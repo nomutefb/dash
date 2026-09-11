@@ -1,6 +1,146 @@
 {
-  "checkedAt": "2026-09-11T02:07:21.916Z",
-  "scope": "Local exported snapshot only; live MISO editor blocked by its internal-network policy.",
+  "checkedAt": "2026-09-11T02:30:38.071Z",
+  "scope": "Local exported snapshot with separately dated, limited live MISO inspection evidence; this script does not contact MISO.",
+  "liveComparison": {
+    "checkedOn": "2026-09-11",
+    "evidence": "migration/live-connection-check.json",
+    "sourceFiles": [
+      {
+        "path": "api/ym-auth-lib.js",
+        "liveSha256": "a3d08cbf9feadd2f6982eb477f441403511977b511ca177c54f583f43ad8da28",
+        "matchesCapturedOriginal": true,
+        "localSha256": "724531b6ad6880b51b1069270e2a2e0de056d7ab2b98f273aa0bb2daa6e7b103"
+      },
+      {
+        "path": "api/ym-env-lib.js",
+        "liveSha256": "aaf9d03b9e7c72fea0ca249c5c32f3c07e39081f9c820ada5402a0a4c8869f60",
+        "matchesCapturedOriginal": true,
+        "localSha256": "d8cb8d191880570c8e0c9454062fcbc057d5171e127a4a47f264244a8dd40ba7"
+      },
+      {
+        "path": "api/ym-db.pb.js",
+        "liveSha256": "6f413a90c9dfca6bdc84401fd60a03c59363ed10e52096ea56eda3ee915a065c",
+        "matchesCapturedOriginal": true,
+        "localSha256": "3e5b10afb2338797e70928bba52b2fc2366e0670abcb14f1fa2f82577fbfa77a"
+      },
+      {
+        "path": "public/ym-auth-ui.js",
+        "liveSha256": "c663a9a53d95e620c3dcc817217ca80dd9dfbb160481978d49df6bad09ba7670",
+        "matchesCapturedOriginal": true,
+        "localSha256": "be99b312054ab28be55f826f2384c5f79f683aabfb9bc2c7e88363116c7cd5f5"
+      }
+    ],
+    "tableTotals": [
+      {
+        "name": "users",
+        "rows": 0,
+        "exportRows": 0,
+        "matchesExport": true
+      },
+      {
+        "name": "ymdata",
+        "rows": 18643,
+        "exportRows": 18643,
+        "matchesExport": true
+      },
+      {
+        "name": "ymdata_dev",
+        "rows": 51304,
+        "exportRows": 51304,
+        "matchesExport": true
+      },
+      {
+        "name": "ymmeta_dev",
+        "rows": 30,
+        "exportRows": 30,
+        "matchesExport": true
+      }
+    ],
+    "devSheetMetadata": [
+      {
+        "sheet": "_ticketlink_batches",
+        "rows": 10,
+        "matchesExport": true
+      },
+      {
+        "sheet": "_ticketlink_field_source",
+        "rows": 126,
+        "matchesExport": true
+      },
+      {
+        "sheet": "_ticketlink_group_archive",
+        "rows": 8,
+        "matchesExport": true
+      },
+      {
+        "sheet": "_ym_change_log",
+        "rows": 1410,
+        "matchesExport": true
+      },
+      {
+        "sheet": "_ym_col_archive",
+        "rows": 8765,
+        "matchesExport": true
+      },
+      {
+        "sheet": "managers",
+        "rows": 39,
+        "matchesExport": true
+      },
+      {
+        "sheet": "ops_거래일별회차실적",
+        "rows": 1484,
+        "matchesExport": true
+      },
+      {
+        "sheet": "ops_단체",
+        "rows": 26,
+        "matchesExport": true
+      },
+      {
+        "sheet": "ops_실적회차",
+        "rows": 26,
+        "matchesExport": true
+      },
+      {
+        "sheet": "ops_일별수집상태",
+        "rows": 610,
+        "matchesExport": true
+      },
+      {
+        "sheet": "ops_일일실적",
+        "rows": 5361,
+        "matchesExport": true
+      },
+      {
+        "sheet": "ops_캘린더",
+        "rows": 178,
+        "matchesExport": true
+      },
+      {
+        "sheet": "ops_코드표",
+        "rows": 34,
+        "matchesExport": true
+      },
+      {
+        "sheet": "ops_프로그램마스터",
+        "rows": 2225,
+        "matchesExport": true
+      },
+      {
+        "sheet": "ops_회원",
+        "rows": 30950,
+        "matchesExport": true
+      },
+      {
+        "sheet": "ops_회차별일일실적",
+        "rows": 52,
+        "matchesExport": true
+      }
+    ],
+    "fullRowValuesCompared": false,
+    "collectionRulesAndIndexesVerified": false
+  },
   "deployReady": false,
   "entry": "public/standalone.html",
   "hookFiles": 20,
@@ -964,7 +1104,7 @@
     "sourceHash": "d8cb8d191880570c8e0c9454062fcbc057d5171e127a4a47f264244a8dd40ba7"
   },
   "blockers": [
-    "Live Code/Database Workbench cannot be inspected until the authorized company network is restored.",
+    "The user must choose shared current MISO data or an isolated pseudonymized database; no write target is selected.",
     "GitHub Pages serves static files; no PocketBase runtime is deployed for this copy.",
     "Platform gateway authentication, runtime proxy and managed environment are not included in the export.",
     "The custom session guard only covers dev requests; a trusted server boundary is required before exposing this backend.",
@@ -973,10 +1113,10 @@
     "Collection columns alone are not a complete PocketBase collection/rule/credential restoration definition."
   ],
   "nextChecks": [
-    "Read current MISO Code and Database Workbench",
-    "Confirm supported gateway/runtime deployment contract",
-    "Provision a separate persistent backend with server-side authentication",
-    "Import pseudonymized data into isolated collections and verify IDs/joins/totals",
+    "Resolve the shared-data versus isolated-copy decision",
+    "Read the required platform runtime contract through supported access",
+    "For shared data, establish supported external authentication/API access; for an isolated copy, provision a persistent authenticated backend",
+    "Verify collection rules, indexes, IDs, joins and totals for the selected target",
     "Configure user-entered authentication and external-service settings",
     "Verify unauthenticated rejection, role boundaries and actual UI CRUD before switching the public URL"
   ]

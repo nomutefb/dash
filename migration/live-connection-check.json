@@ -1,0 +1,48 @@
+{
+  "checkedOn": "2026-09-11",
+  "method": "Authenticated MISO Code and Database Workbench UI; read-only browser network inspection of the selected files and tables",
+  "editorAccessible": true,
+  "databaseWorkbenchAccessible": true,
+  "sourceFiles": [
+    {"path":"api/ym-auth-lib.js","sha256":"a3d08cbf9feadd2f6982eb477f441403511977b511ca177c54f583f43ad8da28"},
+    {"path":"api/ym-env-lib.js","sha256":"aaf9d03b9e7c72fea0ca249c5c32f3c07e39081f9c820ada5402a0a4c8869f60"},
+    {"path":"api/ym-db.pb.js","sha256":"6f413a90c9dfca6bdc84401fd60a03c59363ed10e52096ea56eda3ee915a065c"},
+    {"path":"public/ym-auth-ui.js","sha256":"c663a9a53d95e620c3dcc817217ca80dd9dfbb160481978d49df6bad09ba7670"}
+  ],
+  "tablesVisible": ["members","users","ym_auth_credentials_dev","ym_auth_state_dev","ymdata","ymdata_dev","ymmeta","ymmeta_dev"],
+  "observedRows": {"users":0,"ymdata":18643,"ymdata_dev":51304,"ymmeta_dev":30},
+  "dataColumns": ["id","sheet","rowIndex","data","created","updated"],
+  "metadataColumns": ["id","sheet","headers","source","rowCount","nextRowIndex","created","updated"],
+  "devMetadataRowCounts": {
+    "_ticketlink_batches":10,"_ticketlink_field_source":126,"_ticketlink_group_archive":8,
+    "_ym_change_log":1410,"_ym_col_archive":8765,"managers":39,
+    "ops_거래일별회차실적":1484,"ops_단체":26,"ops_실적회차":26,"ops_일별수집상태":610,
+    "ops_일일실적":5361,"ops_캘린더":178,"ops_코드표":34,"ops_프로그램마스터":2225,
+    "ops_회원":30950,"ops_회차별일일실적":52
+  },
+  "successfulObservedRuntimeResponses": ["/api/ym/auth/me","/api/ym/ticketlink/status","/api/ym/ticketlink/relay"],
+  "publishedSite": {
+    "url":"https://gscyeulmaru.miso.gs/site/KP0cPEj6vV6xA9I7/",
+    "status":"Published",
+    "publishedAtAsDisplayed":"2026. 08. 28. 13:11:53",
+    "verifiedIn":"Share settings only; published application behavior was not tested"
+  },
+  "platformContract": {
+    "readFiles":["api/README.md",".miso/rules/10-skill-routing.md"],
+    "requiredSkill":".miso/skills/miso-coder-platform/SKILL.md",
+    "requiredSkillRead":false,
+    "lookupResult":"Not listed in Code/Context search; opening the documented file through the read URL was blocked by the browser client. No alternate access was attempted.",
+    "collectionRulesAndIndexesVerified":false
+  },
+  "dataTargetDecision":"Awaiting user's choice between shared current MISO data and an isolated pseudonymized copy",
+  "limits":[
+    "Four source files only; not a fresh full-source audit",
+    "Table totals and metadata rowCount values only; no full row-value comparison",
+    "HTTP success does not establish successful collection or complete data freshness",
+    "No GitHub-to-MISO authentication or cross-origin data integration is configured",
+    "No passwords, keys, encrypted credentials, personal rows or raw metadata objects are stored in this report"
+  ],
+  "sourceChanges":false,
+  "databaseWrites":false,
+  "published":false
+}
