@@ -2,6 +2,10 @@
 
 MISO의 현재 코드·정적 데이터와 운영/개발 DB를 직접 읽어 만든 Git 작업본입니다. 개인정보는 가짜 영문 정보로 치환했습니다. 실제 MISO 데이터와 발행본은 변경하지 않았습니다.
 
+**웹 미리보기:** https://nomutefb.github.io/dash/
+
+현재는 로그인 화면을 확인하는 정적 미리보기입니다. 로그인 서버와 DB가 연결된 실제 대시보드 서비스는 아닙니다. GitHub Pages는 `gh-pages` 브랜치의 루트에서 `public/`에 해당하는 파일만 게시합니다. `main`의 코드 수정만으로 이 브랜치가 자동 갱신되지는 않습니다.
+
 - 현재 코드와 정적 자료: `api/`, `public/`, `src/`, `server-data/`, `tools/`
 - DB: `data/database/*.jsonl` — 운영 18,643행, 개발 51,304행, 메타데이터 67행
 - 스키마와 인증 테이블의 필드 구조: `data/database/schema.json`

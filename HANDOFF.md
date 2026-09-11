@@ -21,6 +21,8 @@
 
 ## 실행 제한
 
+웹 미리보기는 https://nomutefb.github.io/dash/ 이다. GitHub Pages의 게시 원본을 gh-pages / (root)로 설정했다. public/index.html은 미연결 상태 안내와 standalone.html 로그인 화면을 보여 주며 인증을 건너뛰지 않는다. public/.nojekyll도 추가했다. gh-pages는 public 트리만 담은 독립 커밋이므로 전체 저장소를 게시하지 않는다. main 변경 시 public 트리를 새 커밋으로 만들되 원격 gh-pages를 부모로 연결해 일반 push한다. 강제 push하지 않는다.
+
 원본 MISO는 수정하지 않았다. src/main.tsx는 과거 MISO 파일 조회에서 403이었다. 플랫폼 _runtime_proxy.js/_runtime_env.js, 실제 인증 설정, PocketBase 구성과 데이터 가져오기는 별도다. 인증을 우회하지 않는다.
 
 로그인 이후 전체 UI/CRUD, DB 재가져오기, 외부 수집기, Microsoft 로그인/PWA 설치는 끝까지 검증하지 않았다. 원격 해시/코드 구조 비교는 과거 캡처이며 이번 세션에서 최신 MISO 전체를 다시 읽은 결과가 아니다.
