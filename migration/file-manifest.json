@@ -860,9 +860,9 @@
     "sha256": "1e87a6c01593c70741fb0edb1b4e4f1a3d67d1bc92f80335d86984a7b28be277"
   },
   {
-    "bytes": 6082,
+    "bytes": 6080,
     "path": "api/ym-changelog-lib.js",
-    "sha256": "df143c56fbfd4cc5de4be6d8224e73fefc2e33934008b0f54f6fb58a6f0b8163"
+    "sha256": "c573bd098def923212812fc935a4a49f0ce57511a0bbbdf89860aab3dc207917"
   },
   {
     "bytes": 2674,

@@ -1,0 +1,67 @@
+{
+  "checkedAt": "2026-09-11T02:48:15.676Z",
+  "scope": "Isolated local PocketBase import; original MISO not contacted",
+  "passed": true,
+  "allCollectionCrudRulesLocked": true,
+  "collections": [
+    "users",
+    "members",
+    "ym_auth_credentials_dev",
+    "ym_auth_state_dev",
+    "ymdata",
+    "ymdata_dev",
+    "ymmeta",
+    "ymmeta_dev"
+  ],
+  "tables": [
+    {
+      "table": "members",
+      "expectedRows": 0,
+      "restoredRows": 0,
+      "mismatchedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "users",
+      "expectedRows": 0,
+      "restoredRows": 0,
+      "mismatchedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "ymdata",
+      "expectedRows": 18643,
+      "restoredRows": 18643,
+      "mismatchedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "ymdata_dev",
+      "expectedRows": 51304,
+      "restoredRows": 51304,
+      "mismatchedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "ymmeta",
+      "expectedRows": 37,
+      "restoredRows": 37,
+      "mismatchedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "ymmeta_dev",
+      "expectedRows": 30,
+      "restoredRows": 30,
+      "mismatchedRows": 0,
+      "passed": true
+    }
+  ],
+  "applicationReady": false,
+  "notVerified": [
+    "MISO collection rules and indexes",
+    "application login and runtime hooks",
+    "external integrations",
+    "UI behavior parity"
+  ]
+}

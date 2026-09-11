@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { Script } from 'node:vm';
 import { htmlParts } from './audit-fidelity.mjs';
 import { parseCsv, createSanitizer } from './sanitize.mjs';
-import { scrubCredentials } from './transform-source.mjs';
+import { scrubCredentials, transformEmbedded } from './transform-source.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const issues=[];const report=JSON.parse(fs.readFileSync(path.join(root,'migration/export-report.json'),'utf8'));
@@ -38,6 +38,13 @@ for(let i=0;i<10;i++)for(const r of JSON.parse(fs.readFileSync(path.join(root,'a
   shardRows++;if(Number(String(r['회원키']).slice(-1))!==i)issues.push({path:'shard-'+i,check:'bucket'});
 }
 const sanitizer=createSanitizer();
+const codeFlags='var SKIP_COLS = {"수정일시":1,"수정자":1,"입력시간(KST)":1};';
+const transformedFlags=transformEmbedded(codeFlags,createSanitizer(),'api/ym-changelog-lib.js');
+if(transformedFlags.content!==codeFlags||transformedFlags.blocks!==0)issues.push({path:'transform-source',check:'preserve-code-membership-flags'});
+const numericStaff='var record = {"담당자":123,"금액":1500};';
+const transformedStaff=transformEmbedded(numericStaff,createSanitizer(),'records');
+const staffPayload=JSON.parse(transformedStaff.content.match(/=\s*(\{.*\});/)[1]);
+if(staffPayload['담당자']===123||staffPayload['금액']!==1500)issues.push({path:'transform-source',check:'retain-personal-data-sanitization'});
 const example={회원키:'01012345678',휴대폰번호:'010-1234-5678',이메일:'sample@source.test',이름:'테스트회원',금액:123400,프로그램ID:'260910_01',짧은이름:'공연',knownAddress:42};
 const synthetic=sanitizer.structured(example,'members');
 if(digits(synthetic.회원키)!==digits(synthetic.휴대폰번호)||synthetic.금액!==example.금액||synthetic.프로그램ID!==example.프로그램ID||synthetic.짧은이름!==example.짧은이름||synthetic.knownAddress!==42)issues.push({path:'sanitizer',check:'identity-and-business-values'});

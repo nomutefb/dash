@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-09-11T02:30:38.071Z",
+  "checkedAt": "2026-09-11T02:51:56.888Z",
   "scope": "Local exported snapshot with separately dated, limited live MISO inspection evidence; this script does not contact MISO.",
   "liveComparison": {
     "checkedOn": "2026-09-11",
@@ -141,6 +141,74 @@
     "fullRowValuesCompared": false,
     "collectionRulesAndIndexesVerified": false
   },
+  "localDatabaseVerification": {
+    "checkedAt": "2026-09-11T02:48:15.676Z",
+    "scope": "Isolated local PocketBase import; original MISO not contacted",
+    "passed": true,
+    "allCollectionCrudRulesLocked": true,
+    "collections": [
+      "users",
+      "members",
+      "ym_auth_credentials_dev",
+      "ym_auth_state_dev",
+      "ymdata",
+      "ymdata_dev",
+      "ymmeta",
+      "ymmeta_dev"
+    ],
+    "tables": [
+      {
+        "table": "members",
+        "expectedRows": 0,
+        "restoredRows": 0,
+        "mismatchedRows": 0,
+        "passed": true
+      },
+      {
+        "table": "users",
+        "expectedRows": 0,
+        "restoredRows": 0,
+        "mismatchedRows": 0,
+        "passed": true
+      },
+      {
+        "table": "ymdata",
+        "expectedRows": 18643,
+        "restoredRows": 18643,
+        "mismatchedRows": 0,
+        "passed": true
+      },
+      {
+        "table": "ymdata_dev",
+        "expectedRows": 51304,
+        "restoredRows": 51304,
+        "mismatchedRows": 0,
+        "passed": true
+      },
+      {
+        "table": "ymmeta",
+        "expectedRows": 37,
+        "restoredRows": 37,
+        "mismatchedRows": 0,
+        "passed": true
+      },
+      {
+        "table": "ymmeta_dev",
+        "expectedRows": 30,
+        "restoredRows": 30,
+        "mismatchedRows": 0,
+        "passed": true
+      }
+    ],
+    "applicationReady": false,
+    "notVerified": [
+      "MISO collection rules and indexes",
+      "application login and runtime hooks",
+      "external integrations",
+      "UI behavior parity"
+    ]
+  },
+  "parityChecklist": "migration/PARITY-CHECKLIST.md",
   "deployReady": false,
   "entry": "public/standalone.html",
   "hookFiles": 20,
@@ -1104,7 +1172,7 @@
     "sourceHash": "d8cb8d191880570c8e0c9454062fcbc057d5171e127a4a47f264244a8dd40ba7"
   },
   "blockers": [
-    "The user must choose shared current MISO data or an isolated pseudonymized database; no write target is selected.",
+    "An isolated local database is available for verification; application authentication, runtime hooks and live MISO synchronization are not connected.",
     "GitHub Pages serves static files; no PocketBase runtime is deployed for this copy.",
     "Platform gateway authentication, runtime proxy and managed environment are not included in the export.",
     "The custom session guard only covers dev requests; a trusted server boundary is required before exposing this backend.",
@@ -1113,11 +1181,11 @@
     "Collection columns alone are not a complete PocketBase collection/rule/credential restoration definition."
   ],
   "nextChecks": [
-    "Resolve the shared-data versus isolated-copy decision",
+    "Use the current MISO development preview as the UI/behavior baseline",
     "Read the required platform runtime contract through supported access",
-    "For shared data, establish supported external authentication/API access; for an isolated copy, provision a persistent authenticated backend",
-    "Verify collection rules, indexes, IDs, joins and totals for the selected target",
-    "Configure user-entered authentication and external-service settings",
-    "Verify unauthenticated rejection, role boundaries and actual UI CRUD before switching the public URL"
+    "Connect an authenticated application runtime to the isolated verification DB",
+    "Verify original collection rules/indexes and configure supported external integrations",
+    "Execute every scenario in migration/PARITY-CHECKLIST.md on both source and target",
+    "Verify production hosting and authentication before switching the public URL"
   ]
 }

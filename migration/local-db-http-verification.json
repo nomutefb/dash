@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-09-11T02:49:41.751Z",
+  "bind": "127.0.0.1:18090",
+  "scope": "Isolated DB server only; no application hooks",
+  "passed": true,
+  "checks": [
+    {
+      "path": "/api/health",
+      "status": 200,
+      "passed": true
+    },
+    {
+      "path": "/api/collections/ymdata_dev/records",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "path": "/api/collections/ymdata/records",
+      "status": 403,
+      "passed": true
+    },
+    {
+      "path": "/api/collections/ym_auth_state_dev/records",
+      "status": 403,
+      "passed": true
+    }
+  ]
+}

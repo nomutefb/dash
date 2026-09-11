@@ -21,6 +21,7 @@ tsconfig.tsbuildinfo
 # PocketBase
 pb_data/
 pb_migrations/
+runtime/.local/
 
 # Platform-managed, per-app env hook (Session Manager regenerates it at runtime)
 api/_runtime_env.js

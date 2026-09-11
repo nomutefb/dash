@@ -34,6 +34,8 @@ const liveComparison=live?{
 const result={
   checkedAt:new Date().toISOString(),scope:'Local exported snapshot with separately dated, limited live MISO inspection evidence; this script does not contact MISO.',
   liveComparison,
+  localDatabaseVerification:fs.existsSync(path.join(root,'migration/local-db-verification.json'))?JSON.parse(read('migration/local-db-verification.json')):null,
+  parityChecklist:'migration/PARITY-CHECKLIST.md',
   deployReady:false,
   entry:'public/standalone.html',hookFiles:hooks.length,routeCount:routes.length,routes,cronCount:crons.length,crons,collections,
   requirements:required.map(p=>({path:p,present:fs.existsSync(path.join(root,p))})),
@@ -41,7 +43,7 @@ const result={
   environment:{clientHeaderSelectsDev:env.includes('X-Ym-Env'),defaultUsesProductionCollections:env.includes('return env === "dev" ? "dev" : ""'),sourceHash:hash('api/ym-env-lib.js')},
   blockers:[
     ...(live?.editorAccessible&&live?.databaseWorkbenchAccessible?[]:['Live Code/Database Workbench inspection evidence is not available.']),
-    'The user must choose shared current MISO data or an isolated pseudonymized database; no write target is selected.',
+    'An isolated local database is available for verification; application authentication, runtime hooks and live MISO synchronization are not connected.',
     'GitHub Pages serves static files; no PocketBase runtime is deployed for this copy.',
     'Platform gateway authentication, runtime proxy and managed environment are not included in the export.',
     'The custom session guard only covers dev requests; a trusted server boundary is required before exposing this backend.',
@@ -49,7 +51,7 @@ const result={
     'MISO LLM routes depend on its internal Session Manager and registered model provider.',
     'Collection columns alone are not a complete PocketBase collection/rule/credential restoration definition.'
   ],
-  nextChecks:['Resolve the shared-data versus isolated-copy decision','Read the required platform runtime contract through supported access','For shared data, establish supported external authentication/API access; for an isolated copy, provision a persistent authenticated backend','Verify collection rules, indexes, IDs, joins and totals for the selected target','Configure user-entered authentication and external-service settings','Verify unauthenticated rejection, role boundaries and actual UI CRUD before switching the public URL']
+  nextChecks:['Use the current MISO development preview as the UI/behavior baseline','Read the required platform runtime contract through supported access','Connect an authenticated application runtime to the isolated verification DB','Verify original collection rules/indexes and configure supported external integrations','Execute every scenario in migration/PARITY-CHECKLIST.md on both source and target','Verify production hosting and authentication before switching the public URL']
 };
 fs.writeFileSync(path.join(root,'migration/runtime-readiness.json'),JSON.stringify(result,null,2)+'\n');
 console.log(JSON.stringify({deployReady:result.deployReady,hookFiles:hooks.length,routes:routes.length,crons:crons.length,collections:collections.length,missingFiles:result.requirements.filter(x=>!x.present).map(x=>x.path),authentication:result.authentication,blockers:result.blockers},null,2));

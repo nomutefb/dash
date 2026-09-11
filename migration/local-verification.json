@@ -6,7 +6,7 @@
   "bookingRows": 40429,
   "memberBookingMatches": 23063,
   "shardRows": 22630,
-  "javascriptFilesChecked": 186,
+  "javascriptFilesChecked": 190,
   "inlineScriptsChecked": 14,
   "sourceComparisonPassed": true,
   "issues": []

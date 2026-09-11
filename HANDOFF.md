@@ -4,7 +4,11 @@
 
 최신 요청은 “MISO와 동일하게 로그인·DB·외부 기능을 모두 연결”하는 것이다. 2026-09-11 사용자가 접속을 복구해 실제 MISO Code/Database Workbench를 열었다. 인증·환경·DB API·인증 UI 4개 파일은 이전 원본 캡처와 SHA-256이 일치한다. 개발 51,304행, 운영 18,643행과 주요 개발 시트 메타 행수도 이전 기록과 일치한다. 전체 데이터 값 재검증은 아니다. migration/live-connection-check.json 및 RUNTIME-CONNECTION.md를 읽는다.
 
-사용자에게 “현재 MISO와 같은 데이터를 함께 조회·수정” 또는 “이전한 가명 데이터로 별도 운영” 중 어느 쪽인지 질문한 상태다. 답을 확인하기 전 데이터 쓰기 대상이나 외부 공개 범위를 임의로 결정하지 않는다. 원본 앱/DB/공유 설정은 변경하지 않았다. GitHub Pages는 여전히 로그인 화면 미리보기이며 기능 연결은 완료하지 않았다.
+사용자가 “현재 MISO의 화면과 미세한 작동까지 모두 동일해야 한다”고 완료 기준을 명확히 했다. 현재 개발 미리보기를 기준으로 원본 UI·계산·상태 전환을 유지한다. 운영 데이터 공유 여부와 관계없이 우선 이 PC에서 비공개 격리 검증 환경을 준비했다. 원본 앱/DB/공유 설정은 변경하지 않았다. GitHub Pages는 여전히 로그인 화면 미리보기이며 기능 연결은 완료하지 않았다. 상세 검증 항목은 migration/PARITY-CHECKLIST.md를 읽는다.
+
+로컬 runtime/.local에 공식 PocketBase 0.31.0과 실제 검증 DB가 있다. runtime/prepare-local.mjs 및 verify-local-db.mjs로 70,014행 전체 ID·컬럼·JSON 값의 일치를 검증했다. DB의 직접 CRUD 규칙은 잠겨 있고 원본 MISO 인증/수집/AI 훅은 아직 연결하지 않았다. 검증용 localhost 서버는 종료했다. DB·바이너리·로그는 Git 제외다. Node 내장 sqlite 때문에 이 로컬 도구는 Node 24 런타임으로 실행한다(원본 Vite 패키지의 Node 22 요구와 구분).
+
+api/ym-changelog-lib.js의 SKIP_COLS 수정자 값이 1에서 840으로 가명화된 오류를 실제 MISO Code에서 대조해 1로 복구했다. 변환기에서 이 코드 설정을 제외하고 회귀 검사도 추가했다. 관련 manifest는 이 파일만 갱신했다. 원본 MISO는 수정하지 않았다.
 
 작업 폴더는 이 HANDOFF.md가 있는 dash 저장소다. 원격은 https://github.com/nomutefb/dash.git 이다.
 

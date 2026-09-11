@@ -5,7 +5,7 @@
 //   행 1개 = 저장 1번. 변경 = [{열, 전, 후}] JSON. 프로그램ID/실적ID/일정ID 를 키로 같이 적어 나중에 "이 프로그램 이력" 으로 뽑는다.
 var LOG = "_ym_change_log";
 var WATCH = {"ops_프로그램마스터":"프로그램ID","ops_일일실적":"실적ID","ops_캘린더":"일정ID"};
-var SKIP_COLS = {"수정일시":1,"수정자":840,"입력시간(KST)":1};
+var SKIP_COLS = {"수정일시":1,"수정자":1,"입력시간(KST)":1};
 var MAX_LEN = 4000;
 function nz(v) { return String(v === undefined || v === null ? "" : v).trim(); }
 function jsonValue(raw, fallback) {

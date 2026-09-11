@@ -3,6 +3,10 @@ export function transformEmbedded(source,sanitizer,path) {
   const re=/(?:=\s*|export\s+default\s+)(\{\s*"|\[\s*(?:\{|\[|"|\d))/g;
   let m;
   while((m=re.exec(source))){
+    // This binding is a field-membership map in ym-changelog-lib.js, not a
+    // manager record. Its "수정자": 1 flag must never become a staff alias.
+    const declaration=source.slice(0,m.index).match(/\b(?:var|let|const)\s+([A-Za-z_$][\w$]*)\s*$/);
+    if(declaration?.[1]==='SKIP_COLS')continue;
     const start=m.index+m[0].length-m[1].length;let depth=0,q='',escaped=false,end=-1;
     for(let i=start;i<source.length;i++){
       const c=source[i];if(q){if(escaped)escaped=false;else if(c==='\\')escaped=true;else if(c===q)q='';continue;}
