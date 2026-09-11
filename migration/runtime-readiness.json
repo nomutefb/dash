@@ -1,0 +1,983 @@
+{
+  "checkedAt": "2026-09-11T02:07:21.916Z",
+  "scope": "Local exported snapshot only; live MISO editor blocked by its internal-network policy.",
+  "deployReady": false,
+  "entry": "public/standalone.html",
+  "hookFiles": 20,
+  "routeCount": 99,
+  "routes": [
+    {
+      "method": "POST",
+      "path": "/api/content/detail",
+      "file": "api/content-detail.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/content/kakao",
+      "file": "api/content-kakao.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/blog/dispatch",
+      "file": "api/miso-llm-adapter.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/blog/draft",
+      "file": "api/miso-llm-adapter.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/promo/auto-run",
+      "file": "api/miso-llm-adapter.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/promo/auto-latest",
+      "file": "api/miso-llm-adapter.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/content/structure",
+      "file": "api/miso-llm-adapter.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/miso-llm/models",
+      "file": "api/miso-llm-bridge.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/miso-llm",
+      "file": "api/miso-llm-bridge.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/auth/{action}",
+      "file": "api/ym-auth.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/changelog",
+      "file": "api/ym-changelog.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/monitor/scan",
+      "file": "api/ym-crons.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/monitor/kopis-related",
+      "file": "api/ym-crons.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/monitor/judge",
+      "file": "api/ym-crons.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/records",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/programs",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/sheet/{slug}",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ops",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/program",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/calendar",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/codes/reindex",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/holidays",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/config",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/messages",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/lastmod",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/holidays",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/config",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/messages",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/lastmod",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/presence",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/gcal",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/monitor/feed",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/visitors",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/memo",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/chatbot/faq",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/chatbot/rules",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/qa",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/diagrams",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/records",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/records/{rowIndex}",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/records/{rowIndex}",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/records",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/records-delete",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/records-delete",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/sheet/{slug}",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/sheet/{slug}/{rowIndex}",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/sheet/{slug}/{rowIndex}",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ops",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ops/row",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/ops/row",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/ops/row",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/qa",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/qa",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/messages",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/messages/{id}",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/messages/{id}",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/config",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/memo",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/presence",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/verify-pin",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/set-pin",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym-db/fix-holidays",
+      "file": "api/ym-db.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/env",
+      "file": "api/ym-env.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/env/init-dev",
+      "file": "api/ym-env.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/env/refresh-dev",
+      "file": "api/ym-env.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/migrations",
+      "file": "api/ym-env.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/migrate",
+      "file": "api/ym-env.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/relay",
+      "file": "api/ym-local-relay.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-search",
+      "file": "api/ym-member-search.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-booking",
+      "file": "api/ym-member-search.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-status",
+      "file": "api/ym-member-sync.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-prepare",
+      "file": "api/ym-member-sync.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-heartbeat",
+      "file": "api/ym-member-sync.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-login-state",
+      "file": "api/ym-member-sync.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-begin",
+      "file": "api/ym-member-sync.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-chunk",
+      "file": "api/ym-member-sync.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-commit",
+      "file": "api/ym-member-sync.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-failure",
+      "file": "api/ym-member-sync.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/member-rows",
+      "file": "api/ym-member-sync.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/plan/meta",
+      "file": "api/ym-plan.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/plan/biz",
+      "file": "api/ym-plan.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/plan/biz",
+      "file": "api/ym-plan.pb.js"
+    },
+    {
+      "method": "GET",
+      "path": "/api/ym/plan/programs",
+      "file": "api/ym-plan.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/plan/program",
+      "file": "api/ym-plan.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/plan/settle",
+      "file": "api/ym-plan.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/plan/delete",
+      "file": "api/ym-plan.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/status",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/group-save",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/prepare",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/login-state",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/request",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/heartbeat",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/claim",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/apply",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/failure",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/reconcile",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/mappings",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/settings",
+      "file": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "method": "POST",
+      "path": "/api/ym/ticketlink/worker-settings",
+      "file": "api/ym-ticketlink.pb.js"
+    }
+  ],
+  "cronCount": 6,
+  "crons": [
+    {
+      "name": "__migration_order_guard",
+      "schedule": "* * * * *",
+      "file": "api/_migration_order_guard.pb.js"
+    },
+    {
+      "name": "ym-promo-alert-scan",
+      "schedule": "*/10 * * * *",
+      "file": "api/ym-crons.pb.js"
+    },
+    {
+      "name": "ym-hold-auto-cancel",
+      "schedule": "5 0 * * *",
+      "file": "api/ym-crons.pb.js"
+    },
+    {
+      "name": "ym-monitor-scan",
+      "schedule": "0 * * * *",
+      "file": "api/ym-crons.pb.js"
+    },
+    {
+      "name": "ym-monitor-judge",
+      "schedule": "0 23,2,5,8 * * *",
+      "file": "api/ym-crons.pb.js"
+    },
+    {
+      "name": "ym-member-summary-refresh",
+      "schedule": "0 18 * * *",
+      "file": "api/ym-crons.pb.js"
+    }
+  ],
+  "collections": [
+    {
+      "name": "members",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "phone",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "addr1",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "addr2",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "addr3",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "addr4",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "zip",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "phoneDup",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "addrFlag",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "phoneStatus",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "userId",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "birthDate",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "email",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "regDate",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "phoneRaw",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "addrRaw",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "tel",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "sourceIdx",
+          "type": "number",
+          "nullable": true
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "nullable": true
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "nullable": true
+        }
+      ],
+      "dataExportPresent": true
+    },
+    {
+      "name": "users",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "password",
+          "type": "password",
+          "nullable": false
+        },
+        {
+          "name": "tokenKey",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "nullable": false
+        },
+        {
+          "name": "emailVisibility",
+          "type": "bool",
+          "nullable": true
+        },
+        {
+          "name": "verified",
+          "type": "bool",
+          "nullable": true
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "avatar",
+          "type": "file",
+          "nullable": true
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "nullable": true
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "nullable": true
+        }
+      ],
+      "dataExportPresent": true
+    },
+    {
+      "name": "ym_auth_credentials_dev",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "managerId",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "kind",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "password",
+          "type": "password",
+          "nullable": false
+        },
+        {
+          "name": "tokenKey",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "nullable": false
+        },
+        {
+          "name": "emailVisibility",
+          "type": "bool",
+          "nullable": true
+        },
+        {
+          "name": "verified",
+          "type": "bool",
+          "nullable": true
+        }
+      ],
+      "dataExportPresent": false
+    },
+    {
+      "name": "ym_auth_state_dev",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "key",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "value",
+          "type": "json",
+          "nullable": true
+        }
+      ],
+      "dataExportPresent": false
+    },
+    {
+      "name": "ymdata",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "sheet",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "rowIndex",
+          "type": "number",
+          "nullable": false
+        },
+        {
+          "name": "data",
+          "type": "json",
+          "nullable": true
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "nullable": true
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "nullable": true
+        }
+      ],
+      "dataExportPresent": true
+    },
+    {
+      "name": "ymdata_dev",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "sheet",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "rowIndex",
+          "type": "number",
+          "nullable": false
+        },
+        {
+          "name": "data",
+          "type": "json",
+          "nullable": true
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "nullable": true
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "nullable": true
+        }
+      ],
+      "dataExportPresent": true
+    },
+    {
+      "name": "ymmeta",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "sheet",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "headers",
+          "type": "json",
+          "nullable": true
+        },
+        {
+          "name": "source",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "rowCount",
+          "type": "number",
+          "nullable": true
+        },
+        {
+          "name": "nextRowIndex",
+          "type": "number",
+          "nullable": true
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "nullable": true
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "nullable": true
+        }
+      ],
+      "dataExportPresent": true
+    },
+    {
+      "name": "ymmeta_dev",
+      "columns": [
+        {
+          "name": "id",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "sheet",
+          "type": "text",
+          "nullable": false
+        },
+        {
+          "name": "headers",
+          "type": "json",
+          "nullable": true
+        },
+        {
+          "name": "source",
+          "type": "text",
+          "nullable": true
+        },
+        {
+          "name": "rowCount",
+          "type": "number",
+          "nullable": true
+        },
+        {
+          "name": "nextRowIndex",
+          "type": "number",
+          "nullable": true
+        },
+        {
+          "name": "created",
+          "type": "autodate",
+          "nullable": true
+        },
+        {
+          "name": "updated",
+          "type": "autodate",
+          "nullable": true
+        }
+      ],
+      "dataExportPresent": true
+    }
+  ],
+  "requirements": [
+    {
+      "path": "api/_runtime_proxy.js",
+      "present": false
+    },
+    {
+      "path": "api/_runtime_env.js",
+      "present": false
+    },
+    {
+      "path": "api/ym-auth-initial-private.js",
+      "present": false
+    },
+    {
+      "path": "api/ym-ticketlink-private.js",
+      "present": false
+    }
+  ],
+  "authentication": {
+    "customGuardDevOnly": true,
+    "devPreviewEntryEnabled": true,
+    "sourceHash": "724531b6ad6880b51b1069270e2a2e0de056d7ab2b98f273aa0bb2daa6e7b103"
+  },
+  "environment": {
+    "clientHeaderSelectsDev": true,
+    "defaultUsesProductionCollections": true,
+    "sourceHash": "d8cb8d191880570c8e0c9454062fcbc057d5171e127a4a47f264244a8dd40ba7"
+  },
+  "blockers": [
+    "Live Code/Database Workbench cannot be inspected until the authorized company network is restored.",
+    "GitHub Pages serves static files; no PocketBase runtime is deployed for this copy.",
+    "Platform gateway authentication, runtime proxy and managed environment are not included in the export.",
+    "The custom session guard only covers dev requests; a trusted server boundary is required before exposing this backend.",
+    "Actual authentication secrets, auth records and collector connector key are intentionally absent.",
+    "MISO LLM routes depend on its internal Session Manager and registered model provider.",
+    "Collection columns alone are not a complete PocketBase collection/rule/credential restoration definition."
+  ],
+  "nextChecks": [
+    "Read current MISO Code and Database Workbench",
+    "Confirm supported gateway/runtime deployment contract",
+    "Provision a separate persistent backend with server-side authentication",
+    "Import pseudonymized data into isolated collections and verify IDs/joins/totals",
+    "Configure user-entered authentication and external-service settings",
+    "Verify unauthenticated rejection, role boundaries and actual UI CRUD before switching the public URL"
+  ]
+}

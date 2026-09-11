@@ -2,6 +2,8 @@
 
 ## 현재 상태
 
+최신 요청은 “MISO와 동일하게 로그인·DB·외부 기능을 모두 연결”하는 것이다. 실제 MISO 편집기는 현재 사내망 제한 화면이라 Code/Database Workbench에 접근하지 못했다. 사용자의 허용된 사내망/VPN 연결을 기다리고 있다. 로컬 구조 조사와 다음 연결 순서는 migration/RUNTIME-CONNECTION.md 및 runtime-readiness.json을 읽는다. 외부 서버 연결은 아직 완료하지 않았으며 미리보기 링크도 로그인 화면 상태다.
+
 작업 폴더는 이 HANDOFF.md가 있는 dash 저장소다. 원격은 https://github.com/nomutefb/dash.git 이다.
 
 2026-09-11에 이전 세션의 오치환 복구를 재검토하고 manifest를 제한적으로 갱신했다. 자유서술형 직원 이름 누락도 기존 가명으로 맞췄다. 정확한 결과와 미검증 범위는 migration/FINAL-AUDIT.md와 README.md를 먼저 읽는다.
