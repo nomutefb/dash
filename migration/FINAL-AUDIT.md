@@ -23,7 +23,7 @@
 
 ## 업로드와 실행 제한
 
-GitHub 플러그인은 nomutefb로 연결되어 있으나 PC의 Git 인증은 muteno다. push --dry-run이 403으로 실패했고, 비대화형 nomutefb 인증 확인에서도 저장된 인증을 찾지 못했다. 원격 main은 5d231f4fa79744c41b5f3653e583d652266a454c의 초기 README다.
+초기 PC Git 인증은 muteno라 push --dry-run이 403이었다. 이후 공식 Git Credential Manager 브라우저 로그인으로 nomutefb 인증을 완료했고, nomutefb로 지정한 push --dry-run이 통과했다. 업로드 기준 원격 main은 5d231f4fa79744c41b5f3653e583d652266a454c였다. 최종 업로드 결과는 원격 SHA와 대조한다.
 
 원본 이름이 포함된 이전 로컬 커밋을 공개 원격에 밀어 올리지 않는다. 업로드용 브랜치는 정리된 최종 트리를 원격 초기 커밋의 자식으로 만들어 일반 push가 가능하도록 구성한다. 이전 로컬 main과 백업 브랜치는 보존한다. 강제 push나 원본 MISO 변경은 하지 않는다.
 

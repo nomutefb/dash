@@ -13,9 +13,9 @@
 - 파일 해시, JS와 HTML 인라인 구문 통과. 정적 참조 193개 중 184개 해결.
 - 직원 이름 잔존 검사는 공개 공연명/테스트 표현을 제외해 추가 수정 대상 0개. 모든 자유서술 개인정보의 완전한 제거를 보증하는 검사는 아니다.
 
-## 남은 업로드
+## GitHub 업로드
 
-사용자는 이전본 GitHub 업로드를 승인했다. 하지만 PC Git은 muteno로 인증되어 nomutefb/dash push dry-run에서 403이었다. GitHub 플러그인의 nomutefb 연결과 로컬 Git 인증은 별개다. nomutefb 인증을 사용자 전용 로그인으로 완료한 뒤 원격 최신 상태를 읽고 일반 push한다. 비밀번호/토큰을 대화로 받거나 출력하지 않는다.
+사용자는 이전본 GitHub 업로드를 승인했다. 초기 PC Git의 muteno 인증은 403이었지만 공식 브라우저 로그인으로 nomutefb 인증을 완료했고 push dry-run도 통과했다. 이 저장소의 credential username은 nomutefb로 지정한다. 비밀번호/토큰을 대화로 받거나 출력하지 않는다. 원격 최신 SHA를 확인한 뒤 일반 push하며 최종 로컬/원격 SHA 일치를 확인한다.
 
 업로드용 codex/sanitized-import-20260911 브랜치를 사용한다. 원본 이름이 남은 b26d227을 부모로 포함하지 않고, 원격 초기 README 커밋 5d231f4의 자식으로 정리된 파일만 담는다. 이전 로컬 main과 codex/previous-dash-main-20260910210320 백업은 보존한다. main 전체나 백업 브랜치를 --all로 push하지 않는다. 강제 push하지 않는다.
 
