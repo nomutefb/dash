@@ -1,0 +1,11 @@
+{
+  "checkedAt": "2026-09-11T01:42:52.886Z",
+  "baseline": "b26d227",
+  "passed": true,
+  "filesCompared": 12,
+  "rowsCompared": 73333,
+  "changedStrings": 1258,
+  "numericValuesChecked": 401356,
+  "issues": [],
+  "scope": "Changed structured files and embedded DB: all keys, arrays, types and numeric values preserved; only reviewed staff alias substitutions and sentinel restorations allowed."
+}

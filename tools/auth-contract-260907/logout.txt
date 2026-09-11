@@ -1,0 +1,57 @@
+public/standalone.html L5944-5999
+function updateRoleTag(){
+  const el=document.getElementById('role-tag');
+  if(!el)return;
+  el.className='role-tag '+(userRole==='admin'?'admin':'user');
+  el.textContent=userRole==='admin'?'관리자':'일반';
+  el.title=userRole==='admin'?'관리자 권한':'일반 사용자';
+  el.onclick=null;
+}
+function _updateSalesAsOfBadge(data){
+  var el=document.getElementById('sales-asof-badge');
+  if(!el)return;
+  try{
+    var rows=data&&Array.isArray(data.rows)?data.rows:[], max='';
+    rows.forEach(function(row){
+      var raw=String(row&&row['기준일자']||'').replace(/[^0-9]/g,'');
+      if(/^\d{8}$/.test(raw)&&raw>max)max=raw;
+    });
+    if(!max){el.textContent='';el.style.display='none';return;}
+    el.textContent='판매 데이터 '+parseInt(max.slice(4,6),10)+'/'+parseInt(max.slice(6,8),10)+' 기준';
+    el.style.display='inline-block';
+  }catch(_e){el.textContent='';el.style.display='none';}
+}
+function _loadSalesAsOfBadge(){
+  YMDB.rows('일일실적','공연').then(function(rs){ _updateSalesAsOfBadge({rows:rs}); }).catch(function(){   // [Phase4-3] 통합 시트 직접
+    _updateSalesAsOfBadge(null);
+  });
+}
+// (권한 전환 기능 제거됨 — 권한은 담당자 시트 '관리자여부'로 고정, 앱 내 전환 불가)
+// (관리자 모드 전환 모달/토스트 제거됨 — 권한 전환 기능 폐기)
+function logout(){ showLogoutModal(); }
+function _ddCloseAll(){
+  ['dd-pop','logout-modal'].forEach(function(id){const d=document.getElementById(id);if(d)d.remove();});
+  document.querySelectorAll('.nav-btn[aria-expanded]').forEach(function(b){b.removeAttribute('aria-expanded');});   // navigation-01 이식 — 열림 표시(형제 딤 유지 축) 해제
+  // (260611) 헤더 팝업류 전부 상호 배타 — 하나 열면 나머지 닫힘 (창 중첩 방지)
+  ['memo-pop','pres-pop','wx-pop','prog-modal'].forEach(function(id){const d=document.getElementById(id);if(d)d.classList.remove('show');});
+}
+// [260723 운영자] details.so navigation-01 이식 — 드롭다운 패널 공장: 빌더 실행 + 항목 호버 pill(.dd-pill) 배선.
+// 빌더의 구 인라인 onmouseenter/leave 배경 스왑은 pill이 대체(속성 핸들러를 프로퍼티로 덮음) — '기본' 틴트 항목은 자기 배경 유지 + pill 겹침(구 호버 진하기와 동일 체감).
+function _ddPanel(builder,minW){
+  const p=document.createElement('div');p.className='dd-panel';p.style.minWidth=(minW||176)+'px';
+  builder(p);
+  const pill=document.createElement('div');pill.className='dd-pill';p.insertBefore(pill,p.firstChild);
+  p.querySelectorAll('button').forEach(function(b){
+    b.onmouseenter=function(){const vis=pill.classList.contains('is-visible');
+      if(!vis)pill.classList.add('is-instant');   // 첫 등장 = 제자리 페이드(레퍼런스 is-instant 문법)
+      pill.style.top=b.offsetTop+'px';pill.style.left=b.offsetLeft+'px';pill.style.width=b.offsetWidth+'px';pill.style.height=b.offsetHeight+'px';
+      if(!vis){void pill.offsetWidth;pill.classList.add('is-visible');requestAnimationFrame(function(){pill.classList.remove('is-instant');});}
+    };
+    b.onmouseleave=null;
+  });
+  p.onmouseleave=function(){pill.classList.remove('is-visible');};
+  return p;
+}
+// [260731 운영자] 「세부메뉴, 메뉴 바로 아래에 나오게」 — 드롭다운 좌측을 대메뉴 좌측에 맞춘다.
+//   우측 끝 대메뉴에서 폭이 넘칠 땐 화면 안으로 당김(양쪽 여백 12px) — 잘림 방지.
+function _ddLeftFor(r,w){ return Math.max(12, Math.min(r.left, window.innerWidth-w-12)); }

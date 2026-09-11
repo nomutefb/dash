@@ -1,0 +1,15 @@
+public/standalone.html L6387-6400
+function _lockMinChange(v){var m=Number(v);if(!Number.isInteger(m)||m<1||m>240){showToast('잠금 시간은 1~240분 정수로 입력해 주세요','error');return;}return _saveLockSetting(m);}
+// 관리자 전역 인증 게이트 — 기존 config 저장 경로 재사용. 새 세션부터 기존 MSAL 로그인 화면으로 진입한다.
+function _authGateToggle(on){
+  if(typeof userRole==='undefined'||userRole!=='admin')return;
+  _authGateEnabled=!!on;
+  api('POST','/api/config',{auth_required:_authGateEnabled,pets_visible:_petsOn}).then(function(){
+    if(typeof showToast==='function')showToast('인증 '+(_authGateEnabled?'켜짐':'꺼짐')+' (새 세션부터 적용)','success');
+  }).catch(function(e){
+    _authGateEnabled=!_authGateEnabled;
+    var el=document.getElementById('auth-gate-toggle'); if(el)el.checked=_authGateEnabled;
+    if(typeof showToast==='function')showToast('저장 실패 — Worker 배포 필요할 수 있음: '+e.message,'error');
+  });
+}
+// === 연간 일정 — 네이티브 통합 (구 iframe → yc-* 인라인. 캘린더 레포 코드 이식, 이미지만 외부 참조) ===

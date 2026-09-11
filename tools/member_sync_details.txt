@@ -1,0 +1,247 @@
+/* public/standalone.html lines 33540-33675 */
+//   이름 = 화면 기준 통일: 실적 조회 = openAnalyticsBoard(구 '판매 실적 조회'). [260731 3차] openBusinessBoard = 「사업 결과 비교」로 개명해 대시보드(_bizMenuBuild)로 이동.
+//   연간 일정·회원 조회·사업 결과 비교는 여기서 나감(→ 대시보드 ▸ 연간 일정 · 회원 분포 · 사업 결과 비교).
+// [260803 운영자] 휴면 보존 — 판매 현황 대메뉴 폐지로 호출부 없음(실적 조회·실적 입력 = _bizMenuBuild로 이관 · 상품 등록·변경 = 제거).
+//   되살리기 = MENUS sales 줄 + buildNav 분기 2곳 복구(PLAY ZONE 휴면 보존 선례와 동일 문법).
+function _salesMenuBuild(menu){
+  var itemCss='display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:0;text-align:left;font-size:13px;font-weight:600;color:var(--text);border-radius:9px;cursor:pointer;font-family:inherit;transition:background .12s';
+  menu.innerHTML='<div style="padding:8px 14px 6px;font-size:11px;color:var(--dim);font-weight:700">판매 현황</div>'
+     +(false?'<button type="button" onclick="_ddCloseAll();openTicketReg()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">상품 등록·변경</button>':'')   // [260731 운영자] 구 '상품 등록·변경' 대메뉴 → 판매 현황 세부 1번
+     +(false?'<button type="button" onclick="_ddCloseAll();openAnalyticsBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">실적 조회</button>':'')
+    +(userRole==='admin'?'<button type="button" onclick="_ddCloseAll();setTimeout(function(){ymTicketlinkOpen(false);},0)" style="'+itemCss+';background:rgba(74,77,231,0.06)" onmouseenter="this.style.background=\'rgba(74,77,231,0.12)\'" onmouseleave="this.style.background=\'rgba(74,77,231,0.06)\'"><span style="flex:1">판매 실적 갱신</span></button>':'');   // 구 '일일 실적 입력'(관리자) · [260731 3차] 구 '실적 분석'(openBusinessBoard)은 「사업 결과 비교」로 개명해 대시보드로 이동
+}
+// === [260710] 회원 조회 — 통합문서 '운영_회원' 시트 read-only (admin 전용 — Worker도 동일 게이트 강제) ===
+// 데이터 = 회원DB 주소정제 v2(주소1 시도·주소2 시군구·주소3 동/읍면·주소4 상세·우편번호·휴대폰정규화).
+// 로드 = /api/ops?sheet=회원 1회 → 메모리 캐시(_memState) · 새로고침 버튼만 재요청. 쓰기 없음(원천 = 홈페이지 회원 DB).
+// PII 위생(분신술 보안 MED-4): 로그아웃(_fullLogout)·유휴잠금(lockScreen)이 _memPurge()로 캐시+모달 소거.
+var _memState=null,_memSummary=null,_memSummaryError='',_memLoading=false,_memP=null,_memSummaryLoading=false,_memSummaryP=null,_memEscH=null,_memQT=null,_memEpoch=0;
+// [260731 운영자 "바로 안 열려요"] PII 재적재 가드를 「#member-lookup 존재」 → 「purge 에포크」로 교체.
+//   구 가드는 회원 조회 모달이 DOM에 없으면(= 회원 분포로 곧장 들어온 경우) 응답을 통째로 버려서 개요가 항상 "못 불러왔어요"였다.
+//   에포크 = _memPurge(로그아웃·유휴잠금)가 증가 → await 중 purge된 응답만 정확히 폐기(보안 의도 동일, 진입 경로 무관).
+function _memPurge(){try{if(typeof _memberHubPurge==='function')_memberHubPurge();}catch(_eh){}_memState=null;   /* [260902 고객 관리 허브] 같은 위생 */_memSummary=null;_memSummaryError='';_memLoading=false;_memP=null;_memSummaryLoading=false;_memSummaryP=null;_bkState=null;_bkLoading=false;_bkP=null;_memEpoch++;_memAiHist=[];_memAiBusy=false;   /* [260806] _bkP(비행 중 적재)도 끊는다 — 안 끊으면 purge 뒤 첫 호출이 **폐기 예정인 옛 요청**에 합류해 빈손으로 돌아온다 */
+  /* [260808] 고객 분류(AI 홍보 3탭) = 이름·휴대폰·관람이력이 한 표에 뜨는 자리라 같은 위생을 건다 —
+     상태(_segLast·_bkAsk)와 **이미 그려진 DOM** 둘 다 지운다. 상태만 지우면 화면의 명단은 그대로 남는다. */
+  _segLast=null;_bkAsk=null;var pc=document.getElementById('promo-check');if(pc)pc.innerHTML='';
+  var bg=document.getElementById('member-lookup');if(bg){if(_memEscH){document.removeEventListener('keydown',_memEscH);_memEscH=null;}bg.remove();}var ov=document.getElementById('member-ov');if(ov)ov.remove();var inl=document.getElementById('mem-ov-inline');if(inl){_ldSweepOff(inl);inl.innerHTML='<div style="text-align:center;padding:40px;color:var(--dim);font-size:13px">세션 종료로 집계를 비웠어요</div>';}}   // [260731 4차 · 페이블 검수 HIGH] 인라인 4면(고객 분석)에 그려진 회원 집계 DOM도 소거 — 로그아웃·유휴잠금 PII 위생 동일 적용 · [260806] 스윕도 함께 걷는다(박스 직속이라 innerHTML 교체로는 안 지워진다)
+// 선로딩(운영자 260731 "항상 바로 나오게") — 대시보드 ▸ 회원 분포 항목에 마우스만 올려도 백그라운드 적재 시작.
+//   클릭 시점엔 이미 캐시라 즉시 그려진다. 중복 발사는 _memLoading·_memState 가드로 차단(추가 API 호출 0).
+function _memWarm(){ if(userRole!=='admin')return; try{_bkWarm();}catch(e){}   /* [260804] 예매 집계도 같이 덥힌다 — 첫 예매 질문에서 「아직 안 불러왔어요」가 안 뜨게 */
+  if(_memSummary||_memSummaryLoading)return; try{_memLoadSummary(false);}catch(e){} }
+// [260810 운영자 「대시보드를 불러오는 순간 고객분석 데이터까지 다 · 애초에 이 웹앱이 열려있으면 데이터는 불러오게」]
+//   **부팅 선로딩** — 구판의 출발 신호는 세부메뉴 **호버**(위 _memWarm)와 책 4면 도착(_bizMemberEnsure) 둘뿐이라,
+//   책을 4면까지 넘겨야 그제서야 회원 시트를 부르기 시작했다. 신호를 「앱에 들어온 순간」(initApp)으로 앞당긴다.
+//   새 API·새 캐시·새 상태 **0** = 위 _memWarm을 부팅에서 한 번 더 부르는 것뿐(회원 + 예매집계 · admin 게이트와
+//   _memState/_memLoading 중복 가드가 그대로 걸린다 → 호버·4면 경로와 겹쳐도 추가 fetch 0).
+//   ⚠ **네트워크 우선권**(260711 「캘린더에 우선권」) 유지 = 회원 시트가 6.7MB라 첫 화면 fetch와 겹치면 보이는 화면이 늦어진다
+//     → initApp 병렬조(프로그램·마스터·카페장도·접수설정)가 **끝난 뒤** + 한 박자(레일 6시트는 _calP 뒤 출발이라 그때도 비행 중일 수 있다).
+//   ⚠ **잠금 중이면 안 부른다** = 유휴잠금이 _memPurge로 비운 PII를 이 타이머가 되채우는 창 차단(잠금 해제는 initApp을 다시 타므로 그때 채워진다).
+function _memBootWarm(){
+  if(typeof userRole==='undefined'||userRole!=='admin')return;   // 비admin = 4면 자체가 없다(_bizBookN=3) · 서버도 PII 시트에 admin 강제
+  setTimeout(function(){ if(typeof _locked!=='undefined'&&_locked)return; try{_memWarm();}catch(e){console.warn('[boot warm]',e);} },1200);
+}
+function closeMemberLookup(){var bg=document.getElementById('member-lookup');if(bg)bg.classList.remove('show');if(_memEscH){document.removeEventListener('keydown',_memEscH);_memEscH=null;}}
+async function openMemberLookup(){
+  if(userRole!=='admin'){showToast('회원 조회는 관리자 전용이에요','error');return;}
+  if(window._MEMBER_HUB_ON===false){var _hb=document.getElementById('member-hub');if(_hb)_hb.remove();}else if(typeof openMemberHub==='function')return openMemberHub('lookup');   /* [260902 고객 관리 허브] */
+  var bg=document.getElementById('member-lookup');
+  if(!bg){
+    var el=document.createElement('div');
+    el.className='modal-bg';el.id='member-lookup';el.style.zIndex='var(--z-modal)';
+    el.onclick=function(ev){if(ev.target===el)closeMemberLookup();};
+    el.innerHTML='<div class="modal" style="position:relative;width:940px;max-width:94vw">'
+      +'<button class="modal-x" onclick="closeMemberLookup()" title="닫기" aria-label="닫기">✕</button>'
+      +_mhead('회원 조회','')
+      +'<div id="mem-sub" style="font-size:11.5px;color:var(--dim);margin-bottom:12px">불러오는 중…</div>'
+      +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center">'
+      +'<input id="mem-q" placeholder="이름 · 휴대폰 · 주소 검색" oninput="_memRenderDeb()" onsearch="_memRenderDeb()" style="flex:1;width:100%;box-sizing:border-box;min-width:180px;padding:9px 12px;border:1px solid var(--border2);border-radius:var(--r-btn);font-size:13px;font-family:inherit;background:var(--surface-solid);color:var(--text)">'
+      +'<label style="display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap"><input id="mem-mask" type="checkbox" checked onchange="_memRender()" style="accent-color:var(--accent);width:14px;height:14px;margin:0">마스킹</label>'
+      
+      +'<button type="button" onclick="closeMemberLookup();openMemberOverview()" title="거주지·연령·전국 분포 요약" style="padding:9px 13px;border:1.5px solid var(--accent);background:var(--accent);color:var(--surface-solid);border-radius:var(--r-btn);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 12V7M7 12V2M12 12V5"/></svg>고객 분석</button>'   /* [260731 4차] 이름 통일 = 대시보드 세부메뉴·책 4면 「고객 분석」(구 '회원 분포' — 한 화면 = 한 이름) */
+      
+      +'</div>'
+      +'<div id="mem-body" style="display:none;height:56vh;max-height:56vh;overflow:auto;border:1px solid var(--border);border-radius:var(--r-btn)"></div>'
+      +'</div>';
+    document.body.appendChild(el);
+    bg=el;
+  }
+  bg.classList.add('show');
+  if(!_memEscH){_memEscH=function(e){if(e.key==='Escape'&&!e.defaultPrevented)closeMemberLookup();};document.addEventListener('keydown',_memEscH);}   // 판매보드 escHandler 전례 계승(확인창 preventDefault 양보)
+  if(!_memState)await _memLoad(false);else _memRender();
+}
+async function _memLoadCore(force){
+  _memLoading=true;
+  var ep=_memEpoch;   // 이 요청의 세대 — 응답 도착 시 purge가 있었으면(ep 불일치) 결과 폐기
+  var sub=document.getElementById('mem-sub'),body=document.getElementById('mem-body'),rf=document.getElementById('mem-refresh');
+  if(sub)sub.textContent='불러오는 중… (첫 로드는 수 초 걸릴 수 있어요)';
+  if(body)body.innerHTML='';
+  if(rf){rf.disabled=true;rf.style.opacity='.5';}
+  try{
+     var d;
+     if(window.__MEMBERS__&&window.__MEMBERS__.rows&&window.__MEMBERS__.rows.length){
+       d={headers:window.__MEMBERS__.headers,rows:window.__MEMBERS__.rows,note:'내장 members.js'}; // [WA30-v1] 내장 회원 데이터 우선 — 회원 API 지연 우회
+     }else{
+       d=await api('GET','/api/ops?sheet='+encodeURIComponent('회원')+(force?'&fresh=1':''));
+     }
+    if(ep!==_memEpoch)return;   // await 중 _memPurge(로그아웃·유휴잠금) = PII 재적재 금지(보안 재심사 잔여 LOW)
+    if(!d||!d.rows||!d.rows.length){
+      if(sub)sub.innerHTML='<span style="color:var(--danger)">시트가 비어 있거나 없어요 — 통합문서에 시트 이름을 정확히 「운영_회원」으로(복사 시 뒤에 「 (2)」 같은 접미사 없이) 두었는지 확인해 주세요'+(d&&d.note?' · '+_memEsc(d.note):'')+'</span>';
+      _memState={rows:[]};return;
+    }
+    // 스키마 검증(분신술 UX MED-1) — 구버전(v1)·다른 문서를 복사하면 빈 셀로 조용히 나오는 것 방지
+    var hd=d.headers||[];
+    var miss=['주소1','주소2','주소3','주소4','우편번호'].filter(function(k){return hd.indexOf(k)<0;});
+    var noPhone=hd.indexOf('휴대폰정규화')<0&&hd.indexOf('휴대폰번호')<0;
+    _memState={rows:d.rows,ts:Date.now(),schemaWarn:(miss.length||noPhone)?'⚠ 시트 컬럼이 v2 정제본과 달라요(누락: '+(noPhone?['휴대폰정규화'].concat(miss):miss).join(', ')+') — 「회원DB_주소정제_v2」의 운영_회원 시트를 복사해 주세요':''};
+    
+    _memRender();
+  }catch(e){
+    var msg=String(e.message||e);
+    if(sub)sub.innerHTML='<span style="color:var(--danger)">'+(msg.indexOf('401')===0?'세션이 만료됐어요 — 다시 로그인해 주세요':(msg.indexOf('403')===0?'권한이 없어요 — 관리자 계정으로 로그인해 주세요':'로드 실패: '+_memEsc(msg.slice(0,120))))+'</span>';
+    _memState=null;
+  }finally{
+    _memLoading=false;
+    var rf2=document.getElementById('mem-refresh');if(rf2){rf2.disabled=false;rf2.style.opacity='';}
+  }
+}
+function _memLoad(force){
+  if(_memLoading)return _memP||Promise.resolve(_memState);   // 선로딩 중인 동일 요청에 합류 — undefined 즉시 반환으로 모달 로더가 영구 잔류하지 않게 한다.
+  _memP=_memLoadCore(force);
+  _memP.then(function(){_memP=null;},function(){_memP=null;});
+  return _memP;
+}
+async function _memLoadSummary(force){
+if(window.__MEMBERS__&&window.__MEMBERS__.rows&&window.__MEMBERS__.rows.length){ // [WA30b-v1] 내장 회원 우선 — 집계 API 생략, 렌더러가 rows에서 직접 계산
+  if(!_memState||!_memState.rows||!_memState.rows.length)_memState={headers:window.__MEMBERS__.headers,rows:window.__MEMBERS__.rows,note:'내장 members.js'};
+  return null;
+}
+  if(_memSummaryLoading)return _memSummaryP||Promise.resolve(_memSummary);
+  _memSummaryLoading=true;_memSummaryError='';
+  _memSummaryP=(async function(){
+    try{
+      // [WA9-v1] 회원 집계 API는 12초 뒤 명시적으로 실패시켜 기존 catch 흐름으로 보낸다.
+      var _wa9Req=api('GET','/api/ops?sheet='+encodeURIComponent('회원')+'&summary=1'+(force?'&fresh=1':''));
+      var _wa9Timeout=new Promise(function(_,reject){setTimeout(function(){reject(new Error('회원 API 응답 시간 초과(12초)'));},12000);});
+      var d=await Promise.race([_wa9Req,_wa9Timeout]);
+      if(false){
+      var d=await api('GET','/api/ops?sheet='+encodeURIComponent('회원')+'&summary=1'+(force?'&fresh=1':''));
+      }
+      if(!d||!d.summary)throw new Error('회원 집계 응답이 없어요');
+      _memSummary=d;return d;
+    }catch(e){_memSummary=null;_memSummaryError=String(e.message||e);return null;}
+    finally{_memSummaryLoading=false;}
+  })();
+  _memSummaryP.then(function(){_memSummaryP=null;},function(){_memSummaryP=null;});
+  return _memSummaryP;
+}
+// 지역 셀렉트 채우기 — lv1 시도 / lv2 시군구(시도 종속) / lv3 동·읍면(시군구 종속)
+function _memFillSel(lv){
+
+/* api/ym-member-summary-lib.js */
+// 회원 요약 스냅샷 공용 계산기.
+// ymmeta의 _member_summary 행에 저장해 /api/ops?summary=1은 행 스캔 없이 반환한다.
+
+var MEMBER_SUMMARY_SHEET = "_member_summary";
+// [260904 발행관리] 환경(dev/prod)별 컬렉션 — 호출자가 env 를 넘긴다(ym-db.pb.js 의 __env). 크론/훅(env 없음)은 발행본.
+var ENV = "";
+function colFor(base) { return $app.findCollectionByNameOrId(ENV === "dev" ? base + "_dev" : base); }
+
+function memberSummaryJsonValue(raw, fallback) {
+  if (raw === null || raw === undefined) return fallback;
+  try { if (typeof raw.string === "function") return JSON.parse(raw.string()); } catch (err) {}
+  if (typeof raw === "string") { try { return JSON.parse(raw); } catch (err2) {} }
+  return raw;
+}
+
+function memberSummaryMeta() {
+  var col = colFor("ymmeta");
+  var rows = $app.findRecordsByFilter(col, "sheet = '_member_summary'", "", 1, 0);
+  return rows && rows.length ? rows[0] : null;
+}
+
+function memberSummaryRead() {
+  var row = memberSummaryMeta();
+  if (!row) return null;
+  var value = memberSummaryJsonValue(row.get("headers"), null);
+  if (!value || value.snapshot !== true) return null;
+  // v150 클라이언트의 성공 판정 계약을 유지한다. 기존 저장본도 재계산 없이 복구한다.
+  value.summary = true;
+  return value;
+}
+
+function memberSummarySave(value) {
+  var col = colFor("ymmeta"), row = memberSummaryMeta();
+  if (!row) row = new Record(col, { sheet: MEMBER_SUMMARY_SHEET, headers: value, source: "member-summary", rowCount: 1, nextRowIndex: 1 });
+  else row.set("headers", value);
+  row.set("source", "member-summary");
+  row.set("rowCount", 1);
+  $app.save(row);
+  return value;
+}
+
+function memberSummaryRebuild() {
+  var dataCol = colFor("ymdata");
+  var records = $app.findRecordsByFilter(dataCol, "sheet = 'ops_회원'", "rowIndex", 50000, 0);
+  var sido = {}, city = {}, region = {"여수":0,"순천":0,"광양":0,"전남광주권":0,"수도권":0,"그 외":0};
+  var rawAge = {}, geo = {}, total = 0, unknownAddress = 0;
+  var gjGu = {"동구":1,"서구":1,"남구":1,"북구":1,"광산구":1};
+  var geoKeys = {"서울특별시":1,"인천광역시":1,"경기도":1,"강원특별자치도":1,"충청북도":1,"충청남도":1,"세종특별자치시":1,"대전광역시":1,"전북특별자치도":1,"경상북도":1,"대구광역시":1,"울산광역시":1,"부산광역시":1,"경상남도":1,"제주특별자치도":1,"여수시":1,"순천시":1,"광양시":1,"목포시":1,"고흥군":1,"광주":1};
+  function dataValue(raw) { return memberSummaryJsonValue(raw, {}) || {}; }
+  function cityName(s1, s2) {
+    if (s1 === "전남광주통합특별시") return gjGu[s2] ? "Example State 207" : s2;
+    var match = String(s1).match(/^(.+?)(특별시|광역시|특별자치시)$/);
+    return match ? match[1] + "시" : s2;
+  }
+  function ageName(data) {
+    var value = String(data["연령대"] || "").trim();
+    if (value) return value;
+    var birth = String(data["생년월일"] || "").replace(/[^0-9]/g, "");
+    var birthYear = parseInt(birth.slice(0, 4), 10), nowYear = new Date().getFullYear();
+    return birthYear > 1900 && birthYear <= nowYear ? Math.max(0, Math.floor((nowYear - birthYear) / 10) * 10) + "대" : "미상";
+  }
+  for (var i = 0; i < records.length; i++) {
+    var data = dataValue(records[i].get("data"));
+    var s1 = String(data["주소1"] || "").trim(), s2 = String(data["주소2"] || "").trim(), age = ageName(data);
+    total++;
+    rawAge[age] = (rawAge[age] || 0) + 1;
+    if (!s1) { unknownAddress++; continue; }
+    sido[s1] = (sido[s1] || 0) + 1;
+    var cityNameValue = cityName(s1, s2), cityKey = s1 + "|" + cityNameValue;
+    city[cityKey] = (city[cityKey] || 0) + 1;
+    if (cityNameValue === "여수시") region["여수"]++;
+    else if (cityNameValue === "순천시") region["순천"]++;
+    else if (cityNameValue === "광양시") region["광양"]++;
+    else if (s1 === "전남광주통합특별시") region["전남광주권"]++;
+    else if (s1 === "서울특별시" || s1 === "경기도" || s1 === "인천광역시") region["수도권"]++;
+    else region["그 외"]++;
+    var geoKey = s1 === "전남광주통합특별시" ? (gjGu[s2] ? "전남광주통합특별시|광주" : (geoKeys[cityNameValue] ? "전남광주통합특별시|" + cityNameValue : "전남광주통합특별시")) : (geoKeys[s1] ? s1 : null);
+    if (geoKey) geo[geoKey] = (geo[geoKey] || 0) + 1;
+  }
+  var ageBands = {
+    "10·20대": (rawAge["10세 미만"] || 0) + (rawAge["10대"] || 0) + (rawAge["20대"] || 0),
+    "30대": rawAge["30대"] || 0,
+    "40대": rawAge["40대"] || 0,
+    "50대": rawAge["50대"] || 0,
+    "60대 이상": (rawAge["60대"] || 0) + (rawAge["70대"] || 0) + (rawAge["80대"] || 0) + (rawAge["90대"] || 0) + (rawAge["100대"] || 0),
+    "미상": rawAge["미상"] || 0
+  };
+  return memberSummarySave({
+    summary: true,
+    snapshot: true,
+    total: total,
+    knownAddress: total - unknownAddress,
+    unknownAddress: unknownAddress,
+    sidoCounts: sido,
+    cityCounts: city,
+    regionCounts: region,
+    ageCounts: ageBands,
+    rawAgeCounts: rawAge,
+    geoCounts: geo,
+    updatedAt: new Date().toISOString()
+  });
+}
+
+module.exports = {
+  read: function (env) { ENV = env === "dev" ? "dev" : ""; return memberSummaryRead(); },
+  rebuild: function (env) { ENV = env === "dev" ? "dev" : ""; return memberSummaryRebuild(); },
+  getOrBuild: function (env) { ENV = env === "dev" ? "dev" : ""; return memberSummaryRead() || memberSummaryRebuild(); }
+};

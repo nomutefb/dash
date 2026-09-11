@@ -1,0 +1,18 @@
+# -*- coding: utf-8 -*-
+# [PA1-v1] node ESM 이슈 대체 — python 판. 앵커 유일성 게이트 포함.
+import json,sys
+F='public/standalone.html'
+FIND1=json.loads(r'''"var _rowClick=(programBoard&&_pstState==='판매 중')?'_bizSalesRowPick(\\''+_anaEsc(g.name)+'\\')':'_finOpen(\\''+_anaEsc(g.name)+'\\','+_fy+')';"''')
+REPL1=json.loads(r'''"var _rowClick=(programBoard&&_pstState==='판매 중')?'_bizSalesRowPick(\\''+_anaEsc(g.name)+'\\')':(programBoard?'_pastAudOpen(\\''+_anaEsc(g.name)+'\\','+_fy+')':'_finOpen(\\''+_anaEsc(g.name)+'\\','+_fy+')');   /* [PA1-v1] 판매현황: 종료 공연은 예매자 정보 모달 — 재무 카드 대신 (운영자 260828) */"''')
+FIND2=json.loads(r'''"function _finOpen(name,year){"''')
+INS=json.loads(r'''"// ===== [PA1-v1] 종료 공연 예매자 정보 모달 (운영자 260828 「판매현황에서 지나간 공연 누르면 예매자 성향만 모달로」) =====\n// 데이터 = data/예매집단분석_과거_260828.json (통합장부 2015~2026 × 회원명부 전화 정확일치 · 서버측 생성)\n// 렌더 = 기존 _anaAudienceHtml 재사용(잠깐 _audSeg를 바꿔치기 후 원복 — 판매중 화면 영향 0)\nvar _pastAud=null,_pastAudP=null;\nfunction _pastAudLoad(){ if(_pastAud)return Promise.resolve(_pastAud); if(_pastAudP)return _pastAudP;\n  _pastAudP=fetch('data/예매집단분석_과거_260828.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(d){_pastAud=(d&&Array.isArray(d['공연']))?d:{'공연':[]};return _pastAud;}).catch(function(){_pastAud={'공연':[]};return _pastAud;});\n  return _pastAudP; }\nfunction _pastAudNorm(s){return String(s||'').normalize('NFKC').replace(/^20\\d\\d(년)?\\s*/,'').replace(/\\s*[-–]\\s*여수\\s*$/,'').replace(/[\\s<>＜＞〈〉「」『』'\"“”‘’:：_\\-–,.!?？~·&＆×xX()（）\\[\\]\\/]/g,'').toLowerCase();}\nfunction _pastAudClose(){var m=document.getElementById('pastaud-modal');if(m)m.remove();}\nfunction _pastAudOpen(name,year){\n  _pastAudLoad().then(function(d){\n    var n=_pastAudNorm(name),list=(d&&d['공연'])||[];\n    var cand=list.filter(function(x){return !year||!x['연도']||String(x['연도'])===String(year);});\n    var hit=cand.find(function(x){return _pastAudNorm(x['공연'])===n;})\n      ||cand.find(function(x){var m=_pastAudNorm(x['공연']);return n.length>=6&&(m.indexOf(n)>=0||n.indexOf(m)>=0);})\n      ||list.find(function(x){var m=_pastAudNorm(x['공연']);return n.length>=6&&(m.indexOf(n)>=0||n.indexOf(m)>=0);});\n    _pastAudClose();\n    var head='<div style=\"font-size:15px;font-weight:800;margin:2px 30px 2px 2px\">'+escapeHtml(name)+' <span style=\"font-weight:400;color:var(--dim);font-size:12px\">'+((hit&&hit['연도'])?hit['연도']+'년 · ':'')+'예매자 정보</span></div>';\n    var inner;\n    if(hit){ var keep=_audSeg; _audSeg={'공연':[hit]}; try{ inner=_anaAudienceHtml({name:hit['공연']})||''; }catch(_e){ inner=''; } _audSeg=keep;\n      if(!inner)inner='<div style=\"padding:24px 6px;color:var(--dim);font-size:13px\">표시할 예매자 정보가 없어요.</div>';\n    } else { inner='<div style=\"padding:20px 6px;color:var(--dim);font-size:13px\">이 공연의 예매자 데이터가 장부에 없어요. (기획공연 예매이력 밖 — 대관·전시·교육 등)</div>'; }\n    var wrap=document.createElement('div');wrap.id='pastaud-modal';\n    wrap.innerHTML='<div class=\"modal-bg show\" onclick=\"if(event.target===this)_pastAudClose()\"><div class=\"modal\" style=\"width:880px;max-width:96vw;text-align:left;max-height:88vh;overflow:auto\">'\n      +'<button class=\"modal-x\" onclick=\"_pastAudClose()\" title=\"닫기\" aria-label=\"닫기\">✕</button>'\n      +head+'<div id=\"pastaud-body\">'+inner+'</div></div></div>';\n    document.body.appendChild(wrap);\n  });\n}\nfunction _finOpen(name,year){"''')
+s=open(F,encoding='utf-8').read()
+if '_pastAudOpen(' in s:
+    print('ABORT: 이미 패치됨'); sys.exit(1)
+c1=s.count(FIND1); c2=s.count(FIND2)
+if c1!=1 or c2!=1:
+    print('ABORT (파일 미변경): FIND1=%d FIND2=%d'%(c1,c2)); sys.exit(1)
+before=len(s)
+s=s.replace(FIND1,REPL1).replace(FIND2,INS)
+open(F,'w',encoding='utf-8').write(s)
+print('PA1-v1 ok · chars %d -> %d · tags=%d'%(before,len(s),s.count('_pastAudOpen')))

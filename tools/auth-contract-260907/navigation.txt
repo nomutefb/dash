@@ -1,0 +1,320 @@
+function updateRoleTag(){
+  const el=document.getElementById('role-tag');
+  if(!el)return;
+  el.className='role-tag '+(userRole==='admin'?'admin':'user');
+  el.textContent=userRole==='admin'?'관리자':'일반';
+  el.title=userRole==='admin'?'관리자 권한':'일반 사용자';
+  el.onclick=null;
+}
+function _updateSalesAsOfBadge(data){
+  var el=document.getElementById('sales-asof-badge');
+  if(!el)return;
+  try{
+    var rows=data&&Array.isArray(data.rows)?data.rows:[], max='';
+    rows.forEach(function(row){
+      var raw=String(row&&row['기준일자']||'').replace(/[^0-9]/g,'');
+      if(/^\d{8}$/.test(raw)&&raw>max)max=raw;
+    });
+    if(!max){el.textContent='';el.style.display='none';return;}
+    el.textContent='판매 데이터 '+parseInt(max.slice(4,6),10)+'/'+parseInt(max.slice(6,8),10)+' 기준';
+    el.style.display='inline-block';
+  }catch(_e){el.textContent='';el.style.display='none';}
+}
+function _loadSalesAsOfBadge(){
+  YMDB.rows('일일실적','공연').then(function(rs){ _updateSalesAsOfBadge({rows:rs}); }).catch(function(){   // [Phase4-3] 통합 시트 직접
+    _updateSalesAsOfBadge(null);
+  });
+}
+// (권한 전환 기능 제거됨 — 권한은 담당자 시트 '관리자여부'로 고정, 앱 내 전환 불가)
+// (관리자 모드 전환 모달/토스트 제거됨 — 권한 전환 기능 폐기)
+function logout(){ showLogoutModal(); }
+function _ddCloseAll(){
+  ['dd-pop','logout-modal'].forEach(function(id){const d=document.getElementById(id);if(d)d.remove();});
+  document.querySelectorAll('.nav-btn[aria-expanded]').forEach(function(b){b.removeAttribute('aria-expanded');});   // navigation-01 이식 — 열림 표시(형제 딤 유지 축) 해제
+  // (260611) 헤더 팝업류 전부 상호 배타 — 하나 열면 나머지 닫힘 (창 중첩 방지)
+  ['memo-pop','pres-pop','wx-pop','prog-modal'].forEach(function(id){const d=document.getElementById(id);if(d)d.classList.remove('show');});
+}
+// [260723 운영자] details.so navigation-01 이식 — 드롭다운 패널 공장: 빌더 실행 + 항목 호버 pill(.dd-pill) 배선.
+// 빌더의 구 인라인 onmouseenter/leave 배경 스왑은 pill이 대체(속성 핸들러를 프로퍼티로 덮음) — '기본' 틴트 항목은 자기 배경 유지 + pill 겹침(구 호버 진하기와 동일 체감).
+function _ddPanel(builder,minW){
+  const p=document.createElement('div');p.className='dd-panel';p.style.minWidth=(minW||176)+'px';
+  builder(p);
+  const pill=document.createElement('div');pill.className='dd-pill';p.insertBefore(pill,p.firstChild);
+  p.querySelectorAll('button').forEach(function(b){
+    b.onmouseenter=function(){const vis=pill.classList.contains('is-visible');
+      if(!vis)pill.classList.add('is-instant');   // 첫 등장 = 제자리 페이드(레퍼런스 is-instant 문법)
+      pill.style.top=b.offsetTop+'px';pill.style.left=b.offsetLeft+'px';pill.style.width=b.offsetWidth+'px';pill.style.height=b.offsetHeight+'px';
+      if(!vis){void pill.offsetWidth;pill.classList.add('is-visible');requestAnimationFrame(function(){pill.classList.remove('is-instant');});}
+    };
+    b.onmouseleave=null;
+  });
+  p.onmouseleave=function(){pill.classList.remove('is-visible');};
+  return p;
+}
+// [260731 운영자] 「세부메뉴, 메뉴 바로 아래에 나오게」 — 드롭다운 좌측을 대메뉴 좌측에 맞춘다.
+//   우측 끝 대메뉴에서 폭이 넘칠 땐 화면 안으로 당김(양쪽 여백 12px) — 잘림 방지.
+function _ddLeftFor(r,w){ return Math.max(12, Math.min(r.left, window.innerWidth-w-12)); }
+// 메뉴 간 이동 = 닫고 새로 열지 않고 한 컨테이너가 위치·크기 모핑 + 패널 방향 슬라이드(레퍼런스 핵심 문법 — 이동 방향으로 이전 패널 퇴장·새 패널 입장)
+function _ddMorph(m,anchor,builder,minW,owner){
+  const menu=m._menu,old=menu.querySelector('.dd-panel.is-active');
+  const dir=anchor.getBoundingClientRect().left>=m._anchor.getBoundingClientRect().left?1:-1;   // 1 = 오른쪽 메뉴로 이동
+  const np=_ddPanel(builder,minW);
+  np.classList.add(dir===1?'is-enter-right':'is-enter-left');
+  menu.appendChild(np);
+  const r=anchor.getBoundingClientRect();
+  menu.classList.add('dd-morphing');
+  menu.style.left=_ddLeftFor(r,np.offsetWidth)+'px';   // [260731 운영자] 메뉴 바로 아래 = 앵커 좌측 정렬(구 우측정렬 right)
+  menu.style.width=np.offsetWidth+'px';menu.style.height=np.offsetHeight+'px';
+  void np.offsetWidth;   // enter 초기 위치 커밋 후 전이 시작
+  np.classList.remove('is-enter-right','is-enter-left');np.classList.add('is-active');
+  if(old){old.classList.remove('is-active');old.classList.add(dir===1?'is-leaving-left':'is-leaving-right');setTimeout(function(){old.remove();},500);}
+  document.querySelectorAll('.nav-btn[aria-expanded]').forEach(function(b){if(b!==anchor)b.removeAttribute('aria-expanded');});
+  anchor.setAttribute('aria-expanded','true');
+  m.dataset.owner=owner;m._anchor=anchor;
+}
+// [260805 운영자 4차] 「메뉴 안에 메뉴는 없어」 — 3차의 패널 드릴인(_ddDrill) 철거.
+//   분류 = 메뉴 계층이 아니라 **모달 안 탭**으로 푼다(영상 편집기 .prog-tab 정본과 같은 축):
+//   이미지 편집 버튼 1개 → 그 모달 안에 카드 제작·누끼따기 탭. 드롭다운은 한 겹으로 끝난다.
+function _ddOpen(anchor,builder,minW,owner){
+  if(!anchor)return;
+  const ex=document.getElementById('dd-pop');
+  if(ex&&ex.dataset.owner&&owner&&ex._menu&&ex._anchor){   // 호버 드롭다운이 이미 열림 = 모핑 축
+    if(ex._anchor===anchor)return;                          // 같은 메뉴 재호출 = 유지(깜빡 방지)
+    _ddMorph(ex,anchor,builder,minW,owner);return;          // 다른 메뉴 = 모핑 전환
+  }
+  _ddCloseAll();
+  const r=anchor.getBoundingClientRect();
+  const m=document.createElement('div');m.id='dd-pop';
+  if(owner)m.dataset.owner=owner;   // 호버 전환 판정용 소유 메뉴 id (같은 메뉴 재호버=유지, 다른 메뉴=전환)
+  // 오버레이는 nav(56px) 아래만 덮는다 — nav 위까지 덮으면 다른 메뉴 호버 mouseenter가 막혀 메뉴 간 전환 불가(운영자 260709 "호버 원활 안 함"). 본문 클릭 닫기·nav 통과는 유지.
+  m.style.cssText='position:fixed;top:56px;left:0;right:0;bottom:0;z-index:99999;background:transparent';
+  const menu=document.createElement('div');menu.className='dd-menu';
+  // 글래스 값 = 기존 그대로 · padding/min-width는 패널로 이동, overflow:hidden = 패널 슬라이드 뷰포트(navigation-01 viewport 문법)
+  menu.style.cssText='position:fixed;top:'+(r.bottom+8)+'px;left:'+Math.max(12,r.left)+'px;max-width:94vw;background:var(--glass-menu);backdrop-filter:blur(9px) saturate(150%);-webkit-backdrop-filter:blur(9px) saturate(150%);border:1px solid rgba(0,0,0,0.06);border-radius:14px;box-shadow:0 16px 48px rgba(74,77,231,0.18),0 4px 14px rgba(0,0,0,0.08);overflow:hidden;transform-origin:top left;animation:'+(window.innerWidth<=768?'ddFold .55s cubic-bezier(.215,.61,.355,1)':'acctDrop .22s cubic-bezier(.26,1.2,.5,1)');   // [260723 운영자] 모바일 = 말림 등장(ddFold · 햄버거 패널과 통일) · 데스크탑 = 기존 acctDrop
+  const panel=_ddPanel(builder,minW);
+  menu.appendChild(panel);
+  m.appendChild(menu);document.body.appendChild(m);
+  menu.style.width=panel.offsetWidth+'px';menu.style.height=panel.offsetHeight+'px';   // 실측 고정 = 이후 모핑 전이의 시작점
+  menu.style.left=_ddLeftFor(r,panel.offsetWidth)+'px';   // [260731] 폭 실측 후 좌측 정렬 확정(넘치면 화면 안으로 클램프)
+  panel.classList.add('is-active');
+  m._menu=menu;m._anchor=anchor;
+  if(owner){   // 호버 드롭다운 — 메뉴 위는 유지(닫기 예약 취소), 벗어나면 지연 닫기(버튼↔메뉴 갭 커버). 클릭 드롭다운(관리자)엔 미적용.
+    anchor.setAttribute('aria-expanded','true');
+    menu.addEventListener('mouseenter',function(){clearTimeout(window._ddHovT2);});
+    menu.addEventListener('mouseleave',function(){clearTimeout(window._ddHovT2);window._ddHovT2=setTimeout(_ddCloseAll,160);});
+  }
+  // 바깥 클릭 = 닫기. 단 전면 오버레이(z99999)가 nav(z20)를 덮어 다음 클릭을 삼키는 문제(분신술 HIGH: 호버 자동오픈 후 "메뉴 안 눌림")
+  // → 닫은 뒤 클릭 지점 밑이 nav 버튼류면 그 버튼으로 클릭을 통과시켜 한 번에 열리게 한다.
+  m.addEventListener('click',function(e){
+    if(e.target!==m)return;
+    _ddCloseAll();
+    try{ var t=document.elementFromPoint(e.clientX,e.clientY);
+      var nb=t&&t.closest?t.closest('.nav-btn,.icon-btn,.msgbox-btn,.hamburger,.pres-ava,.nav-logo,.welcome-msg,.role-tag,#wx-widget'):null;
+      if(nb)nb.click(); }catch(_e){}
+  });
+}
+// 설정(관리) 드롭다운 — 관리자 패널 모달 대신 버튼 아래 메뉴
+var _adminGroups=[{name:'시스템 관리',items:[['logs','로그 조회'],['platform','플랫폼 관리'],['users','사용자 관리'],['security','보안 관리']]},{name:'사업 관리',items:[['bizplan','기획 사업 관리'],['progplan','프로그램 관리']]},{name:'홍보 관리',items:[['applysettings','신청 일정 관리']]}];
+function _adminMarkup(){return _adminGroups.map(function(g,i){return '<section aria-label="'+g.name+'" style="'+(i?'border-top:1px solid var(--border);margin-top:8px;padding-top:8px;':'')+'"><div style="padding:8px 14px 6px;font-size:11px;color:var(--dim);font-weight:700">'+g.name+'</div>'+g.items.map(function(it){return '<button type="button" class="admin-menu-entry" data-admin-route="'+it[0]+'" style="display:block;width:100%;padding:10px 14px;border:0;background:none;text-align:left;font-size:13px;font-weight:600;color:var(--text);border-radius:9px;cursor:pointer;font-family:inherit">'+it[1]+'</button>';}).join('')+'</section>';}).join('');}
+function _adminBind(root){root.querySelectorAll('[data-admin-route]').forEach(function(btn){btn.onmouseenter=function(){btn.style.background='var(--past-bg)';};btn.onmouseleave=function(){btn.style.background='none';};btn.onclick=function(){var id=btn.getAttribute('data-admin-route');_ddCloseAll();if(id==='security')openLockSettings();else adminRoute(id);};});}
+function _ddAdmin(btn){_ddOpen(btn,function(menu){menu.innerHTML=_adminMarkup();_adminBind(menu);});}
+
+function showLogoutModal(){
+  // (260611) 중앙 모달 → 이름 아래 드롭다운 · [260723 운영자] navigation-01 통일 — 자체 복제 코드 대신 _ddOpen 합류(같은 글래스·패널·항목 pill·모바일 말림 문법 공유)
+  const anchor=document.getElementById('welcome-msg')||document.getElementById('role-tag');
+  _ddOpen(anchor,function(menu){
+    const item=function(label,fn,extra){
+      const b=document.createElement('button');b.type='button';b.textContent=label;
+      b.style.cssText='display:block;width:100%;padding:10px 14px;border:0;background:none;text-align:left;font-size:13px;font-weight:600;color:var(--ink);border-radius:9px;cursor:pointer;font-family:inherit;transition:background .12s;'+(extra||'');
+      b.onclick=fn;return b;
+    };
+    let _nm='';try{_nm=sessionStorage.getItem('myApplicant')||'';}catch(_e){}
+    const hd=document.createElement('div');hd.style.cssText='padding:8px 14px 6px;font-size:11px;color:#999;font-weight:700';hd.textContent=(_nm?_nm+' 님':'계정')+(userRole==='admin'?' · 관리자':' · 일반');
+    menu.appendChild(hd);
+    if(userRole==='admin')menu.appendChild(item('설정 (관리)',function(){_ddCloseAll();openAdminPanel();}));
+    menu.appendChild(item('사용자 전환',function(){_doSwitchUser();}));
+    menu.appendChild(item('로그아웃',function(){_doLogout();},'color:#e53935'));
+    menu.appendChild(item('취소',function(){_ddCloseAll();},'color:#aaa;font-weight:500;font-size:12px'));
+  },176);
+}
+function closeLogoutModal(){ _ddCloseAll(); }   // 합류 후 별칭 유지(_doSwitchUser 등 기존 호출부 무수정)
+async function _doSwitchUser(){
+  closeLogoutModal(); _stopIdleTimer();
+  try{ sessionStorage.removeItem('pw'); sessionStorage.removeItem('role'); sessionStorage.removeItem('subAdminPin'); sessionStorage.removeItem('myApplicant'); sessionStorage.removeItem('myUserDept'); sessionStorage.removeItem('_lockedAt'); }catch(e){}
+  password=''; userRole='user';
+  const app=document.getElementById('app'); if(app)app.style.display='none';
+  const login=document.getElementById('login'); if(login)login.style.display='';
+  try{
+    const email=await _msalLoginEmail();
+    if(email){ try{localStorage.setItem('_resumePin',email);}catch(e){} location.reload(); }
+    else { initLoginScreen(); }
+  }catch(e){ console.warn('[switchUser]',e); initLoginScreen(); }
+}
+async function _doLogout(){
+if(window.YMAuth){return window.YMAuth.logout();}
+
+  closeLogoutModal(); _stopIdleTimer();
+  try{ sessionStorage.removeItem('pw'); sessionStorage.removeItem('role'); sessionStorage.removeItem('subAdminPin'); sessionStorage.removeItem('myApplicant'); sessionStorage.removeItem('myUserDept'); sessionStorage.removeItem('_lockedAt'); }catch(e){}
+  try{ await _msalLogout(); }catch(e){ console.warn('[logout msal]',e); }
+  location.reload();
+}
+var _idleTimer=null, _idleBound=false, _locked=false;
+// IDLE_MS is declared above the session-restore IIFE (see ~line 1795) so reload-time resetIdleTimer gets the real value, not undefined.
+function resetIdleTimer(){
+  if(_idleTimer)clearTimeout(_idleTimer);
+  const app=document.getElementById('app');
+  if(_idleLockDisabled){return;} if(app && app.style.display!=='none' && !_locked){ _idleTimer=setTimeout(lockScreen, IDLE_MS||30*60*1000); }
+}
+function _stopIdleTimer(){ if(_idleTimer){clearTimeout(_idleTimer);_idleTimer=null;} }
+function _bindIdleEvents(){
+  if(_idleBound)return; _idleBound=true;
+  ['mousemove','keydown','mousedown','touchstart','scroll'].forEach(function(ev){ document.addEventListener(ev, resetIdleTimer, {passive:true}); });
+}
+function lockScreen(){
+if(window.YMAuth){return window.YMAuth.lock();}
+
+  if(window._OPEN_ENTRY){ _stopIdleTimer(); return; }   // [260812 운영자 「잠금 기능 아예 없애고」] 전면 개방 = 잠금 자체를 걸지 않는다(유휴 타이머·수동 잠금·F5 복원 도장 전부 무효)
+  _stopIdleTimer(); _locked=true;
+  try{sessionStorage.setItem('_lockedAt',String(Date.now()));}catch(e){}   // [260721] 잠금 도장 — F5 세션복원 IIFE가 이 도장을 보면 앱 직행 대신 잠금화면 유지(새로고침 우회 봉쇄). 해제 성공(_enterApp)·로그아웃(_doLogout)이 제거
+  try{if(typeof _memPurge==='function')_memPurge();}catch(e){}   // 회원 PII 모달은 body 직속(z 2000)이라 #app 숨김만으론 잠금화면 위에 남음(분신술 보안 MED-4) — 잠금 시 소거
+  const app=document.getElementById('app'); if(app)app.style.display='none';
+  const login=document.getElementById('login'); if(login){login.style.display='';login.classList.remove('login-leave');}
+  try{var _lkc=document.querySelector('.login-card');if(_lkc)_lkc.classList.remove('lc-lift');}catch(e){}  // 진입 연출 잔류 클래스 방어 청산
+  if(typeof startLoginShader==='function'){try{startLoginShader();}catch(e){}}
+  const a=document.getElementById('account-step'); if(a)a.style.display='none';
+  const ps=document.getElementById('pin-step'); if(ps)ps.style.display='';
+  const pa=document.getElementById('pin-account'); if(pa)pa.innerHTML='<b style="color:var(--peach-text)">'+escapeHtml(_loginEmail||'')+'</b>';
+  const lm=document.getElementById('login-msg'); if(lm){ lm.textContent=(Math.round((IDLE_MS||1800000)/60000))+'분간 입력이 없어 잠금되었습니다'; lm.style.color='#e53935'; lm.style.fontSize='11px'; lm.style.marginTop='6px'; }
+  const ll=document.getElementById('login-load'); if(ll)ll.textContent='';
+  _pinClear(false);
+  if(typeof _pinFocusFirst==='function')_pinFocusFirst(); else if(pins[0])pins[0].focus();   // [260714] 잠금 재진입도 견고화 포커스로 통일(경로 일관성)
+  if(typeof _pinFirstHintStart==='function')_pinFirstHintStart();   // [분신술 260710 감사5] 잠금 재진입도 PIN 진입 — 첫 칸 안내 링 발동(경로 일관성)
+  try{if(typeof _plKick==='function')_plKick();}catch(_e){}   // [로그인 프리로드] F5 잠금 복원(_lockedAt 도장) = 해제 즉시 initApp 재로딩 → 그 데이터 선출발(_appEnteredAt 가드가 앱 사용 중 유휴 잠금은 자동 제외)
+}
+function toggleMobileNav(){
+  const c=document.getElementById('nav-menus');if(!c)return;
+  if(c.classList.contains('mobile-open')){closeMobileNav();return;}
+  c.classList.add('mobile-open');
+  const h=document.querySelector('.hamburger');if(h){h.classList.add('is-open');h.setAttribute('aria-expanded','true');}   // navigation-01 이식 — 2줄 → X 모프
+}
+function closeMobileNav(){
+  const c=document.getElementById('nav-menus');
+  if(c){c.classList.remove('mobile-open');
+    c.querySelectorAll('.nav-acc.is-expanded').forEach(function(a){a.classList.remove('is-expanded');});   // 아코디언 원복 — 다음 오픈 = 접힌 상태
+    c.querySelectorAll('.nav-btn.acc-on').forEach(function(x){x.classList.remove('acc-on');x.removeAttribute('aria-expanded');});}
+  const h=document.querySelector('.hamburger');if(h){h.classList.remove('is-open');h.setAttribute('aria-expanded','false');}
+}
+// [260731 운영자] "지나가는 중에는 안 열리게" — 포인터 속도 기반 의도 판정(hover intent).
+//   느리게(=겨냥해서) 들어오면 지연 0으로 즉시 열고, 빠르게 스쳐 지나가는 중이면 열지 않는다.
+//   스쳐가다 그 메뉴에서 멈추거나 느려지면 그 순간 열림 — '못 열리는 메뉴'는 없음.
+//   [260731 운영자 "자연스럽게 · 프레임 높게"] 재판정 = 고정 타이머가 아니라 **매 프레임(requestAnimationFrame)** — 디스플레이 주사율(60/120Hz)을 그대로 타서
+//   느려지는 순간 같은 프레임에 열린다. 등장 모션 자체는 260723 navigation-01 이식 정본(.nav-hover-bg L228 · .dd-menu/.dd-panel linear() 스프링) 무접촉 계승.
+//   조절값 = 아래 상수 3개뿐(신규 CSS·색 0).
+var _NAV_HOV_SLOW=0.55,    // px/ms(=550px/s) 이하 = '의도' 판정 → 즉시 열기
+    _NAV_HOV_IDLE=70,      // ms — 이만큼 mousemove가 없으면 '멈춤'(속도 0)으로 간주 = 급히 와서 딱 멈춘 경우 즉시 열림
+    _NAV_HOV_SMOOTH=0.4,   // 속도 EMA 계수 — 매 프레임 재판정이라 한 샘플의 튐(이벤트 병합·손떨림)으로 오판하지 않게 평활
+    _navPtr={x:0,y:0,t:0,v:0};
+document.addEventListener('mousemove',function(e){
+  var n=(window.performance&&performance.now)?performance.now():Date.now(),dt=n-_navPtr.t;
+  if(dt>0&&_navPtr.t){
+    var dx=e.clientX-_navPtr.x,dy=e.clientY-_navPtr.y,iv=Math.sqrt(dx*dx+dy*dy)/dt;
+    _navPtr.v+=(iv-_navPtr.v)*_NAV_HOV_SMOOTH;   // 멈춤 판정은 _navPtrV()의 무이벤트 시간이 담당(여기서 0으로 덮으면 큰 점프를 '느림'으로 오판)
+  }
+  _navPtr.x=e.clientX;_navPtr.y=e.clientY;_navPtr.t=n;
+},{passive:true});
+function _navPtrV(){   // 현재 포인터 속도 — 마지막 mousemove가 오래됐으면 '멈춤'(0)
+  var n=(window.performance&&performance.now)?performance.now():Date.now();
+  return (!_navPtr.t||n-_navPtr.t>_NAV_HOV_IDLE)?0:_navPtr.v;
+}
+function _navHovStop(b){ if(b&&b._hovRAF){cancelAnimationFrame(b._hovRAF);b._hovRAF=0;} }   // 보류 중 프레임 루프 취소
+function buildNav(){
+  const c=document.getElementById('nav-menus');c.innerHTML='';
+  const hb=document.createElement('div');hb.className='nav-hover-bg';c.appendChild(hb);   // navigation-01 이식 — 호버 배경 pill(살몬 언더바 = 260723 폐지)
+  // [260731 2차] 회원 관리 대메뉴 폐지 — 개인정보(운영_회원) admin 게이트는 세부메뉴(_bizMenuBuild 회원 분포) + open* 함수 자체 게이트가 계속 담당
+  const menus=(userRole==='admin'?[...MENUS.filter(function(m){return m.id!=='promo';})]:MENUS);
+  // 관리(admin)는 nav-center 메뉴에서 빼고 우상단 톱니 아이콘으로 이동 — admin에게만 노출
+  var _gear=document.getElementById('admin-gear'); if(_gear)_gear.style.display=(userRole==='admin')?'flex':'none';
+  var _pw=document.getElementById('pres-wrap'); if(_pw)_pw.style.display=(userRole==='admin')?'block':'none';
+  var _mw=document.getElementById('memo-wrap'); if(_mw)_mw.style.display='block';  // 메모는 전체 사용자
+  menus.forEach(m=>{
+    const b=document.createElement('button');
+    var _mv=(typeof _mainView!=='undefined')?_mainView:'biz';   // [260723] 대시보드/캘린더 활성 = 현재 메인뷰 반영(구 캘린더 하드코딩 on 폐지 — 기본값 = 대시보드)
+    // [260812] 대시보드 대메뉴가 둘(판매 현황·사업 개요)이라 뷰만으로는 어느 쪽을 켤지 못 정한다 → 덱까지 본다.
+    var _dk=(typeof _bizDeck!=='undefined')?_bizDeck:'sales';
+    var _mvOn=((_mv==='biz'&&m.id===_BIZ_DECK_MID[_dk])||(m.id==='cal'&&_mv==='cal')||(m.id==='aipromo'&&_mv==='mem'))?' on':'';   /* [260903 허브 페이지] */
+    b.className='nav-btn'+_mvOn+(m.id==='admin'?' nav-admin':'');b.dataset.mid=m.id;b.textContent=m.label;
+    b.onclick=()=>{
+      _navHovStop(b);  // 클릭 직후 보류 중이던 호버 프레임 루프가 뒤늦게 재오픈하지 않게
+      if(b._acc&&c.classList.contains('mobile-open')){   // [260723 운영자] navigation-01 모바일 — 세부메뉴 탭 = 인라인 아코디언 토글(단일 열림·라우팅 없음)
+        var _op=!b._acc.classList.contains('is-expanded');
+        c.querySelectorAll('.nav-acc.is-expanded').forEach(function(a){a.classList.remove('is-expanded');});
+        c.querySelectorAll('.nav-btn.acc-on').forEach(function(x){x.classList.remove('acc-on');x.removeAttribute('aria-expanded');});
+        if(_op){b._acc.classList.add('is-expanded');b.classList.add('acc-on');b.setAttribute('aria-expanded','true');}
+        return;
+      }
+      closeMobileNav();  // 메뉴 클릭 시 모바일 드롭다운 자동 닫힘
+      if(m.id==='biz'&&typeof setMainView==='function'){_bizDeckGo('sales');return;}   // [260723 운영자] 대시보드 = 사업 실적 메인 전환 · 활성표시 = _mvSync가 .nav-btn.on 동기(기본값) · [260812] 덱 기록 경유
+      if(m.id==='bizov'&&typeof setMainView==='function'){_bizDeckGo('ov');return;}     // [260812 운영자] 사업 개요 = 같은 화면·다른 덱(지금은 내용 동일)
+      if(m.id==='cal'&&typeof setMainView==='function'){setMainView('cal');return;}   // [260723 운영자] 캘린더 = 서브(촤르륵 슬라이드 전환) · 활성표시 = _mvSync 동기
+      if(m.id==='content'){_ddOpen(b,_contentMenuBuild,210,'content');return;}
+      if(m.id==='annual'){openAnnualCalendar();return;}
+      if(m.id==='admin'){openAdminPanel();return;}
+      if(m.id==='aipromo'){openMemberOverview();return;}   // 고객 관리 기본 진입 = 기존 고객 분석 모달
+      if(m.id==='platform'){openPlatformBoard();return;}
+      if(m.id==='playzone'){_ddOpen(b,_playzoneMenuBuild,210,'playzone');return;}   // [260803] sales 분기 제거 — 판매 현황 대메뉴 폐지(세부는 _bizMenuBuild로 이관)
+      document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    };
+    // 세부메뉴 보유 메뉴 = 호버 즉시 드롭다운(운영자 260709 "바로" — 스침 오발 방지 가드 120ms만). 다른 팝업이 열려 있으면 안 뺏음.
+    // [260731] 대메뉴 4종 전부 세부 보유(대시보드·캘린더는 클릭=화면 전환 + 호버=세부 — 구 prodreg "둘다" 패턴)
+    var _sub=(m.id==='content')?_contentMenuBuild:(m.id==='biz')?_salesDashboardMenuBuild:(m.id==='bizov')?_bizMenuBuild:(m.id==='cal')?_calMenuBuild:(m.id==='aipromo')?_aipromoMenuBuild:(m.id==='playzone')?_playzoneMenuBuild:null;   // [260803] sales(_salesMenuBuild) 제거 — 대메뉴 폐지 · [260807] aipromo 세부 3종 신설(운영자) · [260812] bizov = **같은 빌더**(세부메뉴도 복제 = 운영자 「똑같이 복제」 · 갈라낼 땐 여기서 다른 빌더로)
+    if(_sub){ b.setAttribute('aria-haspopup','true');   // navigation-01 이식 — 세부메뉴 보유 표시(a11y · 딤 축과 동일 문법)
+      // [260723 운영자] navigation-01 모바일 문법 — 세부메뉴 = 인라인 아코디언(내용 = 데스크탑 드롭다운과 같은 빌더 재사용 · 항목 탭 = 패널 닫고 이동)
+      var _acc=document.createElement('div');_acc.className='nav-acc';
+      var _accI=document.createElement('div');_accI.className='nav-acc-inner';
+      var _accP=document.createElement('div');_accP.className='nav-acc-panel';
+      _sub(_accP);_accI.appendChild(_accP);_acc.appendChild(_accI);
+      _accP.addEventListener('click',function(e){ if(e.target.closest('button'))closeMobileNav(); });
+      b._acc=_acc;
+    }
+    b.onmouseenter=()=>{ if(c.classList.contains('mobile-open'))return;   // 모바일 패널 = 호버 축 비활성(탭 mouseenter 오발로 데스크탑 드롭다운 열림 차단)
+      _navHoverBgTo(b); clearTimeout(window._ddHovT2);   // 메뉴로 넘어오면 닫기 예약 취소
+      // [260731 운영자] "세부가 있으면 마우스 호버하면 바로 내려오게" — 구 120ms 일괄 가드 폐지.
+      //   대신 속도 판정(_navPtrV): 겨냥해서 들어오면 지연 0 즉시 · 스쳐 지나가는 중이면 안 염(멈추면 그때 열림).
+      if(_sub){ _navHovStop(b);
+        var _openSub=function(){
+          var _ddH=document.getElementById('dd-pop');
+          if(_ddH&&_ddH.dataset.owner===m.id)return;   // 이미 이 메뉴 열림 = 유지(깜빡 방지)
+          _ddOpen(b,_sub,210,m.id);                    // 없거나 다른 메뉴 = 열기/전환
+        };
+        if(_navPtrV()<=_NAV_HOV_SLOW){_openSub();return;}   // 느린 진입 = 의도 → 즉시
+        (function _frame(){ b._hovRAF=requestAnimationFrame(function(){   // 스쳐가는 중 = 보류 · 재판정은 매 프레임
+          if(!b.matches(':hover')){b._hovRAF=0;return;}                   // 이미 지나감 = 취소(mouseleave도 _navHovStop)
+          if(_navPtrV()<=_NAV_HOV_SLOW){b._hovRAF=0;_openSub();return;}   // 느려짐 = 그 프레임에 열기
+          _frame();
+        }); })();
+      }
+      else { var _dd=document.getElementById('dd-pop'); if(_dd&&_dd.dataset.owner){ clearTimeout(window._ddHovT2); window._ddHovT2=setTimeout(_ddCloseAll,160); } }   // 세부메뉴 없는 버튼 호버 = 열린 호버 드롭다운 닫기 예약
+    };
+    b.onmouseleave=()=>{ _navHovStop(b); };   // [260731] 보류 중 프레임 루프 취소 — 지나간 뒤 뒤늦게 열리는 일 없음
+    c.appendChild(b);
+    if(b._acc)c.appendChild(b._acc);   // 아코디언 = 버튼 바로 아래 형제(데스크탑 = display:none · 모바일 = grid)
+  });
+  c.onmouseleave=()=>{
+    hb.classList.remove('is-visible');   // navigation-01 이식 — 메뉴 영역 벗어나면 호버 배경 pill 페이드 아웃
+    var _dd=document.getElementById('dd-pop'); if(_dd&&_dd.dataset.owner){ clearTimeout(window._ddHovT2); window._ddHovT2=setTimeout(_ddCloseAll,160); }};   // nav 벗어남 = 호버 드롭다운 닫기 예약(드롭다운으로 내려가면 menu mouseenter가 취소)
+  try{_bnavBuild();}catch(_e){}  // 모바일 하단 네비 (role별 재구성)
+}
+// (movePill 살몬 언더바 = 260723 폐지 — 활성 표시 = .nav-btn.on 흰 800 · 호버 표시 = _navHoverBgTo)
+// [260723 운영자] details.so navigation-01 이식 — 상단 메뉴 호버 배경 pill: 항목 간 슬라이드, 첫 등장은 제자리 페이드(is-instant). 색 = 흰 알파 변주(.nav .arrow:hover 동일값) · 살몬 언더바(확정 조합)는 무접촉 공존
+function _navHoverBgTo(btn){
+  const c=btn.parentElement,hb=c&&c.querySelector('.nav-hover-bg');if(!hb)return;
+  const vis=hb.classList.contains('is-visible');
+  if(!vis)hb.classList.add('is-instant');
+  hb.style.left=btn.offsetLeft+'px';hb.style.top=btn.offsetTop+'px';hb.style.width=btn.offsetWidth+'px';hb.style.height=btn.offsetHeight+'px';
+  if(!vis){void hb.offsetWidth;hb.classList.add('is-visible');requestAnimationFrame(function(){hb.classList.remove('is-instant');});}
+}
+
+// 관리자 패널 (Phase 3B~3E에서 각 서브메뉴 구현 예정)
+function openAdminPanel(){if(userRole!=='admin')return;var el=document.getElementById('admin-panel');if(!el){el=document.createElement('div');el.id='admin-panel';document.body.appendChild(el);}el.innerHTML='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeAdminPanel)"><div class="modal admin-modal" style="width:440px;position:relative"><button class="modal-x" onclick="closeAdminPanel()" aria-label="닫기">✕</button>'+_mhead('관리','관리할 항목을 선택하세요')+_adminMarkup()+'</div></div>';_adminBind(el);}
+function closeAdminPanel(){const el=document.getElementById('admin-panel');if(el)el.innerHTML='';}
+// [260724 운영자] 자동 잠금 시간 = 톱니(관리) 드롭다운의 독립 항목(전용 모달). 관리 6개(데이터 관리 화면)와 성격이 다른 시스템 설정이라 '설정 관리' 패널 종속에서 분리 — 향후 관련 설정 모이면 이 자리가 '시스템 설정' 그룹. 값·저장 로직(_lockMinChange·cfg:lock_minutes)은 공용. 모달 골격 = openAdminPanel 계승(색은 var 토큰 → 신규 raw hex 0).

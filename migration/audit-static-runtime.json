@@ -1,0 +1,8 @@
+{
+  "mode": "Read-only static preview",
+  "observed": "Local Microsoft login screen rendered; backend and authentication not configured",
+  "screenshot": "screenshots/local-login.png",
+  "fullApplicationVerified": false,
+  "authenticationBypassed": false,
+  "note": "Earlier DOM-proxy stylesheet flags were inconclusive and are not used as evidence. Final CDP check was interrupted by user handoff."
+}

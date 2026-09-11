@@ -1,0 +1,905 @@
+1634:         픽토그램 교체 길은 260805-15 「정본 글자 `✕` 복원」과 충돌해 쓰지 않는다. */
+1635: .modal:has(>.mhead button)>.modal-x{top:18px}
+1636: .modal:has(>.mhead .modal-x[aria-label="최소화"])>.modal-x{top:19.33px}
+1637: /* [260805-30 운영자 「정리해줘」] 머리줄 예약폭 매직넘버(74/106/112/130/200) 폐지 —
+1638:    닫기 `✕`만 절대 자리(right:22)에 남기고 **나머지 버튼은 밴드 안 흐름**으로 넣는다(`_mhead`의 extra).
+1639:    그러면 `.mhead`의 오른쪽 예약은 **언제나 74px 하나**뿐 = 패리티 갈래가 자리 수만큼 늘어나던 축이 붕괴한다.
+1640:    (구조: `.mhead`는 flex-wrap이라 자리가 모자라면 부제가 다음 줄로 내려가고 버튼은 첫 줄 오른쪽에 남는다) */
+1641: .mhead .modal-x,.mhead .bp-x{position:static;float:none;margin:0;flex:none;top:auto;right:auto}
+1642: /* [260805-31 운영자 「버튼을 흰색으로 하지말고 불편사항 관리에 있는 스타일로」] 밴드 위 버튼은 **한 가지 쉼 상태**뿐 —
+1643:    흰 알파 `.12` + 흰 잉크 + 테두리·그림자·blur 0(= 「불편사항 관리」 머리줄의 뒤로·닫기 실측값).
+1644:    ⚠ 구 `.bp-x`(에니어그램 4개)는 `--glass-surface .78` + 어두운 잉크 + 1px 테두리 + blur(8px) + 그림자라
+1645:    밴드 위에서 **흰 알약으로 튀었다**(실측). 회원 분포 명부 버튼도 같은 축. 둘 다 여기로 흡수한다.
+1646:    호버 = **살짝만**(운영자 「호버한 느낌만」) 흰 알파 `.12`→`.25` = 이미 있는 스텝, 형태·크기는 그대로. */
+1647: .mhead .modal-x,.mhead .bp-x{background:rgba(255,255,255,.12);color:var(--surface-solid);
+1648:   width:32px;height:32px;border:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+1649: .mhead .modal-x:hover,.mhead .bp-x:hover{background:rgba(255,255,255,.25);color:var(--surface-solid);border-color:transparent}
+1650: /* [260805-29 운영자 「방금 시안 준대로」 → 「그거로 전 구간 통일」] SSOT 픽토그램 공용 크기 —
+1651:    자리마다 다른 버튼 글자 크기를 **그대로 상속**한다(em). 머리줄 `.modal-x`는 13px → 14.95px ≈ 시안 채택값 15px,
+1652:    캘린더 `.arrow`(18px)·레일 버튼 등은 각자 자기 크기로 자동으로 맞는다 = 자리마다 수치를 다시 정하지 않는다. */
+1653: .nm-ico{width:1.15em;height:1.15em;display:block;flex:none}
+1654: .mv-nav{position:sticky;top:40px;float:right;clear:both;display:flex;gap:6px;margin:0 -8px 8px 0;z-index:10}
+1655: .mv-nav-btn{width:32px;height:32px;border-radius:50%;border:0;background:rgba(240,196,184,0.2);cursor:pointer;font-size:18px;color:#C97A11;display:flex;align-items:center;justify-content:center;transition:background .15s,color .15s,opacity .15s;line-height:1;padding:0}
+1656: .mv-nav-btn:hover:not(:disabled){background:rgba(240,196,184,0.45);color:#A0610A}
+1657: .mv-nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+1658: .mini-tip{position:fixed;background:var(--ink);color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;z-index:99999;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,0.2);white-space:nowrap}
+1659: .mini-tip.action{pointer-events:auto;cursor:pointer;padding:8px 14px}
+1660: .mini-tip.action:hover{background:#222}
+1661: .mini-tip.action .arrow{color:var(--peach);margin-left:6px;font-weight:700}
+1662: @keyframes mini-tip-fade{0%{opacity:0;transform:translateY(-4px)}10%{opacity:1;transform:translateY(0)}85%{opacity:1}100%{opacity:0;transform:translateY(-4px)}}
+1663: .mini-tip{animation:mini-tip-fade 1.8s ease-out forwards}
+1664: .mini-tip.action{animation:mini-tip-fade 3s ease-out forwards}
+1665: /* === 캘린더 우클릭 컨텍스트 메뉴 === */
+1666: #cell-context-menu{position:fixed;z-index:99999;background:#fff;border-radius:10px;box-shadow:0 6px 24px rgba(0,0,0,0.18),0 0 0 1px rgba(0,0,0,0.06);padding:6px;min-width:180px;animation:ccm-fade .12s ease-out}
+1667: @keyframes ccm-fade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+1668: .ccm-item{padding:9px 14px;font-size:13px;color:var(--ink);border-radius:6px;cursor:pointer;display:flex;align-items:center;gap:8px;line-height:1}
+1669: .ccm-item:hover{background:rgba(74,77,231,0.08);color:var(--accent)}
+1670: .ccm-item .emo{font-size:14px;flex:0 0 18px;text-align:center}
+1671: .ccm-divider{height:1px;background:rgba(0,0,0,0.08);margin:4px 8px}
+1672: /* === read-only view (user) === */
+1673: .mv-date1{font-size:14px;color:var(--ink);font-weight:600;margin-bottom:18px}
+1674: .mv-section{display:flex;align-items:center;gap:6px;color:var(--accent);font-size:13px;font-weight:700;margin:18px 0 8px;letter-spacing:0.3px}
+1675: .mv-section:first-of-type{margin-top:6px}
+1676: .mv-row{display:flex;gap:8px;font-size:13px;color:var(--ink);margin:6px 0;line-height:1.5}
+1677: .mv-row .lbl{color:#888;font-size:12px;min-width:64px;flex-shrink:0}
+1678: .mv-row .val{flex:1;font-weight:500;word-break:break-all}
+1679: .mv-row .val.muted{color:#aaa;font-weight:400;font-style:italic}
+1680: .mv-platrow{font-size:13px;color:#555;font-weight:500;margin:6px 0}
+1681: .mv-title{font-size:15px;color:#222;font-weight:500;margin:6px 0 4px;line-height:1.4}
+1682: .mv-title .fmt{color:#888;font-size:12px;font-weight:500;margin-left:6px}
+1683: .mv-content{font-size:13px;color:#444;line-height:1.55;background:#fafafa;border-radius:8px;padding:10px 12px;max-height:54px;overflow-y:auto;white-space:pre-wrap;margin-top:6px}
+1684: /* === 조회 모달 — 자료 경로/홍보 내용 분리 + 하부 팝업 === */
+1685: .mv-link{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;background:rgba(74,77,231,0.07);border:1px solid rgba(74,77,231,0.18);border-radius:8px;color:var(--accent);font-weight:600;font-size:12px;cursor:pointer;transition:all .15s;max-width:100%;vertical-align:middle}
+1686: .mv-link:hover{background:rgba(74,77,231,0.13)}
+1687: .mv-link .tx{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:170px}
+1688: .mv-content-btn{display:flex;align-items:center;gap:8px;font-size:12.5px;background:#fafafa;border:1px solid rgba(0,0,0,0.07);border-radius:10px;padding:9px 12px;margin-top:6px;cursor:pointer;transition:all .15s;line-height:1.5}
+1689: .mv-content-btn:hover{background:rgba(74,77,231,0.05);border-color:rgba(74,77,231,0.2)}
+1690: .mv-content-btn .prev{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#666}
+1691: .mv-content-btn .go{flex-shrink:0;color:var(--accent);font-weight:600;font-size:11px;white-space:nowrap}
+1692: .sub-pop-bg{position:fixed;inset:0;background:rgba(26,26,46,0.35);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:9400;display:flex;align-items:center;justify-content:center;animation:fadeUp .18s ease}
+1693: .sub-pop{background:var(--surface-solid);border:1px solid var(--glass-border);border-radius:var(--radius-lg);width:430px;max-width:90vw;max-height:72vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(74,77,231,0.16),0 8px 24px rgba(0,0,0,0.10);animation:fadeUp .22s ease}
+1694: .sub-pop-hdr{display:flex;align-items:center;gap:8px;padding:14px 16px 12px 20px;border-bottom:1px solid rgba(0,0,0,0.06);flex-shrink:0}
+1695: .sub-pop-title{flex:1;font-size:14px;font-weight:700;color:var(--text)}
+1696: .sub-pop-copy{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border:1px solid var(--glass-bd);background:var(--glass-surface);backdrop-filter:blur(8px);box-shadow:var(--glass-shadow);border-radius:8px;font-size:11px;color:var(--text);cursor:pointer;transition:all .15s;font-family:inherit;white-space:nowrap}
+1697: .sub-pop-copy:hover{border-color:var(--accent);color:var(--accent);background:rgba(74,77,231,0.04)}
+1698: .sub-pop-close{width:28px;height:28px;border-radius:50%;border:none;background:rgba(0,0,0,0.05);color:#888;font-size:13px;cursor:pointer;flex-shrink:0}
+1699: .sub-pop-close:hover{background:rgba(0,0,0,0.1)}
+1700: .sub-pop-body{padding:14px 20px 18px;overflow-y:auto;font-size:13px;line-height:1.6;color:var(--ink)}
+1701: .sub-sec-h{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:0.4px;margin:14px 0 4px}
+1702: .sub-sec-h:first-child{margin-top:0}
+1703: .sub-sec-b{white-space:pre-wrap;word-break:break-word;color:#444}
+1704: .sub-path-row{display:flex;align-items:center;gap:8px;background:#fafafa;border:1px solid rgba(0,0,0,0.06);border-radius:10px;padding:9px 12px;margin-bottom:8px}
+1705: .sub-path-tx{flex:1;font-size:12px;color:#444;word-break:break-all;line-height:1.5}
+1706: /* === 조회 모달 인라인 펼침 (구 sub-pop 오버레이 대체) === */
+1707: .mv-inline-detail{margin:6px 0 2px;padding:12px 14px;background:#fafbff;border:1px solid rgba(74,77,231,0.14);border-radius:10px;font-size:13px;line-height:1.6;color:var(--ink);max-height:46vh;overflow-y:auto;animation:fadeUp .16s ease}
+1708: .mv-inline-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+1709: .mv-inline-title{flex:1;font-size:12px;font-weight:700;color:var(--text)}
+1710: .mv-inline-collapse{color:#999}
+1711: .mv-link.open .go,.mv-content-btn.open .go{color:#999}
+1712: /* === 챗봇 위젯 (우측 하단) — 리퀴드 폴리시 === */
+1713: .cb-fab{position:fixed;right:26px;bottom:26px;width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,#5B5EF0 0%,#4A4DE7 55%,#3A3DD0 100%);color:#fff;cursor:pointer;z-index:95;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 28px rgba(74,77,231,0.42),0 3px 10px rgba(0,0,0,0.12),inset 0 1px 0 rgba(255,255,255,0.25);transition:transform .22s cubic-bezier(.34,1.4,.64,1),box-shadow .22s;animation:cbPop .45s cubic-bezier(.34,1.56,.64,1) backwards}
+1714: .cb-fab:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 16px 36px rgba(74,77,231,0.5),0 4px 12px rgba(0,0,0,0.14)}
+1715: .cb-fab:active{transform:scale(0.94)}
+1716: .cb-fab svg{width:26px;height:26px;filter:drop-shadow(0 1px 2px rgba(0,0,0,0.15))}
+1717: .cb-fab::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:2px solid rgba(74,77,231,0.35);animation:cbPulse 2.6s ease-out 1s 3}
+6055:       var nb=t&&t.closest?t.closest('.nav-btn,.icon-btn,.msgbox-btn,.hamburger,.pres-ava,.nav-logo,.welcome-msg,.role-tag,#wx-widget'):null;
+6056:       if(nb)nb.click(); }catch(_e){}
+6057:   });
+6058: }
+6059: // 설정(관리) 드롭다운 — 관리자 패널 모달 대신 버튼 아래 메뉴
+6060: function _ddAdmin(btn){
+6061:   _ddOpen(btn,function(menu){
+6062:     // [260724 운영자] 버튼 생성 헬퍼로 추출(리터럴 1곳 유지 = raw hex 총량 무변) + 톱니 드롭다운에도 '설정 (관리)' 패널 입구 추가.
+6063:     //   사유: 펫 표시·자동 잠금 시간 등 전역설정이 openAdminPanel(설정 관리 패널)에 있는데, 관리자가 '설정'을 찾을 때 자연히 누르는 톱니엔 없어 오인 → 톱니에서도 바로 닿게.
+6064:     var _it=function(act,label){ return '<button type="button" onclick="'+act+'" style="display:block;width:100%;padding:10px 14px;border:0;background:none;text-align:left;font-size:13px;font-weight:600;color:var(--ink);border-radius:9px;cursor:pointer;font-family:inherit;transition:background .12s" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">'+label+'</button>'; };
+6065:     const items=[['logs','로그 조회'],['platform','플랫폼 관리'],['users','사용자 관리'],['bizplan','기획 사업 등록'],['progplan','프로그램 등록'],['applysettings','신청 일정 관리'],['qa','불편사항 관리']];   // [260905 운영자] 일정 반영(카페 운영 일정) 메뉴 제거   // [260804 운영자] 일정 반영 신설 — 받은 일정표(카페 운영시간표 등)를 앱 데이터로 옮기는 자리. 항목 목록은 openAdminPanel과 같은 순서로 유지
+6066:     menu.innerHTML='<div style="padding:8px 14px 6px;font-size:11px;color:#999;font-weight:700">관리</div>'
+6067:       + items.map(function(it){ return _it('_ddCloseAll();adminRoute(\''+it[0]+'\')',it[1]); }).join('')
+6068:       + '<div style="height:1px;background:var(--border);margin:6px 10px"></div>'
+6069:       + _it('_ddCloseAll();openLockSettings()','자동 잠금 시간')   // [260724 운영자] 시스템 설정 성격 = 관리 6개(데이터 화면)와 구분선으로 분리 · 향후 관련 설정 모이면 '시스템 설정' 그룹으로
+6070:       + _it('_ddCloseAll();openYeulPersona()','예울이 페르소나')   // [260803 운영자] 루시봇 컨셉 — AI 답변 말투 카드 조정(기본 = 레포 persona/yeuli.md)
+6071:       + _it('_ddCloseAll();openSearchMonitor()','검색량 확인');   // [260807 운영자] 검색 모니터링 열람 — 웹에 잡힌 예울마루(구글 알림·다음·KOPIS). 알림 아님 = 조회 화면(Q28)
+6072:   });
+6073: }
+6074: function showLogoutModal(){
+6075:   // (260611) 중앙 모달 → 이름 아래 드롭다운 · [260723 운영자] navigation-01 통일 — 자체 복제 코드 대신 _ddOpen 합류(같은 글래스·패널·항목 pill·모바일 말림 문법 공유)
+6076:   const anchor=document.getElementById('welcome-msg')||document.getElementById('role-tag');
+6077:   _ddOpen(anchor,function(menu){
+6078:     const item=function(label,fn,extra){
+6079:       const b=document.createElement('button');b.type='button';b.textContent=label;
+6080:       b.style.cssText='display:block;width:100%;padding:10px 14px;border:0;background:none;text-align:left;font-size:13px;font-weight:600;color:var(--ink);border-radius:9px;cursor:pointer;font-family:inherit;transition:background .12s;'+(extra||'');
+6081:       b.onclick=fn;return b;
+6082:     };
+6083:     let _nm='';try{_nm=sessionStorage.getItem('myApplicant')||'';}catch(_e){}
+6084:     const hd=document.createElement('div');hd.style.cssText='padding:8px 14px 6px;font-size:11px;color:#999;font-weight:700';hd.textContent=(_nm?_nm+' 님':'계정')+(userRole==='admin'?' · 관리자':' · 일반');
+6085:     menu.appendChild(hd);
+6086:     if(userRole==='admin')menu.appendChild(item('설정 (관리)',function(){_ddCloseAll();openAdminPanel();}));
+6087:     menu.appendChild(item('사용자 전환',function(){_doSwitchUser();}));
+6088:     menu.appendChild(item('로그아웃',function(){_doLogout();},'color:#e53935'));
+6089:     menu.appendChild(item('취소',function(){_ddCloseAll();},'color:#aaa;font-weight:500;font-size:12px'));
+6090:   },176);
+6091: }
+6092: function closeLogoutModal(){ _ddCloseAll(); }   // 합류 후 별칭 유지(_doSwitchUser 등 기존 호출부 무수정)
+6093: async function _doSwitchUser(){
+6094:   closeLogoutModal(); _stopIdleTimer();
+6095:   try{ sessionStorage.removeItem('pw'); sessionStorage.removeItem('role'); sessionStorage.removeItem('subAdminPin'); sessionStorage.removeItem('myApplicant'); sessionStorage.removeItem('myUserDept'); sessionStorage.removeItem('_lockedAt'); }catch(e){}
+6096:   password=''; userRole='user';
+6097:   const app=document.getElementById('app'); if(app)app.style.display='none';
+6098:   const login=document.getElementById('login'); if(login)login.style.display='';
+6099:   try{
+6100:     const email=await _msalLoginEmail();
+6101:     if(email){ try{localStorage.setItem('_resumePin',email);}catch(e){} location.reload(); }
+6102:     else { initLoginScreen(); }
+6103:   }catch(e){ console.warn('[switchUser]',e); initLoginScreen(); }
+6104: }
+6105: async function _doLogout(){
+6106:   closeLogoutModal(); _stopIdleTimer();
+6107:   try{ sessionStorage.removeItem('pw'); sessionStorage.removeItem('role'); sessionStorage.removeItem('subAdminPin'); sessionStorage.removeItem('myApplicant'); sessionStorage.removeItem('myUserDept'); sessionStorage.removeItem('_lockedAt'); }catch(e){}
+6108:   try{ await _msalLogout(); }catch(e){ console.warn('[logout msal]',e); }
+6109:   location.reload();
+6110: }
+6111: var _idleTimer=null, _idleBound=false, _locked=false;
+6112: // IDLE_MS is declared above the session-restore IIFE (see ~line 1795) so reload-time resetIdleTimer gets the real value, not undefined.
+6113: function resetIdleTimer(){
+6114:   if(_idleTimer)clearTimeout(_idleTimer);
+6115:   const app=document.getElementById('app');
+6116:   if(_idleLockDisabled){return;} if(app && app.style.display!=='none' && !_locked){ _idleTimer=setTimeout(lockScreen, IDLE_MS||30*60*1000); }
+6117: }
+6118: function _stopIdleTimer(){ if(_idleTimer){clearTimeout(_idleTimer);_idleTimer=null;} }
+6119: function _bindIdleEvents(){
+6120:   if(_idleBound)return; _idleBound=true;
+6121:   ['mousemove','keydown','mousedown','touchstart','scroll'].forEach(function(ev){ document.addEventListener(ev, resetIdleTimer, {passive:true}); });
+6122: }
+6123: function lockScreen(){
+6124:   if(window._OPEN_ENTRY){ _stopIdleTimer(); return; }   // [260812 운영자 「잠금 기능 아예 없애고」] 전면 개방 = 잠금 자체를 걸지 않는다(유휴 타이머·수동 잠금·F5 복원 도장 전부 무효)
+6125:   _stopIdleTimer(); _locked=true;
+6126:   try{sessionStorage.setItem('_lockedAt',String(Date.now()));}catch(e){}   // [260721] 잠금 도장 — F5 세션복원 IIFE가 이 도장을 보면 앱 직행 대신 잠금화면 유지(새로고침 우회 봉쇄). 해제 성공(_enterApp)·로그아웃(_doLogout)이 제거
+6127:   try{if(typeof _memPurge==='function')_memPurge();}catch(e){}   // 회원 PII 모달은 body 직속(z 2000)이라 #app 숨김만으론 잠금화면 위에 남음(분신술 보안 MED-4) — 잠금 시 소거
+6128:   const app=document.getElementById('app'); if(app)app.style.display='none';
+6129:   const login=document.getElementById('login'); if(login){login.style.display='';login.classList.remove('login-leave');}
+6130:   try{var _lkc=document.querySelector('.login-card');if(_lkc)_lkc.classList.remove('lc-lift');}catch(e){}  // 진입 연출 잔류 클래스 방어 청산
+6131:   if(typeof startLoginShader==='function'){try{startLoginShader();}catch(e){}}
+6132:   const a=document.getElementById('account-step'); if(a)a.style.display='none';
+6133:   const ps=document.getElementById('pin-step'); if(ps)ps.style.display='';
+6134:   const pa=document.getElementById('pin-account'); if(pa)pa.innerHTML='<b style="color:var(--peach-text)">'+escapeHtml(_loginEmail||'')+'</b>';
+6135:   const lm=document.getElementById('login-msg'); if(lm){ lm.textContent=(Math.round((IDLE_MS||1800000)/60000))+'분간 입력이 없어 잠금되었습니다'; lm.style.color='#e53935'; lm.style.fontSize='11px'; lm.style.marginTop='6px'; }
+6136:   const ll=document.getElementById('login-load'); if(ll)ll.textContent='';
+6137:   _pinClear(false);
+6138:   if(typeof _pinFocusFirst==='function')_pinFocusFirst(); else if(pins[0])pins[0].focus();   // [260714] 잠금 재진입도 견고화 포커스로 통일(경로 일관성)
+6139:   if(typeof _pinFirstHintStart==='function')_pinFirstHintStart();   // [분신술 260710 감사5] 잠금 재진입도 PIN 진입 — 첫 칸 안내 링 발동(경로 일관성)
+6140:   try{if(typeof _plKick==='function')_plKick();}catch(_e){}   // [로그인 프리로드] F5 잠금 복원(_lockedAt 도장) = 해제 즉시 initApp 재로딩 → 그 데이터 선출발(_appEnteredAt 가드가 앱 사용 중 유휴 잠금은 자동 제외)
+6141: }
+6142: function toggleMobileNav(){
+6143:   const c=document.getElementById('nav-menus');if(!c)return;
+6144:   if(c.classList.contains('mobile-open')){closeMobileNav();return;}
+6265: // 관리자 패널 (Phase 3B~3E에서 각 서브메뉴 구현 예정)
+6266: function openAdminPanel(){
+6267:   const items=[
+6268:     {id:'logs',label:'로그 조회',desc:'시스템 변경 이력'},
+6269:     {id:'platform',label:'플랫폼 관리',desc:'플랫폼 시트 CRUD'},
+6270:     {id:'users',label:'사용자 관리',desc:'담당자 + 여부 필터'},
+6271:     {id:'bizplan',label:'기획 사업 등록',desc:'연도별 기획 사업 · 정산 합계'},{id:'progplan',label:'프로그램 등록',desc:'사업에 붙여 등록 · 정산 입력'},
+6272:     {id:'applysettings',label:'신청 일정 관리',desc:'접수월 · 제외일자/시간 설정'},
+6273:     {id:'qa',label:'불편사항 관리',desc:'접수된 불편사항 확인·처리'}   // [260905 운영자] 일정 반영(카페) 항목 제거
+6274:   ];
+6275:   // 하단 펫 표시 토글 = 관리자(매니저) 노출. Worker POST가 checkAdmin(슈퍼 OR 서브admin PIN)로 정합 · 이 레포는 슈퍼admin 개념 폐기(role==='admin' 통일)라 admin=서브admin(PIN 보유) · openAdminPanel 자체가 admin 전용 · 분신술 재검증 260711(구 슈퍼전용 게이트 = 전원 미노출 오류 교정)
+6276:   var _petTogAdmin=(typeof userRole!=='undefined' && userRole==='admin');
+6277:   var _petTogHtml=_petTogAdmin?'<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div style="font-weight:700;font-size:13px">캘린더 하단 펫 표시</div><div style="font-size:11px;color:var(--dim)">공차는 애·크랩·LOVE 3마리 랜덤 등장 · 전역설정</div></div><label style="display:inline-flex;align-items:center;cursor:pointer;flex:0 0 auto"><input type="checkbox" id="pet-vis-toggle" onchange="_petToggle(this.checked)" style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent);margin:0"></label></div>':'';
+6278:   var _authTogHtml=_petTogAdmin?'<div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px"><div><div style="font-weight:700;font-size:13px">인증</div><div style="font-size:11px;color:var(--dim)">켜면 새 세션부터 기존 Microsoft 인증을 요구해요 · 기본 OFF</div></div><label style="display:inline-flex;align-items:center;cursor:pointer;flex:0 0 auto"><input type="checkbox" id="auth-gate-toggle" onchange="_authGateToggle(this.checked)" style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent);margin:0"></label></div>':'';
+6279:   const html='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeAdminPanel)"><div class="modal admin-modal" style="width:520px;position:relative"><button class="modal-x" onclick="closeAdminPanel()" title="닫기" aria-label="닫기">✕</button>'+_mhead('관리자 패널','관리할 항목을 골라 주세요')+'<div class="admin-modal-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">'+items.map(it=>'<button class="admin-item" data-id="'+it.id+'" style="text-align:left;padding:14px;border:1px solid var(--border);border-radius:12px;background:var(--surface-solid);cursor:pointer;transition:all .15s"><div style="font-weight:700;font-size:14px;margin-bottom:4px">'+it.label+'</div><div style="font-size:11px;color:#888">'+it.desc+'</div></button>').join('')+'</div>'+_authTogHtml+_petTogHtml+'</div></div>';
+6280:   let el=document.getElementById('admin-panel');
+6281:   if(!el){el=document.createElement('div');el.id='admin-panel';document.body.appendChild(el);}
+6282:   el.innerHTML=html;
+6283:   var _pvt=document.getElementById('pet-vis-toggle'); if(_pvt)_pvt.checked=!!_petsOn;   // 펫 표시 토글 = 현재 전역설정 반영
+6284:   var _agt=document.getElementById('auth-gate-toggle'); if(_agt)_agt.checked=!!_authGateEnabled;
+6285:   el.querySelectorAll('.admin-item').forEach(btn=>{
+6286:     btn.onmouseenter=()=>{btn.style.background='var(--peach-light)';btn.style.borderColor='var(--peach)';};
+6287:     btn.onmouseleave=()=>{btn.style.background='#fff';btn.style.borderColor='rgba(0,0,0,0.08)';};
+6288:     btn.onclick=()=>{adminRoute(btn.dataset.id);};
+6289:   });
+6290: }
+6291: function closeAdminPanel(){const el=document.getElementById('admin-panel');if(el)el.innerHTML='';}
+6292: // [260724 운영자] 자동 잠금 시간 = 톱니(관리) 드롭다운의 독립 항목(전용 모달). 관리 6개(데이터 관리 화면)와 성격이 다른 시스템 설정이라 '설정 관리' 패널 종속에서 분리 — 향후 관련 설정 모이면 이 자리가 '시스템 설정' 그룹. 값·저장 로직(_lockMinChange·cfg:lock_minutes)은 공용. 모달 골격 = openAdminPanel 계승(색은 var 토큰 → 신규 raw hex 0).
+6293: function openLockSettings(){
+6294:   var _cur=Math.max(1,Math.round((IDLE_MS||1800000)/60000));
+6295:   var _opts=[5,10,20,30,60]; if(_opts.indexOf(_cur)<0){ _opts.push(_cur); _opts.sort(function(a,b){return a-b;}); }   // 현재값이 프리셋에 없으면 포함해 선택 반영
+6296:   var _optHtml=_opts.map(function(m){return '<option value="'+m+'"'+(m===_cur?' selected':'')+'>'+m+'분</option>';}).join('');
+6297:   var html='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeLockSettings)"><div class="modal" style="width:400px;position:relative"><button class="modal-x" onclick="closeLockSettings()" title="닫기" aria-label="닫기">✕</button>'+_mhead('자동 잠금 시간','전역설정 · 모든 사용자에게 적용돼요')+'<div style="font-size:12px;color:var(--dim);margin-bottom:18px;line-height:1.6">아무 입력이 없으면 설정한 시간 뒤 잠금화면으로 전환됩니다. <b>전역설정</b>이라 모든 사용자에게 적용돼요.</div><div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div style="font-weight:700;font-size:13px">잠금까지</div><select id="lock-min-select" onchange="_lockMinChange(this.value)" style="width:auto;flex:0 0 auto;padding:8px 12px;font-size:13px">'+_optHtml+'</select></div></div></div>';
+6298:   var el=document.getElementById('admin-panel');
+6299:   if(!el){el=document.createElement('div');el.id='admin-panel';document.body.appendChild(el);}
+6300:   el.innerHTML=html;
+6301: }
+6302: function closeLockSettings(){var el=document.getElementById('admin-panel');if(el)el.innerHTML='';}
+6303: // ── [260807 운영자 「설정- 검색량 확인 하나 만들어서 리스트업 · 디자인은 사업 대시보드 공연 리스트와 동일한 느낌」] ──
+6304: //   검색 모니터링 열람 모달 — Worker sm* 축(/api/monitor/feed)이 매시 모아둔 「웹에 잡힌 예울마루」를 보여준다.
+6305: //   알림이 아니라 조회 화면(Q28 「홍보 알림 당분간 없애줘」 준수) · 모달 골격 = openLockSettings 계승(#admin-panel 공유) ·
+6306: //   표 문법 = _bizListTable 계승 — 머리글(sticky·--dim 12px·inset 하단선·좌 14px)·제브라(--past-bg)·행 하단선(--border)·
+6307: //   제목 1행 말줄임(max-width:0 + width:100% · 말줄임은 칸 자체에 — 래퍼 금지, 표 복사 쪼개짐 방지)·tabular-nums.
+6308: var _smwSrcName={google:'구글',kakao:'다음',kopis:'KOPIS',naver:'네이버'};
+6309: function openSearchMonitor(){
+6310:   var html='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeSearchMonitor)">'
+6311:     +'<div class="modal" style="width:920px;max-width:calc(100vw - 24px);position:relative">'
+6312:     +'<button class="modal-x" onclick="closeSearchMonitor()" title="닫기" aria-label="닫기">✕</button>'
+6313:     +_mhead('검색량 확인','웹에 잡힌 예울마루 — 구글 알림 · 다음(카카오) · KOPIS 공연')
+6314:     +'<div id="smw-sum" style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);margin-bottom:10px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:7px">'+_ldHtml(14)+' 불러오는 중</span></div>'
+6315:     +'<div id="smw-flt" style="display:none;gap:6px;flex-wrap:wrap;align-items:center;margin:0 0 10px"></div>'
+6316:     +'<div id="smw-body" style="max-height:min(58vh,540px);overflow:auto;border:1px solid var(--border);border-radius:12px"></div>'
+6317:     +'</div></div>';
+6318:   var el=document.getElementById('admin-panel');
+6319:   if(!el){el=document.createElement('div');el.id='admin-panel';document.body.appendChild(el);}
+6320:   el.innerHTML=html;
+6321:   _smwLoad();
+6322: }
+6323: function closeSearchMonitor(){var el=document.getElementById('admin-panel');if(el)el.innerHTML='';}
+6324: // [260807 운영자 「관련 없는것도 있어서 관련된 것만 추릴 수 있는지」] AI 선별 상태 — 서버 크론(sonnet 5 · KST 8·11·14·17시)이
+6325: //   최근 3일치에 새긴 rel(1 관련 · 0 제외 · 없음 미판정)을 칩으로 거른다. 판정이 하나도 없으면 칩 자체가 안 뜬다(종전 화면 그대로).
+6326: var _smwState={rows:[],judge:null,flt:null};
+6327: function _smwRelCnt(rows){ var c={rel:0,irr:0,un:0}; rows.forEach(function(x){ if(x.rel===1)c.rel++; else if(x.rel===0)c.irr++; else c.un++; }); return c; }
+6328: function _smwSetFlt(v){ _smwState.flt=v; _smwPaint(); }
+6329: async function _smwLoad(){
+6330:   var sum=document.getElementById('smw-sum'),body=document.getElementById('smw-body');
+6331:   if(!sum||!body)return;
+6332:   try{
+6333:     var d=await api('GET','/api/monitor/feed?limit=300');
+6334:     var rows=(d&&d.rows)||[];
+6335:     _smwState.rows=rows; _smwState.judge=(d&&d.judge)||null;
+6336:     var c=_smwRelCnt(rows);
+6337:     // 첫 진입 기본 = 관련만(지시 「관련된 것만」) — 단 **AI가 실제로 판정한 글**(KOPIS 자동 제외)이 있을 때만.
+6338:     //   자동분만으로 좁히면 아직 판정 전인 수집분 전체가 첫 화면에서 사라져 보인다(라이브 실측 260807: KOPIS 자동 11 · 미판정 60).
+6339:     var aiJudged=rows.some(function(r){return r.src!=='kopis'&&(r.rel===0||r.rel===1);});
+6340:     if(_smwState.flt===null)_smwState.flt=aiJudged?'rel':'all';
+6341:     var by={};rows.forEach(function(r){by[r.src]=(by[r.src]||0)+1;});
+6342:     var kst=function(iso){ var t=iso?new Date(iso):null; return (t&&!isNaN(t.getTime()))?t.toLocaleString('ko-KR',{timeZone:'Asia/Seoul',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}):null; };
+6343:     var atTxt=kst(d&&d.last&&d.last.at)||'아직 없음', jdTxt=kst(_smwState.judge&&_smwState.judge.at);
+6344:     sum.innerHTML='<span>마지막 수집 <b style="color:var(--text)">'+escapeHtml(atTxt)+'</b> · 총 <b style="color:var(--text)">'+rows.length+'건</b>'
+6345:       +Object.keys(by).map(function(k){return ' · '+escapeHtml((_smwSrcName[k]||k)+' '+by[k]);}).join('')
+6346:       +' · 매시 자동 수집'+(jdTxt?' · AI 선별 <b style="color:var(--text)">'+escapeHtml(jdTxt)+'</b>':'')+'</span><span style="flex:1 1 auto"></span>'
+6347:       +'<button type="button" class="btn btn--ghost btn--sm" onclick="_smwLoad()">새로고침</button>';
+6348:     _smwPaint();
+6349:   }catch(e){
+6350:     sum.innerHTML='<span style="color:var(--danger)">불러오지 못했어요 — '+escapeHtml(String((e&&e.message)||e).slice(0,80))+'</span>'
+6351:       +'<span style="flex:1 1 auto"></span><button type="button" class="btn btn--ghost btn--sm" onclick="_smwLoad()">다시 시도</button>';
+6352:     body.innerHTML='';
+6353:   }
+6354: }
+6355: // 선별 줄(**세그먼트 `.fbar-seg` 정본** — 기간 줄과 같은 빌더 `_chipRow` 한 벌) + 표를 지금 선별 상태로 그린다.
+6356: // ⚠ 260807-17에서 칩(.ana-chip) → 세그먼트로 통일했다: 관련/제외/미판정/전체는 **상호배타**라 「하나만」을 말하는 세그먼트가 맞다
+6357: //   (칩은 규범상 「여러 개 고를 수 있다」 — Primer·M3·Mobbin 실측). 근거 = docs/reports/260807_기간필터_세그먼트_규범실측.md
+6358: function _smwPaint(){
+6359:   var body=document.getElementById('smw-body'),fl=document.getElementById('smw-flt');
+6360:   if(!body)return;
+6361:   var rows=_smwState.rows,c=_smwRelCnt(rows),judged=c.rel+c.irr;
+6362:   if(fl){
+6363:     if(!judged)fl.style.display='none';
+6364:     else{
+6365:       var segs=[{v:'rel',t:'관련 '+c.rel},{v:'irr',t:'제외 '+c.irr}];
+6366:       if(c.un)segs.push({v:'un',t:'미판정 '+c.un});
+6367:       segs.push({v:'all',t:'전체 '+rows.length});
+6368:       fl.style.display='flex';
+6369:       fl.innerHTML=_chipRow('AI 선별',segs,_smwState.flt,'_smwSetFlt')
+6370:         +'<span style="font-size:11px;color:var(--muted)">sonnet 5 · 3시간마다(08~19시) 최근 3일치</span>';
+6371:     }
+6397:         +'<a href="'+escapeHtml(r.link||'#')+'" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;font-weight:600">'+escapeHtml(r.title||r.link||'—')+'</a></td>'
+6398:       +'<td style="padding:7px 12px 7px 22px;white-space:nowrap;color:var(--neutral-text)">'+escapeHtml(_smwSrcName[r.src]||r.src||'—')+'</td>'
+6399:       +'<td style="padding:7px 12px 7px 22px;white-space:nowrap;color:var(--neutral-text)">'+escapeHtml(r.kind||'—')+'</td>'
+6400:       +'<td style="padding:7px 14px 7px 22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:250px;color:var(--neutral-text)" title="'+escapeHtml(memo)+'">'+(memo?escapeHtml(memo):'<span style="color:var(--muted)">—</span>')+'</td>'
+6401:       +'</tr>';
+6402:   });
+6403:   return h+'</tbody></table>';
+6404: }
+6405: // [260803 운영자] 예울이 페르소나 조정 — 루시봇 카드 컨셉(카드 문장 = 곧 말투): 기본 = 레포 persona/yeuli.md(SSOT),
+6406: //   여기 적으면 이 기기에서만 오버라이드(localStorage — AI 요청에 동봉되어 카드 대신 주입). 모달 골격 = openLockSettings 계승.
+6407: function openYeulPersona(){
+6408:   var cur=_yeulAiPersona();
+6409:   var html='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeYeulPersona)"><div class="modal" style="width:520px;position:relative">'
+6410:     +'<button class="modal-x" onclick="closeYeulPersona()" title="닫기" aria-label="닫기">✕</button>'
+6411:     +_mhead('예울이 페르소나','AI 답변의 성격·말투 카드예요')
+6412:     +'<div style="font-size:12px;color:var(--dim);margin-bottom:12px;line-height:1.6">AI 답변(자유 질문)의 성격·말투 카드예요. <b>카드 문장이 곧 말투</b>가 됩니다(루시봇 방식).<br>비워두면 레포 카드(<b>persona/yeuli.md</b>)를 쓰고, 여기 적으면 <b>이 기기에서만</b> 이 내용이 우선해요. 규정·FAQ·집계 즉답에는 영향 없음.</div>'
+6413:     +'<textarea id="yeul-persona-ta" maxlength="6000" placeholder="예: 너는 예울마루 도우미 예울이. 밝고 정중한 존댓말, 답은 2~6문장, 이모지는 아주 가끔." style="width:100%;height:220px;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--r-btn);font-size:12.5px;font-family:inherit;resize:vertical;background:var(--surface-solid);color:var(--text)">'+_memEsc(cur)+'</textarea>'
+6414:     +'<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">'
+6415:     +'<button type="button" class="btn btn--neutral btn--md" onclick="_yeulPersonaSave(1)">비우기 — 레포 카드 사용</button>'
+6416:     +'<button type="button" class="btn btn--primary btn--md" onclick="_yeulPersonaSave()">저장</button>'
+6417:     +'</div></div></div>';
+6418:   var el=document.getElementById('admin-panel');
+6419:   if(!el){el=document.createElement('div');el.id='admin-panel';document.body.appendChild(el);}
+6420:   el.innerHTML=html;
+6421: }
+6422: function closeYeulPersona(){var el=document.getElementById('admin-panel');if(el)el.innerHTML='';}
+6423: function _yeulPersonaSave(clear){
+6424:   var ta=document.getElementById('yeul-persona-ta');
+6425:   var v=clear?'':String((ta&&ta.value)||'').trim();
+6426:   try{ if(v)localStorage.setItem(_YEULAI_LS,v); else localStorage.removeItem(_YEULAI_LS); }catch(_e){}
+6427:   if(typeof showToast==='function')showToast(v?'예울이 페르소나 저장 — 이 기기 전용':'페르소나 비움 — 레포 카드(persona/yeuli.md) 사용','success');
+6428:   closeYeulPersona();
+6429: }
+6430: // 관리자 전역 토글 — 하단 펫(3마리 랜덤) 표시 on/off. POST /api/config(관리자·KV) → 전역 반영(⚠ Worker 배포 필요). 260711
+6431: function _petToggle(on){
+6432:   _petsOn=!!on;
+6433:   api('POST','/api/config',{pets_visible:_petsOn}).then(function(){ if(typeof showToast==='function')showToast('하단 펫 '+(_petsOn?'표시 켜짐':'숨김')+' (전역 저장)','success'); }).catch(function(e){ if(typeof showToast==='function')showToast('저장 실패 — Worker 배포 필요할 수 있음: '+e.message,'error'); });
+6434:   if(_petsOn){ _petEnter(); }   // 켜기 = 사이클 시동
+6435:   else { _petGen++; _petCycleOn=false; document.querySelectorAll('.pet,.petcrab,.petlove').forEach(function(e){ e.style.opacity='0'; }); }   // 끄기 = 세대 무효화(in-flight 타이머·rAF의 _petCycle 재개 차단)+루프 종료+즉시 숨김
+6436: }
+6437: // [260724 운영자] 자동 잠금 시간 설정 — 관리자 전역(_petToggle 미러). ① 즉시 IDLE_MS 반영 + 진행 중 유휴 타이머 재무장 ② POST /api/config(cfg:lock_minutes). pets_visible 동봉 = 미배포 구 Worker(POST마다 pets를 b.pets_visible로 덮음)의 pets 클로버 방지.
+6438: function _lockMinChange(v){
+6439:   var m=parseInt(v,10); if(!(m>=1&&m<=240)){ if(typeof showToast==='function')showToast('잠금 시간은 1~240분 범위','error'); return; }
+6440:   IDLE_MS=m*60*1000; if(typeof resetIdleTimer==='function')resetIdleTimer();   // 즉시 반영(진행 중 유휴 타이머 재무장)
+6441:   api('POST','/api/config',{lock_minutes:m,pets_visible:_petsOn}).then(function(){ if(typeof showToast==='function')showToast('자동 잠금 시간 '+m+'분 (전역 저장)','success'); }).catch(function(e){ if(typeof showToast==='function')showToast('저장 실패 — Worker 배포 필요할 수 있음: '+e.message,'error'); });
+6442: }
+6443: // 관리자 전역 인증 게이트 — 기존 config 저장 경로 재사용. 새 세션부터 기존 MSAL 로그인 화면으로 진입한다.
+6444: function _authGateToggle(on){
+6445:   if(typeof userRole==='undefined'||userRole!=='admin')return;
+6446:   _authGateEnabled=!!on;
+6447:   api('POST','/api/config',{auth_required:_authGateEnabled,pets_visible:_petsOn}).then(function(){
+6448:     if(typeof showToast==='function')showToast('인증 '+(_authGateEnabled?'켜짐':'꺼짐')+' (새 세션부터 적용)','success');
+6449:   }).catch(function(e){
+6450:     _authGateEnabled=!_authGateEnabled;
+6451:     var el=document.getElementById('auth-gate-toggle'); if(el)el.checked=_authGateEnabled;
+6452:     if(typeof showToast==='function')showToast('저장 실패 — Worker 배포 필요할 수 있음: '+e.message,'error');
+6453:   });
+6454: }
+6455: // === 연간 일정 — 네이티브 통합 (구 iframe → yc-* 인라인. 캘린더 레포 코드 이식, 이미지만 외부 참조) ===
+6456: // ═══ [260731 운영자] 타임라인 = 프로그램 시트 자동 반영 (서식 유지) ═══
+6457: // 구판은 타임라인 25건이 전부 손 마크업 → 시트에 새 공연·전시를 등록해도 여기엔 영영 안 들어왔다(전시 3건째를 손으로 넣은 게 260731d).
+6458: // 서식(마크업 문법·클래스·좌우 교대·유지보수 블록)은 100% 그대로 두고 **내용만** 데이터에서 만든다.
+6459: //   · 로그인 = 프로그램 시트(PERFS) 도착 시 `_ycSync`가 타임라인을 다시 그린다 → 시트에 등록하면 그날로 반영.
+6460: //   · 비로그인(?annual 공유 링크)·저장본 = API 호출이 불가(`api()`가 앱 비번 헤더 필요) → 마크업의
+6461: //     `<!-- YC-AUTO -->` 스냅샷이 그대로 보인다. 스냅샷은 `tools/build_annual.mjs`가 **같은 `_ycBuild`로** 다시 찍는다
+6462: //     (렌더러 1벌 = 서식 드리프트 0 · 스냅샷 손편집 금지 — 값은 시트를 고치고 빌더를 돌린다).
+6463: // YC-BUILD-START  ← 이 구간은 tools/build_annual.mjs가 통째로 eval해 재사용한다. DOM 접근 금지(순수 문자열 조립).
+6464: var _YC_YEAR=2026;
+6465: var _YC_MAINT=[{ms:[2,3],t:'대·소극장<br>유지보수'},{ms:[7,8],t:'대·소극장<br>유지보수'}];   // 공연 없는 정비 구간(편집 상수 — 시트에 없는 편집 정보) · **1-based 달 번호**. 이 상수가 SSOT — 월 섹션 병합·타임라인 마크업·`?annual` 스냅샷·연간 차트 보수 라벨이 전부 여기서 파생된다. ⚠ 값 이력: 원래 2~3월 → 260807-7에 3~4월로 정정 → **260806-8 운영자 「보수기간 2,3월인데 3,4월로 잘못말함」으로 2~3월 환원**(운영자 본인 정정 · 둘째 7~8월은 전 이력 동일). 값은 **운영자 지시로만** 바꾼다 — 화면이 어긋나 보이면 상수가 아니라 읽는 쪽(0/1-based)을 먼저 의심할 것(실측 260806-7에 차트가 0-based로 읽어 한 달 밀렸던 전례)
+6466: var _YC_MON=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+6467: var _YC_DOW='일월화수목금토';
+6468: // 장르 태그 = 프로그램 시트 「구분」 → 연간 일정 태그(기존 8종 클래스 그대로 · 매칭 없으면 태그 생략)
+6469: var _YC_TAG={'클래식':['클래식','yc-t-cl'],'뮤지컬':['뮤지컬','yc-t-mu'],'뮤지컬(대형)':['뮤지컬','yc-t-mu'],
+6470:   '뮤지컬(어린이)':['어린이뮤지컬','yc-t-kid'],'어린이뮤지컬':['어린이뮤지컬','yc-t-kid'],
+6471:   '뮤지컬(청소년)':['청소년뮤지컬','yc-t-yo'],'청소년뮤지컬':['청소년뮤지컬','yc-t-yo'],
+6472:   '연극':['연극','yc-t-dr'],'오페라':['오페라','yc-t-op'],'무용':['무용','yc-t-dn'],'발레':['발레','yc-t-bl']};
+6473: // 시트 「구분」 오기·미기입 임시 보정 = 지금 화면 태그를 그대로 지키는 장치(운영자 점검목록 260731d ⑥⑦).
+6474: // ⚠ 시트를 고치면 그 줄을 지운다 — 여기 남아 있으면 시트 수정이 화면에 안 먹는다.
+6475: var _YC_TAG_FIX={'발레 <호두까기 인형>':['발레','yc-t-bl'],'국립현대무용단 <트리플 빌>':['발레','yc-t-bl'],
+6476:   '2026 헬로!오페라 <마술피리>':['오페라','yc-t-op'],'뮤지컬 <러커스 더 스쿨>':['청소년뮤지컬','yc-t-yo'],
+6477:   '여수세계섬박람회 기념 음악회':['클래식','yc-t-cl']};
+6478: function _ycEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+6479: function _ycYMD(s){var m=/^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(String(s||''));return m?[+m[1],+m[2],+m[3]]:null;}
+6480: function _ycDow(a){return _YC_DOW.charAt(new Date(a[0],a[1]-1,a[2]).getDay());}
+6481: // 날짜 라벨 — 하루: `1.9 (금)` · 같은 달: `1.24 (토) — 25 (일)` · 다른 달: `7.21 (화) — 11.1 (일)` (구 손 마크업 표기 그대로)
+6482: function _ycRange(s,e){
+6483:   var a=_ycYMD(s);if(!a)return'';
+6484:   var b=_ycYMD(e)||a;
+6485:   var one=a[1]+'.'+a[2]+' ('+_ycDow(a)+')';
+6486:   if(a[1]===b[1]&&a[2]===b[2])return one;
+6487:   return one+' — '+(a[1]===b[1]?'':b[1]+'.')+b[2]+' ('+_ycDow(b)+')';
+6488: }
+6489: // 프로그램 시트(PERFS 모양 {s,e,f,n,t,l,u,g}) → 타임라인 항목. 공연(t='c')·전시(t='e')만, 올해분만.
+6490: function _ycItems(perfs){
+6491:   var out=[];
+6492:   (perfs||[]).forEach(function(p){
+6493:     if(!p||!p.s)return;
+6494:     var a=_ycYMD(p.s);if(!a||a[0]!==_YC_YEAR)return;
+6495:     var e=p.e||p.s,b=_ycYMD(e)||a;
+6496:     var f=String(p.f||p.n||'').trim();if(!f)return;
+6497:     var place=String(p.l||'');
+6498:     if(p.t==='e'){
+6499:       // 전시명 = 「분류 <작품명>」 → 윗줄(분류)·아랫줄(작품명)로 분해. 장도 전시는 분류 앞에 '장도'(구 마크업 표기 계승).
+6500:       var head=f,sub='',m=/^(.*?)\s*[<〈'‘“"]([^>〉'’”"]+)[>〉'’”"]\s*$/.exec(f);
+6501:       if(m){head=m[1].trim();sub=m[2].trim();}
+6502:       head=head.replace(/^GS칼텍스\s*예울마루\s*/,'').trim()||f;
+6503:       if(place.indexOf('장도')>-1&&head.indexOf('장도')<0)head='장도 '+head;
+6504:       out.push({k:'ex',s:p.s,e:e,sm:a[1],em:b[1],title:head,sub:sub,venue:place,url:p.u||''});
+6505:     }else if(p.t==='c'){
+6506:       out.push({k:'ev',s:p.s,e:e,sm:a[1],title:f,tag:_YC_TAG_FIX[f]||_YC_TAG[String(p.g||'').trim()]||null,
+6507:         venue:place,big:place.indexOf('소극장')<0,url:p.u||'',br:f.indexOf('브런치')>-1});
+6508:     }
+6509:   });
+6510:   return out;
+6511: }
+6512: function _ycEvHtml(x){
+6513:   var tag=x.tag?'<span class="yc-ev-tag '+x.tag[1]+'">'+_ycEsc(x.tag[0])+'</span>':'';
+6514:   var ven=x.venue?'<span class="yc-ev-venue '+(x.big?'yc-venue-big':'yc-venue-sm')+'">'+_ycEsc(x.venue)+'</span>':'';
+6515:   return '<div class="yc-ev '+x.side+(x.br?' yc-brunch':'')+'">\n'
+20458: //   성격 = **표시 필터**(비파괴) — 메시지 시트 데이터는 안 지운다. 적용 지점 = 토스트·배지·메시지함 목록 3곳.
+20459: //   되돌리기 = 이 상수 false 한 줄. 신규 생성 자체를 막는 건 Worker 쪽(src/index.js PROMO_NOTIFY_CFG.enabled) — 재배포 필요.
+20460: var _PROMO_NOTIFY_MUTED=true;
+20461: function _msgPromoMuted(m){
+20462:   if(!_PROMO_NOTIFY_MUTED||!m)return false;
+20463:   return /^홍보-/.test((m.trigger||'').toString().trim());
+20464: }
+20465: // 불편사항 접수 알림 판별 — refNo가 신청번호(No)가 아니라 불편사항 id('q'+ts)라
+20466: // 신청 목록(records)에서 절대 못 찾는다. 클릭 시 '불편사항 관리' 화면으로 보내야 열린다.
+20467: function _isQaMessage(m){
+20468:   if(!m) return false;
+20469:   if(m.trigger === '불편사항 접수') return true;
+20470:   return /^q\d{6,}/.test((m.refNo||'').toString().trim());
+20471: }
+20472: // 메시지가 '열 수 있는 대상'을 가지는가 — 대상 없는(DB 싱크 어긋난) 메시지는 목록·배지에서 숨긴다.
+20473: //  · 참조 없는 순수 알림 = 표시(클릭해도 무해)  · 불편사항 = 관리 화면으로 열림
+20474: //  · records 미로드/0건 = 판정 보류하고 표시(로그인 직후 배지 폴링이 신청 메시지를 오숨김하는 것 방지)
+20475: function _msgHasTarget(m, recs){
+20476:   if(!m) return true;
+20477:   const refNo = (m.refNo||'').toString().trim();
+20478:   if(!refNo) return true;
+20479:   if(_isQaMessage(m)) return true;
+20480:   // 사유(reason)를 담은 종결 통보(반려 등)는 대상 레코드가 삭제돼도 메시지 자체가 정보다 → 표시 유지.
+20481:   //   반려(rejectPromo)는 record 하드삭제 + 사유 필수(if(!reason)return) → refNo가 records에 영영 없지만
+20482:   //   신청자에게 '왜 반려됐는지' 사유 전달이 목적이라 숨기면 안 됨. 숨김 대상 = 사유 없는 순수
+20483:   //   상태알림(신청중→예정·예정→완료)이 신청 삭제로 고아된 것뿐(분신술 감사1·2 HIGH 반영).
+20484:   if((m.reason||'').toString().trim()) return true;
+20485:   const rr = (recs && Array.isArray(recs)) ? recs : records;  // 삭제 판정은 fresh·초안포함 신청목록 주입(§_msgPurgeGhosts)
+20486:   if(!Array.isArray(rr) || rr.length===0) return true;
+20487:   return rr.some(function(r){ return (r['No']||r['NO']||'').toString().trim() === refNo; });
+20488: }
+20489: // 유령 메시지 서버 정리(자동) — 화면에서 이미 숨긴 '내 수신 · 대상 없는' 메시지를 '메시지' 시트에서도 삭제.
+20490: //   · 내 수신분(recipient===myAppl)만 = 크로스유저 안전  · reason 담긴 반려 등은 _msgHasTarget=true라 제외(사유 보존)  · 멱등
+20491: //   · _msgApiCall 우회 직접 fetch — DELETE 404(Worker 미배포)가 GET/PATCH의 60초 봉인을 걸지 않게(배포 전에도 무해, 화면 숨김만)
+20492: //   · ⚠️ 판정은 반드시 FRESH·초안포함 신청목록으로(분신술 감사1 HIGH·감사4): 전역 records는 로그인 시 1회 로드 후 stale일 수 있고
+20493: //     (openMsgBox는 메시지만 최신화) 초안을 제외한다 → 그걸로 판정하면 ①내 로그인 이후 타 기기/관리자가 만든 살아있는 신청
+20494: //     ②현재 초안 상태인 신청 의 알림을 유령 오판해 영구삭제. → 삭제 직전 records 재조회(초안 미제외 전체), 실패/빈결과면 스킵.
+20495: async function _msgPurgeGhosts(){
+20496:   try{
+20497:     if(!_msgApiAvailable) return;  // Worker 다운/봉인 확정 시 스킵(재조회·삭제 모두 아낌 — 미배포 버스트 억제, 감사3)
+20498:     const myAppl = _msgMyAppl();
+20499:     if(!myAppl) return;
+20500:     // 저비용 프리체크(감사3 부하 최적화) — 삭제 후보(내 수신·refNo 있음·reason 없음·비QA)가 하나도 없으면
+20501:     //   fresh 재조회(무캐시 전량 GET) 자체를 스킵. 정상상태(유령 0)에서 매 open Graph read 낭비 방지.
+20502:     const cands = _msgGet().filter(function(m){
+20503:       return m && m.id && m.recipient===myAppl && (m.refNo||'').toString().trim() && !(m.reason||'').toString().trim() && !_isQaMessage(m);
+20504:     });
+20505:     if(!cands.length) return;
+20506:     let fresh=null;
+20507:     try{
+20508:       const d = await api('GET','/api/records');
+20509:       if(d && Array.isArray(d.records)) fresh = d.records;  // ⚠️ 초안 미제외 전체 — 초안 참조 알림 오삭제 방지(감사4 지적3)
+20510:     }catch(e){ return; }  // 재조회 실패 = 판정 근거 없음 = 스킵(오삭제 방지)
+20511:     if(!Array.isArray(fresh) || fresh.length===0) return;  // 빈 결과 = 판정 불가 = 스킵
+20512:     const pw = (typeof password!=='undefined'?password:'')||'';
+20513:     let pin=''; try{ pin=sessionStorage.getItem('subAdminPin')||''; }catch(e){}
+20514:     cands.forEach(function(m){
+20515:       if(_msgHasTarget(m, fresh)) return;  // fresh에 대상 있으면 유령 아님(살아있음/초안) — 최종 판정
+20516:       const h={'X-App-Password':pw}; if(pin)h['X-Sub-Admin-PIN']=pin;
+20517:       try{ fetch(_MSG_API_BASE+'/api/messages/'+encodeURIComponent(m.id),{method:'DELETE',headers:h}).catch(function(){}); }catch(e){}
+20518:     });
+20519:   }catch(e){}
+20520: }
+20521: 
+20522: // === 메시지함 API hybrid (Worker 있으면 SharePoint sync, 없으면 localStorage fallback) ===
+20523:  const _MSG_API_BASE = window.__MISO_RUNTIME_BASE__||'';
+20524: let _msgLastFetch = 0;
+20525: var _msgApiAvailable = true;  // 초기 true — 실패(404/401) 시 false로 60초 throttle. (init false면 5968 가드가 fetch를 막아 서버 메시지 동기화가 영구 중단되던 데드락 수정)
+20526: // ⚠️ var 필수(let 금지) — 부트 IIFE가 파싱 중 _enterAppFromSession→initApp을 동기 호출해 이 변수에 접근한다.
+20527: //    let이면 TDZ ReferenceError로 initApp이 중단돼 F5 세션복원 시 모든 데이터 로더가 스킵됨(분신술 2호 MED-HIGH 실측).
+20528: 
+20529: async function _msgApiCall(method, path, body){
+20530:   if(window._QA) return null;  // [QA] 메시지 API 실네트워크 차단(실데이터·PII 미접촉)
+20531:   if(!_msgApiAvailable) return null;  // API 안 됨 알려진 상태면 skip
+20532:   // Worker는 /api/messages도 X-App-Password 게이트 뒤에 있음 — 헤더 없으면 401로
+20533:   // 전부 localStorage 폴백되어 크로스유저 알림이 끊긴다 (260610 라이브 probe로 확인)
+20534:   const opts = {method, headers: {'X-App-Password': (typeof password!=='undefined'?password:'')||''}};
+20535:   const _sp = sessionStorage.getItem('subAdminPin');
+20536:   if(_sp) opts.headers['X-Sub-Admin-PIN'] = _sp;
+20537:   if(body){
+20538:     opts.headers['Content-Type'] = 'application/json';
+20539:     opts.body = JSON.stringify(body);
+20540:   }
+20760:         html += '<div style="font-size:'+(isImp?'14px':'13px')+';font-weight:700;color:'+(isImp?'var(--danger)':'var(--text)')+';margin-bottom:5px;line-height:1.35">'+escapeHtml(m.title)+'</div>';
+20761:       }
+20762:       if(m.reason){
+20763:         const _hasT = !!m.title;
+20764:         const reasonFs = _hasT ? '12px' : (isImp ? '14px' : '12px');
+20765:         const reasonFw = _hasT ? '500' : (isImp ? '700' : '600');
+20766:         const reasonCol = isImp ? '#C0392B' : 'var(--ink)';
+20767:         // [260804] 줄바꿈 보존 — 불편사항 접수 본문이 reason에 실리면서 여러 줄이 한 줄로 뭉개지던 것 방지.
+20768:         //   결·색·크기 무접촉(속성 2개 추가) · '불편사항 관리' 표의 내용 칸과 같은 규약(white-space:pre-wrap;word-break:break-word).
+20769:         html += '<div style="font-size:'+reasonFs+';font-weight:'+reasonFw+';color:'+reasonCol+';margin-bottom:6px;line-height:1.4;white-space:pre-wrap;word-break:break-word">'+escapeHtml(m.reason)+'</div>';
+20770:       }
+20771:       if(m.before && m.after){
+20772:         html += '<div style="font-size:11px;color:#666;margin-bottom:4px">'+escapeHtml(m.before)+' → <strong style="color:var(--ink)">'+escapeHtml(m.after)+'</strong></div>';
+20773:       }
+20774:       if(m.refSummary){
+20775:         html += '<div style="font-size:11px;color:#999;letter-spacing:0.2px">'+escapeHtml(m.refSummary)+'</div>';
+20776:       }
+20777:       html += '</div>';
+20778:     });
+20779:   }
+20780:   html += '</div>';
+20781:   _ddOpen(document.getElementById('msgbox-btn'), function(menu){ menu.style.padding='0'; menu.style.minWidth='380px'; menu.innerHTML=html; });
+20782:   _msgPurgeGhosts();  // 렌더 후 백그라운드 유령 정리(fresh records 재조회 → 자기 유령 서버 삭제) — 화면 블록 안 함
+20783: }
+20784: function closeMsgBox(){ _ddCloseAll(); const el=document.getElementById('msgbox-modal'); if(el)el.innerHTML=''; }
+20785: function markMsgRead(id){
+20786:   // API PATCH (fire-and-forget)
+20787:   _msgApiCall('PATCH', '/api/messages/' + encodeURIComponent(id), {read: true}).then(function(_r){
+20788:     if(_r) console.log('[markMsgRead] API sync OK', id);
+20789:   });
+20790:   // localStorage 즉시 갱신 (UI 반응성)
+20791:   const msgs = _msgGet();
+20792:   const m = msgs.find(function(x){ return x.id === id; });
+20793:   if(!m) return;
+20794:   if(!m.read){
+20795:     m.read = true;
+20796:     _msgSave(msgs);
+20797:   }
+20798:   refreshMsgBoxBadge();
+20799:   // 불편사항 접수 알림 → '불편사항 관리' 화면으로 (refNo=불편사항 id라 신청 목록엔 없다 — 260710 버그수정)
+20800:   if(_isQaMessage(m)){
+20801:     try {
+20802:       closeMsgBox();
+20803:       if(typeof openQaBoard === 'function'){ openQaBoard((m.refNo||'').toString().trim()); return; }
+20804:     } catch(_e){ console.error('[msg qa navigate]', _e); }
+20805:     openMsgBox();
+20806:     return;
+20807:   }
+20808:   // 메시지 클릭 → 일정 확인 및 관리 모달 자동 진입 (refNo로 record 찾기)
+20809:   const refNo = (m.refNo||'').toString().trim();
+20810:   if(refNo && Array.isArray(records)){
+20811:     const rec = records.find(function(r){
+20812:       return (r['No']||r['NO']||'').toString().trim() === refNo;
+20813:     });
+20814:     if(rec && rec._rowIndex != null){
+20815:       try {
+20816:         closeMsgBox();
+20817:         const _dk = (typeof getRecDateKey==='function') ? getRecDateKey(rec) : (rec['날짜']||'').toString();
+20818:         if(typeof editRec === 'function'){
+20819:           // 역할 기반: 관리자=편집, 일반=읽기전용 조회. 취소건도 조회 가능(목록 필터 우회)
+20820:           editRec(rec._rowIndex, _dk, null);
+20821:           return;
+20822:         } else if(typeof openScheduleRow === 'function'){
+20823:           openScheduleRow(_dk, rec._rowIndex);
+20824:           return;
+20825:         }
+20826:       } catch(_e){
+20827:         console.error('[msg navigate]', _e);
+20828:         showToast('일정 모달 진입 실패: '+(_e.message||_e),'error');
+20829:       }
+20830:     }
+20831:     // 대상 못 찾음 = DB 싱크 어긋남 → 이 메시지는 openMsgBox 필터(_msgHasTarget)가 이미 숨긴다.
+20832:     //   여기 도달 = 레이스(방금 삭제 등) — 조용히 목록 새로고침해 사라지게 둔다(빈 화면 토스트 제거).
+20833:   }
+20834:   // refNo 없는 일반 메시지 또는 navigate 실패 → msgbox 새로고침
+20835:   openMsgBox();
+20836: }
+20837: // 초기 로드 + 주기적 갱신
+20838: (function(){
+20839:   function _initBadge(){ try { refreshMsgBoxBadge(); } catch(e){} }
+20840:   if(document.readyState !== 'loading') setTimeout(_initBadge, 500);
+20841:   else document.addEventListener('DOMContentLoaded', function(){ setTimeout(_initBadge, 500); });
+20842:   setInterval(_initBadge, 10000);
+20843: })();
+20844: 
+20845: // === CapsLock 알림 (비밀번호 input 아래 inline 표시) ===
+20846: (function(){
+20847:   if(window._capsLockInstalled) return;
+20848:   window._capsLockInstalled = true;
+20849:   let warn = null;
+20850:   let currentInput = null;
+20851:   function ensureWarn(){
+20852:     if(warn) return warn;
+20853:     warn = document.createElement('div');
+20854:     warn.id = '_caps-lock-warn';
+20855:     warn.style.cssText = 'display:none;position:fixed;background:transparent;color:var(--accent);padding:0;font-size:11px;font-weight:600;letter-spacing:0.2px;pointer-events:none;z-index:99999;white-space:nowrap;font-family:inherit;line-height:1.3';
+20856:     warn.innerHTML = '[CapsLock]이 켜져있습니다.';
+20857:     document.body.appendChild(warn);
+20858:     return warn;
+20859:   }
+20860:   // [260708] PIN은 숫자 입력이라 CapsLock 경고가 무의미 → 대상서 제외(비밀번호 설정 모달의 password 필드엔 유지). 운영자 지시.
+20861:   function _isPwField(t){ return t && t.tagName === 'INPUT' && t.type === 'password' && !t.classList.contains('pin'); }
+20862:   function showWarn(inputEl){
+20863:     const w = ensureWarn();
+20864:     const anchor = inputEl.closest('.pin-wrap') || inputEl;   // PIN은 그룹 전체 기준 → 정중앙
+20865:     const rect = anchor.getBoundingClientRect();
+20866:     w.style.left = (rect.left + rect.width/2) + 'px';
+20867:     w.style.top = (rect.bottom + 10) + 'px';
+20868:     w.style.transform = 'translateX(-50%)';
+20869:     w.style.display = '';
+20870:   }
+20871:   function hideWarn(){
+20872:     if(warn) warn.style.display = 'none';
+20873:     currentInput = null;
+28886: var _petCycleOn=false, _petLast=-1, _petsOn=false, _petGen=0;   // _petsOn = 관리자 전역설정 pets_visible(기본 숨김) · _petGen = 사이클 세대(토글 OFF→ON 경쟁 시 옛 체인 무효화 · 분신술 D1 260711)
+28887: var _PET={FADE:700, STAY:9000, REST:20000};   // ms: 페이드 · 노출 · 휴식(운영자 260711 "20초 휴기")
+28888: var _petSprites=[
+28889:   {sel:'.petcrab', cols:10, frames:82, fps:30, dw:66, dh:60},   // 크랩 정면·컨페티(표시 66×60)
+28890:   {sel:'.petlove', cols:2,  frames:2,  fps:6,  dw:38, dh:29}     // LOVE 측면 walk(표시 38×29)
+28891: ];
+28892: // 전역설정(pets_visible·lock_minutes) 로드 — initApp서 1회. 실패(Worker 미배포 등)·미설정 = 기본값(펫 숨김·잠금 30분 유지)
+28893: function _loadPetCfg(){ api('GET','/api/config').then(function(c){ _petsOn=!!(c&&c.pets_visible); _authGateEnabled=!!(c&&c.auth_required); window._authGateChecked=true; if(_petsOn)_petEnter(); _applyLockMin(c&&c.lock_minutes); }).catch(function(){}); }
+28894: // [260724 운영자] 자동 잠금 시간(전역설정 lock_minutes·분) 적용 — 유효(1~240)면 IDLE_MS 갱신 + 진행 중 유휴 타이머 즉시 재무장. 미설정/무효 = 기본값 유지
+28895: function _applyLockMin(m){ var n=parseInt(m,10); if(n>=1&&n<=240){ IDLE_MS=n*60*1000; if(typeof resetIdleTimer==='function')resetIdleTimer(); } }
+28896: function _petEnter(){   // 시동 = 전역설정 ON일 때만(중복 가드)
+28897:   if(!_petsOn)return;                                          // 관리자 전역설정 꺼짐 = 미출현(기본)
+28898:   if(_petCycleOn)return;
+28899:   if(matchMedia('(prefers-reduced-motion:reduce)').matches){   // 감속 선호 = 정적(공차는 애만 노출·나머지 미출현)
+28900:     var p0=document.querySelector('.pet'); if(p0)p0.style.opacity='1'; return;
+28901:   }
+28902:   _petCycleOn=true; _petCycle(++_petGen);
+28903: }
+28904: function _petCycle(gen){
+28905:   if(gen!==_petGen)return;                                      // 지난 세대(토글 OFF로 무효화) = 조용히 종료 · _petCycleOn 안 건드림(현 세대가 소유 = 이중 사이클 차단, 분신술 D1)
+28906:   if(!_petsOn){ _petCycleOn=false; return; }                   // 전역설정 꺼지면 루프 종료
+28907:   var next=function(){ setTimeout(function(){_petCycle(gen);}, _PET.REST); };   // 퇴장 후 20초 쉬고 다음 랜덤(같은 세대만 재개)
+28908:   var pick; do{ pick=Math.floor(Math.random()*3); }while(pick===_petLast);   // 0=공·1=크랩·2=LOVE, 직전과 다르게
+28909:   _petLast=pick;
+28910:   if(pick===0) _ballVisit(next);
+28911:   else _spriteVisit(_petSprites[pick-1], next);
+28912: }
+28913: function _ballVisit(done){                                       // 공차는 애 = petStroll(webp 내장 공차기)
+28914:   var ball=document.querySelector('.pet');
+28915:   if(!ball || ball.offsetParent===null){ setTimeout(done, _PET.STAY); return; }   // 모바일 숨김 = 시간만 흘려 사이클 유지
+28916:   ball.classList.add('walk'); requestAnimationFrame(function(){ball.style.opacity='1';});
+28917:   setTimeout(function(){
+28918:     ball.style.opacity='0';
+28919:     setTimeout(function(){ball.classList.remove('walk');}, _PET.FADE);   // 안 보일 때 산책 정지(원점 리셋=미시)
+28920:     setTimeout(done, _PET.FADE);
+28921:   }, _PET.FADE + _PET.STAY);
+28922: }
+28923: function _spriteVisit(g, done){                                  // 크랩·LOVE = 아틀라스 프레임 스텝 + rAF 배회
+28924:   var el=document.querySelector('.crablane '+g.sel);
+28925:   if(!el || el.offsetParent===null){ setTimeout(done, _PET.STAY); return; }
+28926:   var laneW=(el.offsetParent&&el.offsetParent.clientWidth)||innerWidth, maxX=Math.max(40, laneW-g.dw);
+28927:   var t0=performance.now(), last=t0;
+28928:   var x=Math.random()*maxX*0.6, dir=Math.random()<0.5?-1:1, speed=(16+Math.random()*14)/1000, pauseUntil=0;   // px/ms
+28929:   el.style.transform='translateX('+x+'px) scaleX('+dir+')'; el.style.opacity='0';
+28930:   requestAnimationFrame(function(){el.style.opacity='1';});     // 페이드인
+28931:   (function step(now){
+28932:     var dt=Math.min(64, now-last); last=now;
+28933:     var f=Math.floor((now-t0)/(1000/g.fps))%g.frames;           // fps 프레임 스텝(픽셀 보간 금지)
+28934:     el.style.backgroundPosition=(-(f%g.cols)*g.dw)+'px '+(-Math.floor(f/g.cols)*g.dh)+'px';
+28935:     if(now>=pauseUntil){                                        // 배회 = rAF 이동(종종 방향전환·멈춤)
+28936:       x+=dir*speed*dt;
+28937:       if(x<0){x=0;dir=1;}else if(x>maxX){x=maxX;dir=-1;}
+28938:       else if(Math.random()<0.0025)dir=-dir;
+28939:       if(Math.random()<0.002)pauseUntil=now+(900+Math.random()*1700);
+28940:     }
+28941:     el.style.transform='translateX('+x+'px) scaleX('+dir+')';
+28942:     if(now-t0 < _PET.STAY && !document.hidden){ requestAnimationFrame(step); return; }
+28943:     el.style.opacity='0';                                       // 페이드아웃 → done
+28944:     setTimeout(done, _PET.FADE);
+28945:   })(performance.now());
+28946: }
+28947: // 캘린더 로딩 스켈레톤(글래스 셀 18칸 + 광택 스윕) — 바 폭은 자리표시용 고정 패턴(난수 금지)
+28948: function _calSkelHtml(){
+28949:   var w=['62%','38%','74%','46%','58%','30%'];
+28950:   // [운영자 260710] 로딩 점프 최소화 — 직전 렌더 캘린더 높이(localStorage)로 스켈레톤 행수 산출 → 스켈레톤≈로드 후 높이(주 접힘 반영분까지). 첫 로드·미저장 = 5행 기본.
+28951:   var _ch=0; try{_ch=parseInt(localStorage.getItem('_calGridH'),10)||0;}catch(e){}
+28952:   var _rows=_ch>0?Math.max(3,Math.min(6,Math.round(_ch/132))):5, _cells=_rows*6;
+28953:   var h='<div class="cal-skel" role="status" aria-live="polite" aria-label="캘린더 불러오는 중">';
+28954:   for(var i=0;i<_cells;i++){
+28955:     h+='<div class="sk-c"><div class="sk-b" style="width:22%"></div><div class="sk-b" style="width:'+w[i%6]+'"></div>'+(i%3===0?'<div class="sk-b" style="width:'+w[(i+2)%6]+'"></div>':'')+'</div>';
+28956:   }
+28957:   return h+'<div class="sk-sweep" aria-hidden="true"></div><div class="cal-load-msg">'+_ldHtml(16)+'불러오는 중</div></div>';
+28958: }
+28959: async function loadData(){
+28960:   var cal=document.getElementById('cal');
+28961:   if(cal){cal.innerHTML=_calSkelHtml();}
+28962:   // 헤더 밴드(월·연·요일·칩)는 records 무의존 — 로딩·실패 중에도 먼저 그린다(분신술 3호: 빈 띠 HIGH/MED 수정)
+28963:   try{
+28964:     var _nm3=document.getElementById('nav-month'),_ny3=document.getElementById('nav-year');
+28965:     if(_nm3)_nm3.textContent=currentMonth; if(_ny3)_ny3.textContent=currentYear;
+28966:     var _chw=document.getElementById('cal-head-wrap');
+28967:     if(_chw&&!_chw.innerHTML)_chw.innerHTML='<div class="cal-head">'+DAYS.map(function(d,i){var cls='dh';if(i===4)cls+=' sat';if(i===5)cls+=' sun';if(i===5)return '<div class="'+cls+' dh-split"><i class="p-sun">일</i><i class="p-mon">월</i></div>';return '<div class="'+cls+'" style="border-right:1px solid rgba(0,0,0,.07)">'+d+'</div>';}).join('')+'</div>';
+28968:     if(typeof renderChips==='function')renderChips();
+34083: //   미배포(404)·키 없음(503)이면 안내 폴백 — 예울이 챗봇 /api/qa 미배포 폴백 선례 계승. Worker는 wrangler deploy 별도.
+34084: // UI = 정본 챗봇 부품(.cb-body/.cb-msg/.cb-chip — 기틀 §2 #11) + 회원 조회 입력·accent 버튼 결 계승. 신규 색·클래스·raw hex 0.
+34085: 
+34086: // === [260803 운영자] 예울이 AI — 전사 자유질문 공용 브레인 (루시봇 컨셉 이식: 페르소나 카드 + 깃 Actions claude -p 구독 OAuth) ===
+34087: // 경로 = 이미 배포된 배선만 재사용(Worker 무변경): POST /api/blog/dispatch(payload.yeulchat=1 — Worker는 여분 키 그대로 통과)
+34088: //   → **yeul-chat.yml**(persona/yeuli.md 카드 원문 + 질문 → Messages API 직행 sonnet-5·low · 5계정 폴오버) → drafts/yc*.json 커밋
+34089: //   → GET /api/blog/draft?id= 폴링. 비용 0(구독 OAuth). 사용처 = FAB 예울이 미응답 폴백 + 고객 분석 채팅.
+34090: //   ⚠ 「소요 30초~2분」은 260812 개편 전 이야기다 — CLI 설치·공용 큐를 걷어내 그 두 축이 사라졌다.
+34091: // 페르소나 SSOT = persona/yeuli.md(카드 수정 = 말투 자동 추종). 앱 설정 「예울이 페르소나」(openYeulPersona)가 기기별 오버라이드.
+34092: // ⚠ 산출물 drafts/yc*.json = 공개 레포 커밋(블로그 초안과 동일 축) — 민감 내용 질문 금지 · 워크플로가 3일 지난 산출물 자동 정리.
+34093: var _YEULAI_LS='yeulai_persona';
+34094: function _yeulAiPersona(){try{return String(localStorage.getItem(_YEULAI_LS)||'').slice(0,6000);}catch(_e){return '';}}
+34095: // [260806 운영자 「sonnet 5 low 로 일단 배선 · 어려운 거면 opus 5.0 medium 전환」] 복잡 질문 판정.
+34096: //   기본 = 소넷5·**low**(뭐든 빠르게) / deep = opus5·medium + 「기다려 달라」 안내 선표시.
+34097: //   ⚠ 여기는 **판정만** 한다 — 모델명·effort의 SSOT는 답하는 쪽 둘: Worker `yeulChat`(`src/index.js`)과
+34098: //     `.github/workflows/nb-blog.yml` 라우팅 2줄(cmodel·ceffort). 앱이 모델명을 들고 있으면 세 곳이 갈린다.
+34099: //     ⚠ 그 둘은 **서로 같은 값**을 유지해야 한다 — 폴백이 탈 때 같은 질문에 다른 결로 답하지 않게.
+34100: function _yeulAiDeep(q){q=String(q||'');return q.length>=60||/전략|기획|분석|설계|보고서|제안서?|비교|계획|정리해|작성해?\s*줘|써\s*줘|만들어|장단점|로드맵|개선안/.test(q);}
+34101: // [260812-4 운영자 「그건 제 분야~ 이거는 어려운거 찾아봐야할때 몇초 걸릴때 미리 던지고 그거 바로 찾으러 가는거야」]
+34102: //   = 「분야 밖」 투덜은 **답의 일부가 아니라 대기 말풍선**이다. 앱이 먼저 던지고, 그 몇 초 동안 모델이 검색하러 간다.
+34103: //   판정은 여기서(0초·비용 0) · 문구는 호출부 둘(`_memAiSend`·`_cbAiAnswer`) · 모델에는 `payload.outq`로 **「이미 던졌다」만** 알린다.
+34104: //   ⚠ 안 알리면 모델이 답 첫 줄에서 **같은 투덜을 한 번 더** 한다 = 두 번 툴툴대는 봇(낙차가 죽는다).
+34105: //   ⚠ 예울마루 축 단어가 섞였으면 「내 일」이라 투덜 없이 바로 간다 — 밖 판정이 안쪽을 잡아먹으면 제 일에도 툴툴댄다.
+34106: var _YEULAI_IN_RE=/예울마루|공연|전시|관객|회원|예매|티켓|좌석|대극장|소극장|장도|로비|담당자|규정|사내|직원|홍보|블로그|캘린더|실적|매출/;
+34107: var _YEULAI_OUT_RE=/날씨|기온|강수|태풍|미세먼지|시세|주가|환율|코인|비트코인|금리|뉴스|기사|속보|맛집|카페|식당|영화|드라마|스포츠|야구|축구|경기|선수|선거|대통령|주식|부동산|항공|기차|호텔|숙소|번역|유래|무슨 뜻/;
+34108: function _yeulAiOut(q){
+34109:   q=String(q||'');
+34110:   if(_YEULAI_IN_RE.test(q))return false;
+34111:   if(_YEULAI_OUT_RE.test(q))return true;
+34112:   // 시의성 질문 = 검색행. ⚠ 「어때」만 잡으면 「어땠어」가 새어 나간다(실측 오판 1건이 정확히 이 형태였다).
+34113:   return /(오늘|지금|현재|최근|요즘|이번\s*주|어제|내일)/.test(q)&&/(어때|어땠|얼마|몇|뭐|무슨|어디|언제|알려)/.test(q);
+34114: }
+34115: // [260812 운영자 「워커 쓰지말고 깃에서해 그래야 4개 계정 배선이 돌아」 · 「액션」] 경로 = **Actions 한 갈래**.
+34116: //   ⚠ 종전 1차였던 Worker 즉답(`POST /api/yeul/chat`)은 **뺐다**. 빠르긴 했지만 Worker는 토큰이 `ANTHROPIC_AUTH_TOKEN`
+34117: //     **한 개**라 그 계정이 쿼터·만료로 막히면 그대로 죽는다 — 260812 실측이 그 상태였다(시크릿은 있는데 최근 채팅
+34118: //     3건 전부 Actions로 조용히 폴백 = 90초). 5계정 순환 폴오버는 Actions에만 있고, 그게 「안 죽는 쪽」이다.
+34119: //   대신 Actions를 빠르게 만들었다 → 전용 `.github/workflows/yeul-chat.yml`:
+34120: //     ① `claude -p` CLI 설치(20~30초) 제거 = Messages API 직행(`shared/claude_api_failover.js`)
+34121: //     ② `concurrency: nb-blog` 제거 = 질문별 독립 그룹(블로그 초안 뒤에 줄서지 않는다)
+34122: //     ③ 폴 간격 6초 → 1.5초(첫 확인 2.5초) — 6초 고정은 평균 3초를 그냥 버린다.
+34123: //   ⚠ 모델·프롬프트 SSOT = 그 워크플로 한 곳뿐이다(앱은 판정 `deep`만 보낸다) — 갈래가 하나라 더 이상 안 갈린다.
+34124: var _yeulAiLast={via:'',model:'',effort:'',account:'',ms:0,searches:0};   // 마지막 답이 어느 경로·모델·계정이었나 — 챗봇로그 표기용
+34125: // [260812-3] 검색 횟수도 남긴다 — 「검색해서 답하라」가 실제로 탔는지 로그로 읽히지 않으면 회귀를 못 잡는다.
+34126: function _yeulAiTag(){var L=_yeulAiLast||{};return (L.model||'claude')+(L.effort?'·'+L.effort:'')+(L.via?'·'+L.via:'')+(L.account?'·'+L.account:'')+(L.searches?'·검색'+L.searches:'');}
+34127: async function _yeulAiAsk(q,ctx,onTick){
+34128:   var started=Date.now(),text=String(q||'').slice(0,800),deep=_yeulAiDeep(text);
+34129:   _yeulAiLast={via:'miso',model:MISO_LLM_TARGET.modelId,effort:'',account:'',ms:0,searches:0};
+34130:   if(onTick)try{onTick(0);}catch(_e){}
+34131:   var result=await misoLlmComplete(
+34132:     '예울마루 고객 질문에 답변하세요. 근거 없는 사실은 추정하지 말고 제공된 맥락 안에서만 한국어로 답하세요.\n질문: '+text+'\n맥락: '+String(ctx||'').slice(0,1200),
+34133:     '당신은 예울마루 안내 챗봇 예울이입니다. '+(_yeulAiPersona()||'밝고 정중한 존댓말로 2~6문장 답변을 합니다.')+(deep?' 복잡한 질문이면 핵심 근거와 한계를 분명히 말하세요.':'')
+34134:   );
+34135:   _yeulAiLast.ms=Date.now()-started;
+34136:   var answer=String(result&&result.text||'').trim();
+34137:   if(!answer)throw new Error('빈 응답');
+34138:   return answer;
+34139: }
+34140: var _memAiHist=[],_memAiBusy=false;
+34141: // [260813-5 운영자 「그 아래 파란색 있는 부분 예시 한 행을 삭제해서 여백을 더 확보해줘」] 칩 4 → 3.
+34142: //   지운 건 「23~24년 클래식 2회 이상 관람한 사람」 — 혼자 한 줄을 다 먹던 칩이라 이것만 지우면 **정확히 한 행**이 준다
+34143: //   (짧은 칩을 지우면 같은 행에 둘씩 앉아 있어 행 수가 안 준다 = 여백이 안 생긴다). 남은 3개도 자연어 질의 예시 축은 그대로.
+34144: var _MEM_AI_CHIPS=['여수 30대 회원 몇 명이야?','재구매 회원 몇 명이야?','거주지 TOP5 알려줘'];
+34145: function _memAiCardHtml(sfx,fit,col){
+34146:   // [260804 운영자] ① 헤더 띠(.cb-hdr = 아바타+이름+부제) **폐지** — 이름·상태는 대화 줄의 프로필(.cb-line .cb-ava)이 대신한다.
+34147:   //   ② 카드 폭 = 40%(min(100%,max(300px,40%))) — 40%가 300px보다 좁아지는 좁은 칸에선 300px, 칸이 그보다 좁으면 100%.
+34148:   //      → 어떤 폭에서도 겉 유리(이젤·모달) 안선을 **넘지 않는다**(운영자 「흰 창이 한계선을 넘어가면 안 됨」).
+34149:   //   ③ 로그 높이 한 단 축소(118~236 → 84~160) = 위 「거주지 TOP·연령대」 카드에 세로를 돌려준다.
+34150:   // [260804 2차 운영자 「예울이를 가로 차트 아래로」] col = 우 열(막대 카드 아래) 스택 모드 — 폭은 **열이 이미 정한다**(=100%),
+34151:   //   위 ②의 40% 축소는 「전폭 줄에 홀로 놓일 때」의 규약이라 열 안에서는 오히려 빈 유리를 만든다(적용 제외).
+34152:   //   높이는 fit 여부와 무관하게 고정(flex:0 0 auto) = 막대 카드가 남는 몫을 갖고 예울이는 자기 크기만 쓴다.
+34153:   // [260813 운영자 「마우스 포인터가 올라가면 대화창이 위에 거주지 TOP5 있는 구간까지 쭉 올라가게 — 대화로 고객질의하게」]
+34154:   //   col 모드 = 카드가 **열 전체 높이로 깔리고**(.cb-rise = 절대배치 inset 0) 평소엔 아래 --rise-h 칸만 `clip-path`로 보인다.
+34155:   //   호버·포커스 = 잘라내기가 0으로 가며 열 끝(거주지 TOP 5 윗선)까지 열린다 — 모양·커브 SSOT = CSS `.cb-rise`(위 정의 · 인라인 재타이핑 0).
+34156:   //   로그창은 늘 카드 전체를 채우고(flex:1 1 auto) 대화는 아래에 붙는다(.cb-rise>.cb-body>:first-child{margin-top:auto}) =
+34157:   //   접힘 칸에 보이는 것도, 펼친 뒤 이어 보는 것도 **같은 한 벌**이라 스크롤이 튀지 않는다(칸 높이가 안 변한다).
+34158:   return '<div'+(col?' id="mem-ai-card-'+sfx+'" class="cb-rise" onmouseenter="_memRiseShift(this)"':'')+' style="'+(col?'':'margin-top:'+(fit?14:24)+'px;')+'width:'+(col?'100%':'min(100%,max(300px,40%))')+';background:var(--surface-solid);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden'+((fit||col)?';flex:0 0 auto;display:flex;flex-direction:column':'')+'">'
+34159:     +'<div id="mem-ai-log-'+sfx+'" class="cb-body" style="'+(col?'flex:1 1 auto;min-height:0':(fit?'flex:0 0 auto;height:clamp(96px,16vh,190px)':'min-height:96px;max-height:190px'))+';overflow-y:auto;padding:12px 14px"></div>'
+34160:     // 입력줄 = FAB 예울이 정본 부품(.cb-foot/.cb-in/.cb-send) 그대로 — 「질문」 글자 버튼 → 종이비행기 픽토그램(정본 svg 동일 path)
+34161:     +'<div class="cb-foot">'
+34162:     +'<input id="mem-ai-q-'+sfx+'" class="cb-in" maxlength="200" autocomplete="off" placeholder="예: 순천 20대 회원 몇 명이야?" onkeydown="_memAiKey(this,event,\''+sfx+'\')" oninput="_memAiAuto(this,event)" oncompositionend="_memAiAuto(this,null)">'
+34163:     +'<button type="button" class="cb-send" onclick="_memAiSend(\''+sfx+'\')" title="질문 보내기" aria-label="질문 보내기"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>'
+34164:     +'</div></div>';
+34165: }
+40497:     var _admins=(MANAGERS||[]).filter(function(m){return isFlagOn(m['관리자여부']);});
+40498:     // 순차 전송 — 다중 관리자에게 fire-and-forget 병렬 POST 시 Graph 시트가 같은 행을 계산해 겹쳐써 일부가 유실되던 것 방지
+40499:     var _sent=0,_failed=0,_targets=0;
+40500:     for(var _i=0;_i<_admins.length;_i++){
+40501:       var _nm=(_admins[_i]['담당자']||'').trim();
+40502:       if(!_nm||_nm===_me)continue;
+40503:       _targets++;
+40504:       // [260804 운영자 「내용 꽂히게」] 종전엔 본문이 refSummary 50자 컷 + 11px 최흐림 결(참조요약 자리)이라
+40505:       //   메시지함만 보고는 무슨 불편인지 알 수 없어 매번 '불편사항 관리'를 열어야 했다.
+40506:       //   → title에 머리말, reason에 **접수 본문**(500자)을 실어 12px 본문 결로 올린다(정본 렌더 분기 그대로 사용:
+40507:       //   title 있으면 reason이 12px/500 = 본문 자리). 토스트도 mt-sub(2줄 클램프)로 본문 미리보기가 뜬다.
+40508:       try{ var _r=await pushMessage({recipient:_nm,type:'중요',trigger:'불편사항 접수',
+40509:         title:'🗣️ 불편사항이 접수됐어요',
+40510:         before:payload.user,after:payload.category,
+40511:         reason:payload.content.slice(0,500),
+40512:         refNo:payload.id,refSummary:'눌러서 「불편사항 관리」에서 열기'});
+40513:         if(_r)_sent++; else _failed++; }catch(_pe){_failed++;}
+40514:     }
+40515:     // 관측성(분신술 M1): 예전엔 실패를 통째로 삼켜 유실을 아무도 몰랐음 → 콘솔에 결과 남김
+40516:     if(!_admins.length||!_targets)console.warn('[qa notify] 관리자 수신자 0명 — 담당자 시트 관리자여부(N열)/MANAGERS 로드 확인 필요');
+40517:     else if(_failed)console.warn('[qa notify] 관리자 알림 '+_sent+'/'+_targets+'건 전송, '+_failed+'건 실패(서버/네트워크 오류) — 재시도 후에도 유실 가능');
+40518:   }catch(_e){console.warn('[qa notify]',_e);}
+40519:   _qaClose();
+40520:   showToast('소중한 의견 감사합니다! 접수되었어요 🙏','success');
+40521: }
+40522: 
+40523: // === 불편사항 관리 (admin) — 접수 목록 확인 + 상태/처리메모 업데이트 ===
+40524: var _qaData=[], _qaFilterState={status:'all',cat:'all'}, _qaHighlightId=null;
+40525: async function openQaBoard(highlightId){
+40526:   _qaHighlightId = (highlightId||'').toString().trim() || null;
+40527:   // 메시지함에서 특정 건으로 진입하면 그 건이 필터에 가려지지 않게 필터 초기화
+40528:   if(_qaHighlightId){ _qaFilterState={status:'all',cat:'all'}; }
+40529:   const html='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeAdminPanel)"><div class="modal" style="width:96vw;max-width:1000px;max-height:88vh;overflow:auto;--mpad-y:24px;--mpad-x:24px;position:relative"><button class="modal-x" onclick="closeAdminPanel()" title="닫기" aria-label="닫기">✕</button>'+_mhead('불편사항 관리','접수된 불편사항을 확인해요','<button onclick="backToAdminMenu()" title="뒤로" aria-label="뒤로" class="modal-x">'+_NM_ICO.chevL+'</button>')+'<div id="qa-board-body" style="text-align:center;padding:40px;color:#888">'+_ldHtml(16)+'로딩 중</div></div></div>';
+40530:   let el=document.getElementById('admin-panel');
+40531:   if(!el){el=document.createElement('div');el.id='admin-panel';document.body.appendChild(el);}
+40532:   el.innerHTML=html;
+40533:   await _qaBoardLoad();
+40534: }
+40535: async function _qaBoardLoad(){
+40536:   const body=document.getElementById('qa-board-body'); if(!body)return;
+40537:   try{
+40538:     const d=await api('GET','/api/qa');
+40539:     _qaData=(d.qa||[]).filter(function(r){return String(r['ID']||r['내용']||'').trim()!=='';});
+40540:     _qaBoardRender();
+40541:   }catch(e){
+40542:     body.innerHTML='<div style="padding:34px 20px;color:#c0392b;font-size:13px;line-height:1.75;text-align:left">불편사항 목록을 불러오지 못했어요.<br><span style="color:#666">API(Worker)에 <b>/api/qa</b>가 아직 배포되지 않았을 수 있어요. Cloudflare에서 Worker를 재배포한 뒤 다시 열어 주세요.</span><br><span style="color:#bbb;font-size:11px">('+escapeHtml((e&&e.message)||'')+')</span></div>';
+40543:   }
+40544: }
+40545: function _qaSetFilter(k,v){ _qaFilterState[k]=v; _qaBoardRender(); }
+40546: function _qaChip(k,v,label){
+40547:   var on=_qaFilterState[k]===v;
+40548:   return '<button onclick="_qaSetFilter(\''+k+'\',\''+v+'\')" style="padding:5px 12px;border-radius:14px;border:1px solid '+(on?'var(--accent)':'rgba(0,0,0,0.12)')+';background:'+(on?'var(--accent)':'#fff')+';color:'+(on?'#fff':'#666')+';font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .12s">'+escapeHtml(label)+'</button>';
+40549: }
+40550: function _qaBoardRender(){
+40551:   const body=document.getElementById('qa-board-body'); if(!body)return;
+40552:   var statuses=['접수','처리중','완료'], cats=['오류·버그','사용 불편','기능 제안','기타'];
+40553:   var order={'접수':0,'처리중':1,'완료':2};
+40554:   var rows=_qaData.slice();
+40555:   if(_qaFilterState.status!=='all')rows=rows.filter(function(r){return (r['상태']||'접수')===_qaFilterState.status;});
+40556:   if(_qaFilterState.cat!=='all')rows=rows.filter(function(r){return (r['분류']||'')===_qaFilterState.cat;});
+40557:   rows.sort(function(a,b){
+40558:     var sa=(order[a['상태']||'접수']!=null?order[a['상태']||'접수']:0), sb=(order[b['상태']||'접수']!=null?order[b['상태']||'접수']:0);
+40559:     if(sa!==sb)return sa-sb;
+40560:     return String(b['KST']||'').localeCompare(String(a['KST']||''));
+40561:   });
+40562:   var unhandled=_qaData.filter(function(r){return (r['상태']||'접수')!=='완료';}).length;
+40563:   var html='';
+40564:   html+='<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;padding-bottom:14px;padding-right:64px;border-bottom:1px solid #eee"><h3 style="margin:0;flex:1;text-align:left">🗣️ 불편사항 관리</h3><span style="font-size:12px;color:#888">미처리 <b style="color:#c0392b">'+unhandled+'</b> · 전체 '+_qaData.length+'</span></div>';
+40565:   html+='<div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0 14px">';
+40566:   html+=_qaChip('status','all','전체')+statuses.map(function(s){return _qaChip('status',s,s);}).join('');
+40567:   html+='<span style="width:1px;height:16px;background:#e0e0e0;margin:0 5px"></span>';
+40568:   html+=_qaChip('cat','all','분류 전체')+cats.map(function(c){return _qaChip('cat',c,c);}).join('');
+40569:   html+='</div>';
+40570:   if(rows.length===0){
+40571:     html+='<div style="text-align:center;padding:44px 0;color:#aaa;font-size:13px">해당하는 불편사항이 없어요.</div>';
+40572:   }else{
+40573:     html+='<table class="adm-tbl"><thead><tr><th style="width:118px">일시</th><th style="width:104px">접수자</th><th style="width:88px">분류</th><th>내용</th><th style="width:92px">상태</th><th style="width:210px">처리메모</th></tr></thead><tbody>';
+40574:     rows.forEach(function(r){
+40575:       var ri=r._rowIndex, st=r['상태']||'접수';
+40576:       var stColor=st==='완료'?'#2e7d32':(st==='처리중'?'#e67e22':'#c0392b');
+40577:       var _qid=(r['ID']||'').toString();
+40578:       html+='<tr'+(_qid?' data-qa-id="'+escapeHtml(_qid)+'"':'')+'>';
+40579:       html+='<td style="font-size:11px;white-space:nowrap;color:#999">'+escapeHtml(r['KST']||'')+'</td>';
+40580:       html+='<td style="font-size:12px">'+escapeHtml(r['사용자']||'')+((r['부서'])?('<br><span style="color:#aaa;font-size:10px">'+escapeHtml(r['부서'])+'</span>'):'')+'</td>';
+40581:       html+='<td><span style="background:#F0EFFB;color:var(--accent);padding:2px 8px;border-radius:8px;font-size:11px;white-space:nowrap">'+escapeHtml(r['분류']||'기타')+'</span></td>';
+40582:       html+='<td style="font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word;min-width:180px">'+escapeHtml(r['내용']||'')+'</td>';
+40583:       html+='<td><select id="qa-st-'+ri+'" style="width:100%;padding:5px 4px;border:1px solid rgba(0,0,0,0.14);border-radius:8px;font-size:12px;font-family:inherit;font-weight:700;color:'+stColor+'">'+statuses.map(function(s){return '<option value="'+s+'"'+(s===st?' selected':'')+'>'+s+'</option>';}).join('')+'</select></td>';
+40584:       html+='<td><div style="display:flex;gap:5px;align-items:center"><input id="qa-memo-'+ri+'" value="'+escapeHtml(r['처리메모']||'')+'" placeholder="메모" style="flex:1;min-width:0;padding:6px 8px;border:1px solid rgba(0,0,0,0.14);border-radius:8px;font-size:12px;font-family:inherit"><button class="adm-btn" onclick="_qaSaveRow('+ri+')">저장</button></div></td>';
+40585:       html+='</tr>';
+40586:     });
+40587:     html+='</tbody></table>';
+40588:   }
+40589:   body.innerHTML=html;
+40590:   // 메시지함에서 특정 불편사항 클릭해 진입한 경우 해당 행으로 스크롤 + 잠깐 강조
+40591:   if(_qaHighlightId){
+40592:     var _hid=_qaHighlightId; _qaHighlightId=null;
+40593:     try{
+40594:       var _hrows=body.querySelectorAll('[data-qa-id]');
+40595:       for(var _hi=0;_hi<_hrows.length;_hi++){
+40596:         if(_hrows[_hi].getAttribute('data-qa-id')===_hid){
+40597:           var _htr=_hrows[_hi];
+40598:           _htr.scrollIntoView({block:'center'});
+40599:           _htr.style.transition='background 0.5s'; _htr.style.background='var(--accent-light)';
+40600:           (function(el){ setTimeout(function(){ try{ el.style.background=''; }catch(_e){} }, 2200); })(_htr);
+40601:           break;
+40602:         }
+40603:       }
+40604:     }catch(_e){}
+40605:   }
+40606: }
+40607: async function _qaSaveRow(rowIndex){
+40608:   var stSel=document.getElementById('qa-st-'+rowIndex), memoIn=document.getElementById('qa-memo-'+rowIndex);
+40609:   if(!stSel)return;
+40610:   var status=stSel.value, memo=((memoIn&&memoIn.value)||'').trim();
+40611:   try{
+40612:     await api('PATCH','/api/qa',{rowIndex:rowIndex,status:status,memo:memo});
+40613:     var r=_qaData.find(function(x){return x._rowIndex===rowIndex;});
+40614:     if(r){r['상태']=status;r['처리메모']=memo;}
+40615:     showToast('저장됐어요','success');
+40616:     _qaBoardRender();
+40617:   }catch(e){
+40618:     showToast('저장 실패: '+((e&&e.message)||''),'error');
+40619:   }
+40620: }
+40621: 
+40622: function _chatbotMount(){
+40623:   if(document.getElementById('cb-fab'))return;
+40624:   const fab=document.createElement('button');
+40625:   fab.id='cb-fab';fab.className='cb-fab';fab.title='예울이';
+40626:   fab.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>';
+40627:   fab.onclick=_cbToggle;
+40628:   document.body.appendChild(fab);
+40629:   // [260806] 입력줄 Enter에 isComposing 가드 — 없으면 **한글 조합 중 Enter가 조합 중인 글자를 잘라 전송**한다
+40630:   //   (실측 260806: 질문이 「줄바꾸ㅁ」으로 나가 예울이가 "질문이 중간에 끊긴 것 같은데요?"라고 답했다).
+40631:   //   고객 분석 입력줄(_memAiCardHtml)이 이미 쓰던 정본 가드를 그대로 계승 — 새 문법 0.
+40632:   const win=document.createElement('div');
+40633:   win.id='cb-win';win.className='cb-win';
+40634:   win.innerHTML='<div class="cb-hdr"><div class="cb-ava"><img src="image/yeul_face.png" alt="예울이" style="width:100%;height:100%;border-radius:50%;object-fit:cover"></div><div class="cb-titles"><div class="cb-title">예울이</div><div class="cb-sub">자동응답 · 규정/프로그램 · 그 외엔 AI</div></div><button class="cb-close" onclick="_cbClear()" title="대화 지우기" style="font-size:15px">⟲</button><button class="cb-close" onclick="_cbToggle()" title="닫기" aria-label="닫기">✕</button></div>'+
+40635:     '<div class="cb-body" id="cb-body"></div>'+
+40636:     '<div class="cb-foot"><input class="cb-in" id="cb-in" placeholder="궁금한 내용을 입력하세요" onkeydown="if(event.key===\'Enter\'&&!event.isComposing)_cbSend()"><button class="cb-send" onclick="_cbSend()"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button></div>';
+40637:   document.body.appendChild(win);
+40638:   // 바깥(캘린더/모달 등) 클릭 시 자동 닫힘 — 창/FAB 내부 클릭은 유지

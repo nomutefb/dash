@@ -1,0 +1,197 @@
+SHA256 55d3b2b2b205972cbaa6ab5fbf22b82c224a7434be26a7a29652cb8fba247b2e
+58: <script id="miso-db" type="application/json">{"meta":{"generator":"tools/miso/build_db.mjs (기계산출물 — 손편집 금지)","generatedAt":"2026-07-30T01:50:32.542Z","maskPolicy":{"secrets":"제외(PIN·비밀번호)","emails":"제외","contacts":"제외(전화·내선·휴대폰 — 앱 미표시 PII)","members":"미반입(구조 설계만 → meta.memberSchema)"},"note_names":"담당자·신청자 등 실명 컬럼은 앱 표시에 필수라 유지됨 — 공개 서빙 시 노출 주의(운영자 판단)","counts":{"Claude_Log":109,"special":34,"rules":901,"managers":38,"diagrams":2,"logs":827,"messages":197,"qa_complaints":1,"ops_공연마스터":9,"ops_공연색인":1317,"ops_세부운영관리대장정리":2188,"ops_일일입력":1602,"ops_장도":214,"exhib_daily":29,"ops_카페일정":61,"ops_회차상세":17,"chatbot_faq":4,"chatbot_log":31,"contents":5,"programs":30,"platforms":10,"records":137,"applysettings":6,"exhib_master":25,"edu_institutions":499,"edu_roster":499},"missing":[],"warnings":[],"maskedColumns":{"managers":["PIN","비밀번호","이메일","전화번호","내선번호"]},"memberSchema":[],"blankRowsDropped":{"Claude_Log":90,"special":965,"logs":1,"messages":1,"ops_공연색인":1,"ops_일일입력":1225,"records":861,"applysettings":4},"standalone":{"builtAt":"2026-08-13T09:08:31.479Z","note":"MISO 이식판 — 기계산출물(손편집 금지)"},"lastCorrection":"WA19-v1"},"datasets":{"special":{"source":"db_export/PromoSpecial.csv","headers":["#","입력시간(KST)","시리얼","시작일","종료일","시간","유형","내용","담당자","작성자","비고"],"rows":[{"#":"","입력시간(KST)":"2026-05-23 16:55:41","시리얼":"SP-1779522941307","시작일":"2026-05-28","종료일":"2026-05-28","시간":"09:00 - 18:00","유형":"출장","내용":"정보보안 - 진주 - 이노폴리텍","담당자":"Avery Reed 08336","작성자":"admin","비고":""},{"#":"","입력시간(KST)":"2026-05-23 16:57:25","시리얼":"SP-1779523045723","시작일":"2026-06-08","종료일":"2026-06-09","시간":"09:00 - 18:00","유 [TRUNCATED]
+257:     try{ if(typeof userRole!=='undefined' && userRole) return userRole==='admin'; }catch(e){}   // TDZ면 아래 폴백
+3239:       <div class="month-nav nav-mnav"><button class="arrow" onclick="changeMonth(-1)">‹</button><div><span class="month-text" id="nav-month"></span><span class="year-text" id="nav-year"></span></div><button class="arrow" onclick="changeMonth(1)">›</button></div><!-- [260710 운영자] 월 네비 = 최상단 nav로(로고와 간격 크게·중앙 메뉴와 거리) — 확보분만큼 캘린더·레일 상승 -->
+3242:     <div class="nav-center" id="nav-menus"></div>
+4052:     const dragAttr=userRole==='admin'?' draggable="true" ondragstart="onSpDragStart(event,'+it._rowIndex+',\''+key+'\')" ondragend="onSpDragEnd(event)"':'';
+4053:     const cursorStyle=userRole==='admin'?'cursor:grab':'';
+4055:     inner+='<div class="sp-item'+(spDone?' done':'')+'"'+ctxAttr+clickAttr+dragAttr+' data-sp-row="'+it._rowIndex+'" style="'+cursorStyle+'" title="'+escapeHtml(tipParts.join(' · '))+(userRole==='admin'?' (우클릭: 변경/삭제 · 드래그: 이동)':'')+'">'+
+4065:   const areaCtx=userRole==='admin'?' oncontextmenu="onSpAreaContextMenu(event);return false;"':'';
+4066:   return '<div class="sp-area"'+areaCtx+' title="담당자 일정'+(userRole==='admin'?' — 우클릭: 변경/삭제':'')+'"><div class="sp-track" data-sp-count="'+items.length+'">'+inner+'</div></div>';
+4070: function _spRowMenu(event,rowIndex,src){
+4111: function onSpAreaContextMenu(event){
+4112:   if(userRole!=='admin')return;
+4522: function _enterApp(){
+5034: function _enterAppFromSession(){
+5093:     if(userRole==='admin')sessionStorage.setItem('subAdminPin','0000');
+5114:     if(userRole==='admin')sessionStorage.setItem('subAdminPin','0000');
+5385:     // (260704: 세로막대형 열 제거로 관리자/이메일이 한 칸 당겨짐 + 기관여부 열 반영 + 이메일 신규)
+5395:       {key:'기관여부',label:'기관',type:'checkbox'},
+5396:       {key:'공연여부',label:'공연',type:'checkbox'},
+5397:       {key:'전시여부',label:'전시',type:'checkbox'},
+5405:       {key:'홍보여부',label:'홍보',type:'checkbox',sep:true},
+5427:   '공연':'공연여부',
+5428:   '전시':'전시여부',
+5475:   PR_MANAGERS=MANAGERS.filter(m=>isFlagOn(m['홍보여부']));
+5524:   // 게시 담당자 — 홍보여부=1
+5697:   if(userRole==='admin' && !sessionStorage.getItem('subAdminPin')){
+5824: async function _presPoll(){ if(userRole!=='admin'||!password)return; try{ _presData=await api('GET','/api/presence'); _presRender(); }catch(e){} }
+5981: function updateRoleTag(){
+5984:   el.className='role-tag '+(userRole==='admin'?'admin':'user');
+5985:   el.textContent=userRole==='admin'?'관리자':'일반';
+5986:   el.title=userRole==='admin'?'관리자 권한':'일반 사용자';
+6112:     const hd=document.createElement('div');hd.style.cssText='padding:8px 14px 6px;font-size:11px;color:#999;font-weight:700';hd.textContent=(_nm?_nm+' 님':'계정')+(userRole==='admin'?' · 관리자':' · 일반');
+6114:     if(userRole==='admin')menu.appendChild(item('설정 (관리)',function(){_ddCloseAll();openAdminPanel();}));
+6174: function toggleMobileNav(){
+6180: function closeMobileNav(){
+6205: function _navPtrV(){   // 현재 포인터 속도 — 마지막 mousemove가 오래됐으면 '멈춤'(0)
+6209: function _navHovStop(b){ if(b&&b._hovRAF){cancelAnimationFrame(b._hovRAF);b._hovRAF=0;} }   // 보류 중 프레임 루프 취소
+6210: function buildNav(){
+6214:   const menus=(userRole==='admin'?[...MENUS.filter(function(m){return m.id!=='promo';})]:MENUS);
+6216:   var _gear=document.getElementById('admin-gear'); if(_gear)_gear.style.display=(userRole==='admin')?'flex':'none';
+6217:   var _pw=document.getElementById('pres-wrap'); if(_pw)_pw.style.display=(userRole==='admin')?'block':'none';
+6289: function _navHoverBgTo(btn){
+6298: function openAdminPanel(){if(userRole!=='admin')return;var el=document.getElementById('admin-panel');if(!el){el=document.createElement('div');el.id='admin-panel';document.body.appendChild(el);}el.innerHTML='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeAdminPanel)"><div class="modal admin-modal" style="width:440px;position:relative"><button class="modal-x" onclick="closeAdminPanel()" aria-label="닫기">✕</button>'+_mhead('관리','관리할 항목을 선택하세요')+_adminMarkup()+'</div></div>';_adminBind(el);}
+6437:   if(typeof userRole==='undefined'||userRole!=='admin')return;
+7268:       + (userRole==='admin'?_mheadBtn('ymTicketlinkOpen(true)','일일입력','var(--accent)',''):''))
+8491: function _bizBookN(){ return (typeof userRole!=='undefined'&&userRole==='admin')?4:3; }
+8748: function _bizmPageNav(){ return ''; }   // [260723f] 절대배치 ‹›(구 srail-cbtn) 폐지 — 페이지 컨트롤은 헤더 우측 _bizmDots로 통합(‹ • • ›)
+9123: function _bizOvYearMenu(btn){
+11218: function _isAcct(){ try{ if(typeof userRole!=='undefined'&&userRole==='admin')return true; return sessionStorage.getItem('isAcct')==='1'; }catch(_e){ return false; } }
+11619: function _bizmYearMenu(btn){
+13652: function _srailCarNav(on){ var p=document.getElementById('srail-cprev'),n=document.getElementById('srail-cnext'); if(p)p.style.display=on?'flex':'none'; if(n)n.style.display=on?'flex':'none'; }   // 좌우 넘김 버튼 노출 토글(운영자 260714)
+13923:     +((typeof userRole!=='undefined'&&userRole==='admin')?'<button class="ana-chip" onclick="_srailEditOpen(\''+_anaEsc(p.name)+'\')" title="이 공연의 일일입력 실적을 시트(DB)에서 불러와 수정 · 특정 날짜를 예측 계산에서 제외(관리자 전용)">실적 수정</button>':'')
+13924:     +((typeof userRole!=='undefined'&&userRole==='admin')?'<button class="ana-chip" onclick="_srailRoundsOpen(\''+_anaEsc(p._mid||'')+'\',\''+_anaEsc(p.name)+'\')" title="회차별 공연일·오픈 객석 입력 — 전 회차 입력이 충족되면 합산이 가용좌석(점유율 분모)이 됩니다(관리자 전용)">회차·객석</button>':'')
+13953: function _srailNavSlot(html){
+14459: function _ryYearMenu(btn){
+14745: function _ryDrillNav(cur_key){
+14853:   var adm=(typeof userRole!=='undefined'&&userRole==='admin');
+14863:   if(typeof userRole==='undefined'||userRole!=='admin')return;   // 비admin은 애초에 안내 카드(위)라 여기 안 온다 — 이중 안전
+15152:   if(typeof userRole==='undefined'||userRole!=='admin'){ showToast('관리자만 수정할 수 있어요','error'); return; }
+15295:   if(typeof userRole==='undefined'||userRole!=='admin'){ showToast('관리자만 수정할 수 있어요','error'); return; }
+15532:       + (userRole==='admin'?_mheadBtn('ymTicketlinkOpen(true)','일일입력','var(--accent)',''):''))
+16219:   if(isFlagOn(me['공연여부']))cats.push('공연');
+16220:   if(isFlagOn(me['전시여부']))cats.push('전시');
+16404: // [260723 운영자 버그수정] 구 게이트가 전시여부 플래그(또는 슈퍼admin)를 추가로 요구 → 슈퍼admin 폐기(role==='admin' 통일) 후 플래그 미보유 admin이 전시 입력 자체를 못 함. 모달이 이미 admin 전용(openDailyInput)이라 종류 제한은 불필요 → 진행중 전시 유무로만 판정.
+16406:   var showEx=(typeof userRole!=='undefined'&&userRole==='admin')&&_dailyExhibMasters().length>0;
+16481:   if(userRole!=='admin'){showToast('관리자만 입력할 수 있어요','error');return;}
+16507: function _navBtnByLabel(lbl){ var r=null; document.querySelectorAll('.nav-btn').forEach(function(b){ if((b.textContent||'').trim()===lbl)r=b; }); return r; }
+18036:   if(userRole!=='admin'){ showToast('관리자만 사용할 수 있어요','error'); return; }
+18236: function _loadNaverMaps(cb){
+19720: function _ypIsAdmin(){ return (typeof userRole!=='undefined'&&userRole==='admin'); }
+20026: function backToAdminMenu(){openAdminPanel();}
+20051:   if(userRole!=='admin'){showToast('관리자만 접수할 수 있어요','error');return;}
+20148:   if(userRole!=='admin'){showToast('관리자만 처리할 수 있어요','error');return;}
+20199:   if(userRole!=='admin'){showToast('관리자만 처리할 수 있어요','error');return;}
+20274:   const isAdmin=userRole==='admin';
+20320:   const isAdmin=userRole==='admin';
+20392:   const stBtn=userRole==='admin'?'<button onclick="_spRowMenu(event,'+rowIndex+',\'view\')" style="margin-left:10px;padding:4px 13px;border-radius:8px;border:1px solid rgba(74,77,231,0.35);background:#fff;color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s" onmouseover="this.style.background=\'rgba(74,77,231,0.10)\';this.style.borderColor=\'var(--accent)\'" onmouseout="this.style.background=\'#fff\';this.style.borderColor=\'rgba(74,77,231,0.35)\'">변경</button>':'';
+20424:   if(userRole!=='admin'){showToast('관리자만 할 수 있어요','error');return;}
+20983:   if(userRole!=='admin'){showToast('관리자만 등록할 수 있어요','error');return;}
+21342:   if(userRole!=='admin'){showToast('관리자만 등록할 수 있어요','error');return;}
+21434:   if(userRole!=='admin'){showToast('관리자만 할 수 있어요','error');return;}
+21481: function onSpContextMenu(event,rowIndex){
+21487:   if(userRole==='admin'){
+21810:   if(userRole==='admin')return true;
+21886:       if(userRole==='admin'&&(rec['진행 상태']||'')==='신청 중')patch['진행 상태']='예정';
+21891:       if(userRole==='admin'&&_recip&&_recip!==_myAppl){
+21968: // 시트 헤더: A=담당부서, B=담당자, C=직위, D=휴직여부, E=홍보여부, F=공연여부,
+21969: //          G=전시여부, H=예술교육여부, I=대관여부, J=PIN, K=비밀번호, L=계정여부
+21978:     pick('홍보여부'),pick('공연여부'),pick('전시여부'),pick('예술교육여부'),pick('대관여부'),
+22110:   if(userRole!=='admin'){showToast('관리자만 보류 처리할 수 있어요','error');return;}
+22146:   if(userRole!=='admin' && !_isMineRec(rec,myAppl)){showToast('본인 신청만 재신청할 수 있어요','error');return;}
+22247:   const isAdmin=userRole==='admin';
+22616:         const clickAttr=userRole==='admin'?' onclick="_schedReturnFlag=true;closePromoBoard();openSpecialEntry(null,'+r._rowIndex+')"':'';
+22617:         html+='<tr class="promo-row"'+clickAttr+' style="border-bottom:1px solid #f0f0f0;cursor:'+(userRole==='admin'?'pointer':'default')+';'+trBg+';'+trBorder+';animation-delay:'+_animDelay+'" onmouseover="this.style.background=\''+hoverBg+'\'" onmouseout="this.style.background=\''+baseBg+'\'">';
+22635:         if(userRole==='admin'){
+22853:   // 진행 상태는 submitPromoRequest에서 userRole==='admin'이면 '예정'으로 자동 저장
+23065:   if(userRole==='admin')return true;
+23079:   if(userRole!=='admin'){
+23093: function _renderChangeMenu(rec){
+23094:   const isAdmin=userRole==='admin';
+23156: function closeChangeMenu(){
+23322:   if(_pwSelectedSteps.includes(7)&&userRole==='admin'){
+23326:   if(_pwSelectedSteps.includes(8)&&userRole==='admin'&&_pwData.s_applicant){
+23330:   if(userRole==='admin' && (orig['진행 상태']||'')==='신청 중' && !patch['진행 상태'] && Object.keys(patch).length>0){
+23394:       if(userRole==='admin'){
+23413:       if(userRole!=='admin'&&_cwIsPostFix(orig)){
+23644:     if(userRole!=='admin'){
+23661:     if(userRole!=='admin'){
+23682:     if(userRole==='admin'){
+23747:   if(userRole==='admin'&&!opts.force)return null;
+23817:     if(v==='카카오톡' && userRole!=='admin'){
+24082:     const row=_buildRecRow(_pwData, (userRole==='admin'?'예정':'신청 중'), _subNo, false);
+24090:     // 이전 코드 (if userRole!=='admin' setItem _pwData.applicant)는
+24937:   const _khDisp=(_pwData.plat1==='카카오톡' && userRole!=='admin')?'':'none';
+25593:   if(userRole==='admin'){
+26563:   if(typeof userRole!=='undefined'&&userRole==='admin')return{ok:true};
+26614:   if(typeof userRole!=='undefined'&&userRole==='admin')return{ok:true};
+26673:   var seg=(userRole==='admin');
+26808:   if(userRole!=='admin'){showToast('고객 관리는 관리자 전용이에요','error');return;}
+26918:     if(typeof userRole==='undefined'||userRole!=='admin')return 'notadmin';
+26928: function _aipromoMenuBuild(menu){
+26930:   menu.innerHTML=(userRole==='admin'?'<button type="button" onclick="_ddCloseAll();setTimeout(function(){ymMemberSyncOpen();},0)" style="'+itemCss+'">회원 정보 갱신</button>':'');
+26934:   if(userRole!=='admin'){showToast('고객 분류는 관리자 전용이에요','error');return;}
+26940: document.addEventListener('mouseover',function(e){ try{ var b=(e.target&&e.target.closest)?e.target.closest('.nav-btn[data-mid="aipromo"]'):null; if(b&&typeof userRole!=='undefined'&&userRole==='admin'&&!window._bkPreKick){ window._bkPreKick=1; _bkLoad(false).catch(function(){}); } }catch(_e){} },true);
+26961:       +((typeof userRole!=='undefined'&&userRole==='admin')?'<button type="button" class="btn btn--primary btn--md" id="pa-auto" onclick="_paAutoNow()">오늘 브리핑 지금 생성</button>':'')
+26988:     if(!meta||!meta.ok||!meta.id){ empty('아직 자동 브리핑이 없어요 — 매일 아침 8:30에 처음 생성돼요'+((typeof userRole!=='undefined'&&userRole==='admin')?'. 위 [오늘 브리핑 지금 생성]으로 바로 만들 수도 있어요':'')); return; }
+27303:   const isAdmin=userRole==='admin';
+27444:   if(userRole!=='admin'){showToast('관리자만 추가할 수 있어요','error');return;}
+27690: async function _mgrAddAcctCol(){
+27691:   if(typeof userRole==='undefined'||userRole!=='admin'){ showToast('관리자만 할 수 있어요','error'); return; }
+27776:     html+=(userRole==='admin')?'<button class="adm-btn adm-btn-del" onclick="deleteSheetRow(\''+slug+'\','+r._rowIndex+')">삭제</button>':'<button class="adm-btn adm-btn-del" disabled title="관리자만 삭제 가능" style="opacity:0.35;cursor:not-allowed">삭제</button>';
+27804:     PR_MANAGERS = MANAGERS.filter(m=>isFlagOn(m['홍보여부']));
+27876:     MANAGERS=[];await loadManagers();PR_MANAGERS=MANAGERS.filter(m=>isFlagOn(m['홍보여부']));populateMasterDropdowns();
+27915:     if(slug==='manager'){MANAGERS=[];await loadManagers();PR_MANAGERS=MANAGERS.filter(m=>isFlagOn(m['홍보여부']));populateMasterDropdowns();}
+27953:     const _bizCols=[['홍보여부','홍보'],['기관여부','기관'],['공연여부','공연'],['전시여부','전시'],['예술교육여부','교육'],['대관여부','대관']];
+28027:     if(slug==='manager'){MANAGERS=[];await loadManagers();PR_MANAGERS=MANAGERS.filter(m=>isFlagOn(m['홍보여부']));populateMasterDropdowns();}
+28052:   if(userRole!=='admin'){ showToast('관리자만 삭제할 수 있어요','error'); return false; }
+28063:     if(slug==='manager'){MANAGERS=[];await loadManagers();PR_MANAGERS=MANAGERS.filter(m=>isFlagOn(m['홍보여부']));populateMasterDropdowns();}
+28260:     html+=(userRole==='admin')?'<button class="adm-btn adm-btn-del" onclick="deleteProgram('+p._rowIndex+')">삭제</button>':'<button class="adm-btn adm-btn-del" disabled title="관리자만 삭제 가능" style="opacity:0.35;cursor:not-allowed">삭제</button>';
+29876:         var _canDrag=(userRole==='admin'&&!applying)||(userRole!=='admin'&&isMine&&applying);
+30077:   if(userRole!=='admin')return false;
+30083:   if(userRole!=='admin')return false;
+30126: function onCellContextMenu(event,key){
+30135:   }else if(userRole==='admin'){
+30162: function closeCellContextMenu(){
+30167: function onEvContextMenu(event,rowIndex,dateKey){
+30181:   const _selOn=(userRole==='admin'&&_evSel.size>0&&_evSel.has(rowIndex));
+30195:   if(userRole==='admin'){
+30394:       if(userRole==='admin')h+='<button class="sp-card-del" onclick="event.stopPropagation();deleteSpecialEntry('+it._rowIndex+')" title="삭제" aria-label="삭제">✕</button>';
+30420:     var _showDel=userRole==='admin';
+30428:       var _delTitle=(userRole==='admin'&&st!=='임시')?'삭제':(st==='임시'?'임시저장 삭제':'신청 취소');
+30439:   if(userRole==='admin')h+='<button class="add-btn" onclick="openAdminWizard(\''+dk(dateObj)+'\')">+ 새 콘텐츠 등록</button>';
+30590: function onPerfContextMenu(event, target){
+30998:   const isAdmin=userRole==='admin';
+31248:   if(typeof _cwUserCanEdit==='function'&&userRole!=='admin'&&_cwUserCanEdit(rec)){
+31267: function navRec(dir,event){
+31286: function doNavToRec(newRec){
+31324: function applyModalPermission(isReadOnly){
+31358:   if(userRole!=='admin'&&!forceReadOnly){
+31619: function _bnavBuild(){
+31622:   const isAdmin=(userRole==='admin');
+31644: function _bnavCal(){try{closePanel();}catch(_e){}if(typeof setMainView==='function')setMainView('cal');window.scrollTo({top:0,behavior:'smooth'});}   // [260723 평의회3] 하단네비 캘린더 = 드로어와 동일하게 캘린더 모드 전환 경유(라벨 이중 동작 해소)
+31645: function _bnavMore(){
+31646:   const isAdmin=(userRole==='admin');
+31723: function _calMenuBuild(menu){
+31734: function _salesDashboardMenuBuild(menu){
+31740:       +(userRole==='admin'?'<div style="height:1px;background:var(--border);margin:6px 10px"></div><button type="button" onclick="_ddCloseAll();setTimeout(function(){ymTicketlinkOpen(false);},0)" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'"><span style="flex:1">판매 실적 갱신</span></button>':'');
+31742: function _bizMenuBuild(menu){
+31753:      +(false&&userRole==='admin'?'<button type="button" onclick="_ddCloseAll();openMemberOverview()" title="거주지·연령·전국 분포 요약 (회원 조회는 여기서 진입)" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\';_memWarm()" onmouseleave="this.style.background=\'none\'">고객 분석</button>':'')
+31785: function _contentMenuBuild(menu){
+32188: function _bpListMenu(btn){
+32316: function _bpScopeMenu(btn){
+33597: function _playzoneMenuBuild(menu){
+33608: function _salesMenuBuild(menu){
+33613:     +(userRole==='admin'?'<button type="button" onclick="_ddCloseAll();setTimeout(function(){ymTicketlinkOpen(false);},0)" style="'+itemCss+';background:rgba(74,77,231,0.06)" onmouseenter="this.style.background=\'rgba(74,77,231,0.12)\'" onmouseleave="this.style.background=\'rgba(74,77,231,0.06)\'"><span style="flex:1">판매 실적 갱신</span></button>':'');   // 구 '일일 실적 입력'(관리자) · [260731 3차] 구 '실적 분석'(openBusinessBoard)은 「사업 결과 비교」로 개명해 대시보드로 이동
+33630: function _memWarm(){ if(userRole!=='admin')return; try{_bkWarm();}catch(e){}   /* [260804] 예매 집계도 같이 덥힌다 — 첫 예매 질문에서 「아직 안 불러왔어요」가 안 뜨게 */
+33641:   if(typeof userRole==='undefined'||userRole!=='admin')return;   // 비admin = 4면 자체가 없다(_bizBookN=3) · 서버도 PII 시트에 admin 강제
+33646:   if(userRole!=='admin'){showToast('회원 조회는 관리자 전용이에요','error');return;}
+33870:   if(userRole!=='admin'){showToast('고객 분석은 관리자 전용이에요','error');return;}
+34359: function _bkWarm(){ if(userRole!=='admin'||_bkState||_bkLoading)return; try{_bkLoad(false);}catch(e){} }
+34484:   if(ask.tail&&userRole!=='admin')return '휴대폰 뒤 자리로 찾는 건 <b>관리자 전용</b>이에요.';
+34866: function _segDdMenu(k){
+34931: function _segTokMenu(btn,k){
+34972:   if(userRole!=='admin'){showToast('고객 분류는 관리자 전용이에요','error');return;}
+35221:   if(userRole!=='admin'||!_bkAsk){console.warn('[seg] 명단 보기 중단 — 권한 또는 질의 조건 없음');return;}
+35336:   if(userRole!=='admin'){showToast('고객 분류는 관리자 전용이에요','error');return;}
+36156: function openNaverBlogTool(){
+36178: function closeNaverBlogTool(){
+38524:   if(userRole!=='admin'){showToast('관리자만 쓸 수 있어요','error');return;}
+38544:   if(userRole!=='admin'){showToast('관리자만 쓸 수 있어요','error');return;}
+40696: function _cbAskMenu(){
+41234:   if(userRole!=='admin'){showToast('관리자만 할 수 있어요','error');return;}
+41256:   if(userRole!=='admin'){showToast('관리자만 할 수 있어요','error');return;}
+41302:   if(userRole!=='admin'){
+41364:     if(userRole!=='admin')return;
+41408:   if(userRole!=='admin'){

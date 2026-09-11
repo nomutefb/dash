@@ -1,0 +1,379 @@
+public/standalone.html L27622-27999
+async function openSheetAdmin(slug){
+  const cfg=SHEET_CONFIG[slug];
+  if(!cfg){showToast('알 수 없는 시트예요: '+slug,'error');return;}
+  const html='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeAdminPanel)"><div class="modal" style="width:96vw;max-width:1100px;max-height:88vh;overflow:auto;--mpad-y:24px;--mpad-x:24px;position:relative"><button class="modal-x" onclick="closeAdminPanel()" title="닫기" aria-label="닫기">✕</button>'+_mhead('시트 관리','운영 시트를 앱에서 바로 고쳐요','<button onclick="backToAdminMenu()" title="뒤로" aria-label="뒤로" class="modal-x">'+_NM_ICO.chevL+'</button>')+'<div id="sheet-admin-body" style="text-align:center;padding:40px;color:#888">'+_ldHtml(16)+'로딩 중</div></div></div>';
+  let el=document.getElementById('admin-panel');
+  if(!el){el=document.createElement('div');el.id='admin-panel';document.body.appendChild(el);}
+  el.innerHTML=html;
+  await renderSheetList(slug);
+}
+
+// [260812] 담당자 시트 `회계여부` 열 신설(1회) — 값은 안 건드리고 P1 헤더만 심는다(Worker가 끝 append·멱등).
+async function _mgrAddAcctCol(){
+  if(typeof userRole==='undefined'||userRole!=='admin'){ showToast('관리자만 할 수 있어요','error'); return; }
+  if(!await showConfirm('담당자 시트 맨 끝에 「회계여부」 열을 만들까요? 기존 열·값은 그대로예요.',{title:'회계 권한 열 추가',okText:'만들기'}))return;
+  showOverlayLoad('시트에 열을 추가하는 중입니다...');
+  try{
+    const r=await api('POST','/api/maint/add-column',{sheet:'담당자',header:'회계여부'});
+    showToast('「회계여부」 열을 '+(r.col||'')+'에 '+(r.note?'이미 갖고 있었어요':'만들었어요'),'success');
+    MANAGERS=[];await loadManagers();
+    await renderSheetList('manager');
+  }catch(e){ showToast('실패: '+(e.message||e),'error'); }
+  finally{ hideOverlayLoad(); }
+}
+
+async function renderSheetList(slug){
+  const cfg=SHEET_CONFIG[slug];
+  try{
+    const d=await api('GET','/api/sheet/'+slug);
+    const rows=(d.rows||[]).filter(r=>cfg.columns.some(c=>r[c.key]!==''&&r[c.key]!=null));
+    _sheetCache[slug]=rows;
+    document.getElementById('sheet-admin-body').innerHTML=buildSheetListHtml(slug,rows);
+  }catch(e){
+    document.getElementById('sheet-admin-body').innerHTML='<div style="color:red;padding:20px">로드 실패: '+escapeHtml(e.message)+'</div>';
+  }
+}
+
+function buildSheetListHtml(slug,rows){
+  const cfg=SHEET_CONFIG[slug];
+  let html='<div style="display:flex;align-items:center;margin-bottom:10px;gap:8px;padding-bottom:14px;padding-right:48px;border-bottom:1px solid #eee">';
+  html+='<h3 style="margin:0;flex:1;text-align:left">'+escapeHtml(cfg.title)+'</h3>';
+  // [260812] 담당자 시트에 `회계여부`(P열) 헤더가 아직 없으면 그 자리에서 만든다.
+  //   절대명령 9(xlsm 직접 편집 금지)라 시트 **구조** 변경도 Worker를 거쳐야 한다 → `/api/maint/add-column`(끝 append·멱등).
+  //   헤더가 생기면 이 버튼은 사라진다(rows에 그 키가 생기므로) = 한 번 쓰고 없어지는 안내.
+  if(slug==='manager'&&!rows.some(r=>Object.prototype.hasOwnProperty.call(r,'회계여부')))
+    html+='<button onclick="_mgrAddAcctCol()" title="담당자 시트 맨 끝에 「회계여부」 열을 만듭니다 — 기존 열은 한 칸도 안 움직여요" style="padding:7px 14px;background:var(--surface-solid);color:var(--peach-text);border:1.5px solid var(--peach-text);border-radius:10px;cursor:pointer;font-weight:700;font-size:12px">회계여부 열 만들기</button>';
+  html+='<button onclick="openSheetForm(\''+slug+'\',null)" style="padding:7px 16px;background:var(--accent);color:#fff;border:0;border-radius:10px;cursor:pointer;font-weight:600;font-size:13px">등록</button>';
+  html+='</div>';
+  if(cfg.inlineEdit)html+='<div style="font-size:12px;color:#888;margin-bottom:14px">💡 셀을 클릭해서 직접 변경 → 행 끝의 [저장] 버튼이 활성화되면 클릭</div>';
+  if(cfg.note)html+='<div style="font-size:11px;color:#888;margin-bottom:10px;padding:8px 12px;background:#fafafa;border-radius:8px">'+escapeHtml(cfg.note)+'</div>';
+  html+='<table class="adm-tbl"><thead><tr>';
+  cfg.columns.forEach(c=>{if(c.hidden)return;html+='<th style="'+(c.type==='checkbox'?'width:46px;padding:11px 3px;text-align:center;':'')+(c.sep?'border-left:2px solid var(--border);padding-left:12px;':'')+'">'+escapeHtml(c.label)+'</th>';});
+  html+='<th></th></tr></thead><tbody>';
+  rows.forEach(r=>{
+    html+='<tr data-row="'+r._rowIndex+'">';
+    cfg.columns.forEach(c=>{
+      if(c.hidden) return; // hidden 컬럼은 표 렌더 skip (데이터는 save 시 유지)
+      const raw=r[c.key];
+      if(cfg.inlineEdit){
+        if(c.type==='checkbox'){
+          const on=(raw==='1'||raw===1||raw===true||String(raw||'').toLowerCase()==='true');
+          // 관리자여부 컬럼은 슈퍼 admin만 토글 가능 (서브 admin은 read-only)
+          const isAdminCol=(slug==='manager'&&c.key==='관리자여부');
+          const locked=isAdminCol&&!_isSuperAdmin();
+          const lockedAttr=locked?' disabled title="최고관리자만 변경 가능"':'';
+          const lockedStyle=locked?' style="opacity:0.35;cursor:not-allowed"':'';
+          html+='<td style="text-align:center;width:46px;padding-left:3px;padding-right:3px;'+(c.sep?'border-left:2px solid var(--border);padding-left:12px;':'')+'"><input type="checkbox" class="inl-cb" data-key="'+escapeHtml(c.key)+'"'+(on?' checked':'')+lockedAttr+lockedStyle+' onchange="markRowDirty(\''+slug+'\','+r._rowIndex+')"></td>';
+        }else{
+          html+='<td style="'+(c.sep?'border-left:2px solid var(--border);padding-left:12px;':'')+'"><input type="text" class="inl-input" data-key="'+escapeHtml(c.key)+'" value="'+escapeHtml(raw||'')+'" oninput="markRowDirty(\''+slug+'\','+r._rowIndex+')"></td>';
+        }
+      }else{
+        let val=raw;
+        if(c.type==='checkbox'){
+          const on=(val==='1'||val===1||val===true||String(val||'').toLowerCase()==='true');
+          val=on?'<span style="color:var(--accent);font-weight:700;font-size:14px">●</span>':'<span style="color:#ddd;font-size:14px">○</span>';
+        }else val=escapeHtml(val||'');
+        html+='<td style="'+(c.sep?'border-left:2px solid var(--border);padding-left:12px;':'')+'">'+val+'</td>';
+      }
+    });
+    html+='<td style="text-align:right;white-space:nowrap">';
+    // manager 시트 — 비밀번호 초기화 버튼 (사용자에게 전달할 PIN/비밀번호 관리)
+    if(slug==='manager'){
+      const _hasPin = !!(r['PIN']||'');
+      const _userName = escapeHtml(r['담당자']||'사용자');
+      const _email = (r['이메일']||'').trim();
+      // 이메일 재설정 버튼 (초기화 좌측) — 봉투 아이콘, 2회 입력 일치 시 O열 갱신
+      html+='<button class="adm-btn" style="color:var(--accent);border-color:var(--accent);margin-right:4px" onclick="openEmailReset('+r._rowIndex+',\''+_userName.replace(/'/g,"\\'")+'\',\''+_email.replace(/'/g,"\\'")+'\')" title="이메일 재설정'+(_email?' (현재: '+escapeHtml(_email)+')':' (미설정)')+'">✉</button>';
+      const _btnTitle = _hasPin?'PIN 초기화 — 사용자 다음 접속 때 새로 설정':'PIN 미설정 (사용자가 첫 접속 때 설정)';
+      const _btnStyle = _hasPin?'background:#fff8f3;color:#b35a30;border:1.5px solid #e5c4a8':'background:#f5f5f5;color:#aaa;border:1.5px solid #e0e0e0';
+      html+='<button class="adm-btn" style="'+_btnStyle+';margin-right:4px" '+((_hasPin&&_email)?'':'disabled')+' onclick="resetUserPin('+r._rowIndex+',\''+_userName.replace(/'/g,"\\'")+'\',\''+_email.replace(/'/g,"\\'")+'\')" title="'+_btnTitle+'">\uD83D\uDD11 초기화</button>';
+    }
+    if(cfg.inlineEdit){
+      html+='<button id="save-'+slug+'-'+r._rowIndex+'" class="adm-btn save-row" onclick="saveInlineRow(\''+slug+'\','+r._rowIndex+')" disabled>저장</button>';
+    }else{
+      html+='<button class="adm-btn" onclick="openSheetForm(\''+slug+'\','+r._rowIndex+')">변경</button>';
+    }
+    html+=(userRole==='admin')?'<button class="adm-btn adm-btn-del" onclick="deleteSheetRow(\''+slug+'\','+r._rowIndex+')">삭제</button>':'<button class="adm-btn adm-btn-del" disabled title="관리자만 삭제 가능" style="opacity:0.35;cursor:not-allowed">삭제</button>';
+    html+='</td></tr>';
+  });
+  html+='</tbody></table>';
+  return html;
+}
+
+function markRowDirty(slug,rowIndex){
+  const btn=document.getElementById('save-'+slug+'-'+rowIndex);
+  if(btn&&btn.disabled){
+    btn.disabled=false;
+    btn.classList.add('dirty');
+  }
+}
+
+// === PIN 초기화 (관리자가 manager 시트에서 호출, reset-pin 엔드포인트) ===
+async function resetUserPin(rowIndex, userName, email){
+  if(!email){showToast('이메일이 없는 계정이에요','error');return;}
+  const ok = await showConfirm('<b>'+escapeHtml(userName||'사용자')+'</b> 님의 PIN을 초기화할까요?', {title:'\uD83D\uDD11 PIN 초기화', html:true, okText:'초기화', danger:true});
+  if(!ok) return;
+  showOverlayLoad('초기화 중');
+  try{
+    await api('POST', '/api/auth/reset-pin', {targetEmail: email});
+    showToast(userName+' 님 PIN 초기화 완료. 다음 접속 때 새로 설정합니다');
+    MANAGERS = [];
+    await loadManagers();
+    PR_MANAGERS = MANAGERS.filter(m=>isFlagOn(m['홍보여부']));
+    await renderSheetList('manager');
+  }catch(e){
+    console.error('[resetUserPin]', e);
+    showToast('초기화 실패: '+e.message,'error');
+  }finally{
+    if(typeof hideOverlayLoad==='function')hideOverlayLoad();
+  }
+}
+
+// === 이메일 재설정 (관리자가 manager 목록 ✉ 버튼에서 호출) ===
+// 2회 입력 일치 시 담당자 시트 이메일(O열) 갱신. positional: 기존 행 값 보존 + 이메일만 교체.
+// (Worker set-pin이 이메일로 사용자 매칭 → 이메일이 로그인 키라 재설정 기능 필요)
+function openEmailReset(rowIndex, userName, curEmail){
+  const _cur = curEmail?('현재 '+escapeHtml(curEmail)):'미설정';
+  let html='<div class="modal-bg show" style="z-index:9600" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeEmailReset)"><div class="modal" style="width:94vw;max-width:380px;--mpad-y:24px;--mpad-x:24px;position:relative">';
+  html+='<button class="modal-x" onclick="closeEmailReset()" title="닫기" aria-label="닫기">✕</button>';
+  html+=_mhead('이메일 재설정',(userName||'사용자')+' 님');
+  html+='<p style="margin:0 0 16px;color:var(--dim);font-size:13px">'+_cur+'</p>';
+  html+='<form id="email-reset-form" onsubmit="event.preventDefault();saveEmailReset('+rowIndex+')" style="display:flex;flex-direction:column;gap:12px">';
+  html+='<div><label>새 이메일<span class="req">*</span></label><input id="er-email1" type="email" required placeholder="contact0030707@example.invalid" autocomplete="off" oninput="_emailResetCheck()"></div>';
+  html+='<div><label>이메일 확인<span class="req">*</span></label><input id="er-email2" type="email" required placeholder="한 번 더 입력해 주세요" autocomplete="off" oninput="_emailResetCheck()"></div>';
+  html+='<div id="er-match" style="font-size:12px;min-height:15px;margin-top:-4px;font-weight:600"></div>';
+  html+='<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px;padding-top:14px;border-top:1px solid var(--border)">';
+  html+='<button type="button" onclick="closeEmailReset()" style="padding:9px 18px;border:1px solid rgba(0,0,0,0.08);border-radius:10px;background:var(--surface-solid);cursor:pointer;font-size:13px">취소</button>';
+  html+='<button type="submit" id="er-save" style="padding:9px 22px;background:var(--accent);color:var(--surface-solid);border:0;border-radius:10px;cursor:pointer;font-weight:600;font-size:13px">저장</button>';
+  html+='</div></form></div></div>';
+  let el=document.getElementById('email-reset-modal');
+  if(!el){el=document.createElement('div');el.id='email-reset-modal';document.body.appendChild(el);}
+  el.innerHTML=html;
+  setTimeout(function(){var i=document.getElementById('er-email1');if(i)i.focus();},50);
+}
+function closeEmailReset(){
+  const el=document.getElementById('email-reset-modal');
+  if(el)el.innerHTML='';
+}
+// 이메일 재설정 — 두 칸 실시간 일치 검사 (불일치 즉시 안내 + 저장 버튼 비활성)
+function _emailResetCheck(){
+  var i1=document.getElementById('er-email1'),i2=document.getElementById('er-email2');
+  var msg=document.getElementById('er-match'),btn=document.getElementById('er-save');
+  if(!i1||!i2||!msg)return;
+  var e1=(i1.value||'').trim(),e2=(i2.value||'').trim();
+  if(!e2){ msg.textContent=''; if(btn){btn.disabled=false;btn.style.opacity='';} return; }
+  if(e1===e2){
+    msg.textContent='✓ 이메일이 일치해요';
+    msg.style.color='var(--green)';
+    if(btn){btn.disabled=false;btn.style.opacity='';btn.style.cursor='pointer';}
+  }else{
+    msg.textContent='✕ 이메일이 일치하지 않아요';
+    msg.style.color='var(--peach-text)';
+    if(btn){btn.disabled=true;btn.style.opacity='0.5';btn.style.cursor='not-allowed';}
+  }
+}
+async function saveEmailReset(rowIndex){
+  const e1=((document.getElementById('er-email1')||{}).value||'').trim();
+  const e2=((document.getElementById('er-email2')||{}).value||'').trim();
+  if(!e1||!e2){showToast('이메일을 두 번 모두 입력해 주세요','error');return;}
+  if(e1!==e2){showToast('두 이메일이 일치하지 않아요','error');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e1)){showToast('이메일 형식이 올바르지 않아요','error');return;}
+  const exist=(_sheetCache['manager']||[]).find(r=>r._rowIndex===rowIndex);
+  if(!exist){showToast('행 정보를 못 찾았어요. 목록을 새로고침 해주세요','error');return;}
+  // positional 저장 — 기존 행 값은 그대로 보존하고 이메일(O열)만 교체
+  const values=SHEET_CONFIG['manager'].columns.map(c=>{
+    if(c.key==='이메일')return e1;
+    const v=exist[c.key];
+    return (v===undefined||v===null)?'':v;
+  });
+  showOverlayLoad('저장 중입니다...');
+  try{
+    await api('PATCH','/api/sheet/manager/'+rowIndex,{values});
+    MANAGERS=[];await loadManagers();PR_MANAGERS=MANAGERS.filter(m=>isFlagOn(m['홍보여부']));populateMasterDropdowns();
+    await renderSheetList('manager');
+    closeEmailReset();
+    showToast('이메일이 변경되었어요','success');
+  }catch(e){
+    showToast('저장 실패: '+e.message,'error');
+  }finally{
+    hideOverlayLoad();
+  }
+}
+
+async function saveInlineRow(slug,rowIndex){
+  const tr=document.querySelector('tr[data-row="'+rowIndex+'"]');
+  if(!tr)return;
+  const cfg=SHEET_CONFIG[slug];
+  // hidden 컬럼은 기존 캐시 값 보존 (비밀번호 등 — 표에 안 보이지만 시트에 유지)
+  const _existing=(_sheetCache[slug]||[]).find(r=>r._rowIndex===rowIndex);
+  const values=cfg.columns.map(c=>{
+    if(c.hidden){
+      return _existing?(_existing[c.key]||''):'';
+    }
+    const el=tr.querySelector('[data-key="'+c.key+'"]');
+    if(!el)return '';
+    if(c.type==='checkbox')return el.checked?'1':'';
+    return el.value||'';
+  });
+  // === manager 시트 사전 검증 ===
+  if(slug==='manager'){
+    // 컬럼 인덱스로 PIN과 계정여부 추출
+    const pinColIdx=cfg.columns.findIndex(c=>c.key==='PIN');
+    const activeColIdx=cfg.columns.findIndex(c=>c.key==='계정여부');
+    const myPin=(values[pinColIdx]||'').toString().trim();
+    const myActive=values[activeColIdx]==='1';
+    const myName=tr.querySelector('[data-key="담당자"]')?tr.querySelector('[data-key="담당자"]').value:'';
+    // PIN 중복 허용 — 중복 체크 제거함 (타인 PIN 유출 방지 겸 정책상 중복 허용)
+  }  showOverlayLoad('\uC800\uC7A5 \uC911\uC785\uB2C8\uB2E4...');
+  try{
+    await api('PATCH','/api/sheet/'+slug+'/'+rowIndex,{values:_sheetValuesObj(slug,values)});
+    if(slug==='content'){CONTENT_TYPES=[];await loadContentMeta();populateMasterDropdowns();}
+    if(slug==='manager'){MANAGERS=[];await loadManagers();PR_MANAGERS=MANAGERS.filter(m=>isFlagOn(m['홍보여부']));populateMasterDropdowns();}
+    if(slug==='platform'){await loadPlatforms();populateMasterDropdowns();}
+    showToast('\uC800\uC7A5\uB418\uC5C8\uC2B5\uB2C8\uB2E4','success');
+    const btn=document.getElementById('save-'+slug+'-'+rowIndex);
+    if(btn){btn.disabled=true;btn.classList.remove('dirty');}
+  }catch(e){
+    showToast('\uC800\uC7A5 \uC2E4\uD328: '+e.message,'error');
+  }finally{
+    hideOverlayLoad();
+  }
+}
+
+function openSheetForm(slug,rowIndex){
+  const cfg=SHEET_CONFIG[slug];
+  const existing=rowIndex?_sheetCache[slug].find(r=>r._rowIndex===rowIndex):null;
+  let html='<div class="modal-bg show" style="z-index:9500" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeSheetForm)"><div class="modal" style="width:96vw;max-width:440px;max-height:88vh;overflow:auto;--mpad-y:24px;--mpad-x:24px;position:relative">';
+  html+='<button class="modal-x" onclick="closeSheetForm()" title="닫기" aria-label="닫기">✕</button>';
+  html+=_mhead(cfg.title+' '+(existing?'변경':'등록'),'');
+  html+='<form id="sheet-form" onsubmit="event.preventDefault();saveSheetRow(\''+slug+'\','+(rowIndex||'null')+')" style="display:flex;flex-direction:column;gap:14px">';
+  if(slug==='manager'){
+    // === 사용자 등록 전용 폼 ===
+    const _val=k=>existing?(existing[k]||''):'';
+    const _onFlag=k=>{const x=_val(k);return (x==='1'||x===1||x===true||String(x||'').toLowerCase()==='true');};
+    const _depts=[...new Set((MANAGERS||[]).map(m=>(m['담당부서']||'').trim()).filter(Boolean))].sort();
+    const _curDept=_val('담당부서');
+    if(_curDept&&!_depts.includes(_curDept))_depts.unshift(_curDept);
+    let _deptOpts='<option value="">담당부서 선택</option>';
+    _depts.forEach(d=>{_deptOpts+='<option value="'+escapeHtml(d)+'"'+(d===_curDept?' selected':'')+'>'+escapeHtml(d)+'</option>';});
+    html+='<div><label>담당부서<span class="req">*</span></label><select name="담당부서" required style="width:100%;padding:10px;border:1px solid rgba(0,0,0,0.12);border-radius:10px;font-size:13px;background:#fff">'+_deptOpts+'</select></div>';
+    html+='<div><label>이름<span class="req">*</span></label><input name="담당자" type="text" value="'+escapeHtml(_val('담당자'))+'" required></div>';
+    const _curPos=_val('직위');
+    let _posOpts='<option value="">직위 선택</option>';
+    ['관장','팀장','팀원'].forEach(po=>{_posOpts+='<option value="'+po+'"'+(po===_curPos?' selected':'')+'>'+po+'</option>';});
+    html+='<div><label>직위<span class="req">*</span></label><select name="직위" required style="width:100%;padding:10px;border:1px solid rgba(0,0,0,0.12);border-radius:10px;font-size:13px;background:#fff">'+_posOpts+'</select></div>';
+    html+='<div><label>이메일<span class="req">*</span></label><input name="이메일" type="email" value="'+escapeHtml(_val('이메일'))+'" required placeholder="contact0030707@example.invalid"></div>';
+    html+='<div><label style="display:flex;align-items:center;gap:8px;background:#fafafa;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);cursor:pointer;margin:0;text-transform:none;letter-spacing:0;color:var(--ink);font-size:13px;font-weight:600"><input type="checkbox" name="휴직여부"'+(_onFlag('휴직여부')?' checked':'')+' style="width:18px;height:18px;cursor:pointer;margin:0"> 휴직</label></div>';
+    const _bizCols=[['홍보여부','홍보'],['기관여부','기관'],['공연여부','공연'],['전시여부','전시'],['예술교육여부','교육'],['대관여부','대관']];
+    html+='<div><label style="margin-bottom:6px">담당 업무</label><div style="display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:10px 14px">';
+    _bizCols.forEach(function(pair){var k=pair[0],lb=pair[1];html+='<label style="display:flex;align-items:center;gap:5px;cursor:pointer;margin:0;text-transform:none;letter-spacing:0;color:var(--ink);font-size:13px;font-weight:600;white-space:nowrap"><input type="checkbox" name="'+k+'"'+(_onFlag(k)?' checked':'')+' style="width:17px;height:17px;cursor:pointer;margin:0"> '+lb+'</label>';});
+    html+='</div></div>';
+    const _admLocked=!_isSuperAdmin();
+    const _admLockAttr=_admLocked?' disabled':'';
+    const _admNote=_admLocked?' <span style="color:#999;font-size:11px;font-weight:400;margin-left:4px">(최고관리자만 변경)</span>':'';
+    const _admOp=_admLocked?'opacity:0.55;':'';
+    const _admCur=_admLocked?'not-allowed':'pointer';
+    html+='<div><label style="display:flex;align-items:center;gap:8px;background:#fafafa;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);cursor:'+_admCur+';margin:0;text-transform:none;letter-spacing:0;color:var(--ink);font-size:13px;font-weight:600;'+_admOp+'"><input type="checkbox" name="관리자여부"'+(_onFlag('관리자여부')?' checked':'')+_admLockAttr+' style="width:18px;height:18px;cursor:'+_admCur+';margin:0"> 관리자'+_admNote+'</label></div>';
+  }else{
+  cfg.columns.forEach(c=>{
+    const v=existing?existing[c.key]:'';
+    if(c.type==='checkbox'){
+      const checked=(v==='1'||v===1||v===true||String(v||'').toLowerCase()==='true');
+      const isAdminCol=(slug==='manager'&&c.key==='관리자여부');
+      const locked=isAdminCol&&!_isSuperAdmin();
+      const lockAttr=locked?' disabled':'';
+      const lockNote=locked?' <span style="color:#999;font-size:11px;font-weight:400;margin-left:4px">(최고관리자만 변경)</span>':'';
+      const opacity=locked?'opacity:0.55;':'';
+      const curStyle=locked?'not-allowed':'pointer';
+      html+='<div><label style="display:flex;align-items:center;gap:8px;background:#fafafa;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);cursor:'+curStyle+';margin:0;text-transform:none;letter-spacing:0;color:var(--ink);font-size:13px;font-weight:600;'+opacity+'"><input type="checkbox" name="'+c.key+'"'+(checked?' checked':'')+lockAttr+' style="width:18px;height:18px;cursor:'+curStyle+';margin:0"> '+escapeHtml(c.label)+lockNote+'</label></div>';
+    }else{
+      html+='<div><label>'+escapeHtml(c.label)+(c.required?'<span class="req">*</span>':'')+'</label><input name="'+c.key+'" type="text" value="'+escapeHtml(v||'')+'"'+(c.required?' required':'')+'></div>';
+    }
+  });
+  }  html+='<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;padding-top:14px;border-top:1px solid #eee">';
+  html+='<button type="button" onclick="closeSheetForm()" style="padding:9px 18px;border:1px solid var(--glass-bd);border-radius:10px;background:var(--glass-surface);backdrop-filter:blur(8px);box-shadow:var(--glass-shadow);cursor:pointer;font-size:13px">취소</button>';
+  html+='<button type="submit" style="padding:9px 22px;background:var(--accent);color:#fff;border:0;border-radius:10px;cursor:pointer;font-weight:600;font-size:13px">저장</button>';
+  html+='</div></form></div></div>';
+  let el=document.getElementById('sheet-form-modal');
+  if(!el){el=document.createElement('div');el.id='sheet-form-modal';document.body.appendChild(el);}
+  el.innerHTML=html;
+}
+
+function closeSheetForm(){
+  const el=document.getElementById('sheet-form-modal');
+  if(el)el.innerHTML='';
+}
+
+// [260906 입력절차③-2] 시트 저장은 열 이름으로 — 위치 배열은 시트 열 순서(담당자 18열)와 폼 열(16열)이 어긋나면 값이 밀린다(회계여부 → 전화번호 자리).
+function _sheetValuesObj(slug,values){ var o={}; ((SHEET_CONFIG[slug]||{}).columns||[]).forEach(function(c,i){ o[c.key]=values[i]; }); return o; }
+async function saveSheetRow(slug,rowIndex){
+  const form=document.getElementById('sheet-form');
+  if(!form)return;
+  const cfg=SHEET_CONFIG[slug];
+  const fd=new FormData(form);
+  const _existRow=rowIndex?(_sheetCache[slug]||[]).find(r=>r._rowIndex===rowIndex):null;
+  // [260613] 관리자 해제 시 비밀번호도 제거 — 관리자였다가 내려간 계정에 비번이 남던 버그
+  const _mgrAdminEl=(slug==='manager')?form.elements['관리자여부']:null;
+  const _mgrIsAdmin=_mgrAdminEl?_mgrAdminEl.checked:(_existRow?isFlagOn(_existRow['관리자여부']):false);
+  const values=cfg.columns.map(c=>{
+    const el=form.elements[c.key];
+    if(c.type==='checkbox'){
+      // 폼에 필드가 없으면(등록폼에서 제외된 컬럼): 활성=신규는 '1' 강제, 그 외는 기존값/빈값 보존
+      if(!el){
+        if(slug==='manager'&&c.key==='계정여부')return _existRow?(String(_existRow[c.key]||'').trim()||'1'):'1';
+        return _existRow?(_existRow[c.key]||''):'';
+      }
+      return el.checked?'1':'';
+    }
+    // 텍스트: 폼에 없으면(PIN/비밀번호 등 제외 컬럼) 기존값 보존, 신규면 빈값
+    if(!el){
+      if(slug==='manager'&&c.key==='비밀번호'&&!_mgrIsAdmin)return '';  // 관리자 아니면 비밀번호 비움
+      return _existRow?(_existRow[c.key]||''):'';
+    }
+    return fd.get(c.key)||'';
+  });
+  showOverlayLoad('\uC800\uC7A5 \uC911\uC785\uB2C8\uB2E4...');
+  try{
+    if(rowIndex)await api('PATCH','/api/sheet/'+slug+'/'+rowIndex,{values:_sheetValuesObj(slug,values)});
+    else await api('POST','/api/sheet/'+slug,{values:_sheetValuesObj(slug,values)});
+    // 콘텐츠/담당자/플랫폼 변경 시 작성 모달 마스터 캐시 무효화 & 재로드
+    if(slug==='content'){CONTENT_TYPES=[];await loadContentMeta();populateMasterDropdowns();}
+    if(slug==='manager'){MANAGERS=[];await loadManagers();PR_MANAGERS=MANAGERS.filter(m=>isFlagOn(m['홍보여부']));populateMasterDropdowns();}
+    if(slug==='platform'){await loadPlatforms();populateMasterDropdowns();}
+    await renderSheetList(slug);
+    closeSheetForm();
+    showToast('\uC800\uC7A5\uB418\uC5C8\uC2B5\uB2C8\uB2E4','success');
+  }catch(e){
+    showToast('\uC800\uC7A5 \uC2E4\uD328: '+e.message,'error');
+  }finally{
+    hideOverlayLoad();
+  }
+}
+
+// === 최고관리자(슈퍼관리자) — '관리자여부' 지정/해제만 이 계정들이 가능 ===
+// ⚠️ MS 이메일(소문자) 정확히. 새 최고관리자 추가 시 이 배열에만 넣으면 됨.
+var SUPER_ADMINS=['contact0030708@example.invalid'];
+function _isSuperAdmin(){
+  try{
+    var e=(sessionStorage.getItem('myEmail')||localStorage.getItem('lastLoginEmail')||(typeof _loginEmail!=='undefined'?_loginEmail:'')||'').trim().toLowerCase();
+    return !!e && SUPER_ADMINS.indexOf(e)>=0;
+  }catch(_){ return false; }
+}
+// === 삭제 권한 검증 (관리자면 삭제 가능 — 슈퍼admin 개념 폐기) ===
+function _canDelete(){
+  if(userRole!=='admin'){ showToast('관리자만 삭제할 수 있어요','error'); return false; }
+  return true;
+}
+
+async function deleteSheetRow(slug,rowIndex){
+  if(!await showConfirm('정말 삭제할까요?',{title:'행 삭제',okText:'삭제',danger:true}))return;
+  if(!_canDelete())return;
+  showOverlayLoad('\uC0AD\uC81C \uC911\uC785\uB2C8\uB2E4...');
+  try{
+    await api('DELETE','/api/sheet/'+slug+'/'+rowIndex);
+    if(slug==='content'){CONTENT_TYPES=[];await loadContentMeta();populateMasterDropdowns();}
+    if(slug==='manager'){MANAGERS=[];await loadManagers();PR_MANAGERS=MANAGERS.filter(m=>isFlagOn(m['홍보여부']));populateMasterDropdowns();}
+    if(slug==='platform'){await loadPlatforms();populateMasterDropdowns();}
+    await renderSheetList(slug);
+    showToast('\uC0AD\uC81C\uB418\uC5C8\uC2B5\uB2C8\uB2E4','success');

@@ -1,0 +1,187 @@
+function _bnavBuild(){
+  let el=document.getElementById('bottom-nav');
+  if(!el){el=document.createElement('div');el.id='bottom-nav';el.className='bottom-nav';document.body.appendChild(el);}
+  const isAdmin=(userRole==='admin');
+  const items=[
+    {id:'cal',ico:'🗓️',label:'캘린더',fn:_bnavCal},
+    {id:'schedule',ico:'📋',label:'일정 확인',fn:function(){openPromoBoard();}},
+    isAdmin?{id:'sales',ico:'📈',label:'판매',fn:function(){openAnalyticsBoard();}}:{id:'promo',ico:'✏️',label:'신청',fn:function(){openPromoWizard();}},
+    {id:'annual',ico:'📅',label:'연간',fn:function(){openAnnualCalendar();}},
+    {id:'more',ico:'⋯',label:'더보기',fn:_bnavMore}
+  ];
+  el.innerHTML='';
+  items.forEach(function(it){
+    const b=document.createElement('button');
+    b.className='bn-btn'+(it.id==='cal'?' on':'');
+    b.innerHTML='<span class="bn-ico">'+it.ico+'</span><span>'+it.label+'</span>';
+    b.onclick=function(){
+      el.querySelectorAll('.bn-btn').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+      it.fn();
+      if(it.id!=='cal')setTimeout(function(){b.classList.remove('on');var f=el.querySelector('.bn-btn');if(f)f.classList.add('on');},700);
+    };
+    el.appendChild(b);
+  });
+}
+function _bnavCal(){try{closePanel();}catch(_e){}if(typeof setMainView==='function')setMainView('cal');window.scrollTo({top:0,behavior:'smooth'});}   // [260723 평의회3] 하단네비 캘린더 = 드로어와 동일하게 캘린더 모드 전환 경유(라벨 이중 동작 해소)
+function _bnavMore(){
+  const isAdmin=(userRole==='admin');
+  let h='<div class="bn-sheet">';
+  const add=function(emo,label,fnStr){h+='<button class="bn-sheet-item" onclick="this.closest(\'.bn-sheet-bg\').remove();'+fnStr+'"><span class="emo">'+emo+'</span>'+label+'</button>';};
+   /* [260822 운영자] 콘텐츠 제작 모바일 항목 숨김 — 롤백 = 이 블록 주석 해제 */
+   /*
+   add('📝','블로그·카페 포스팅','openNaverBlogTool()');   // [260805 운영자 2차] 이름 = 데스크톱 「콘텐츠 제작 ▸ SNS」와 통일(구 '네이버 블로그 글쓰기')
+   add('📰','보도자료 만들기','openPressKit()');   // [260806 운영자] 데스크톱 드롭다운(_contentMenuBuild)과 같은 진입점
+   */
+  // [260805 운영자] 「로고 제작」 메뉴 숨김 — 데스크톱 드롭다운(_contentMenuBuild)과 같이 내림. 롤백 = 이 줄 주석 해제.
+  //   숨김일 뿐 제거가 아니다: openLogoMaker()·_lm* 함수와 .lm-* CSS는 그대로 살아있다(.lm-wrap·.lm-col은 「카카오 메세지 설계」가 공용 — 지우면 그쪽이 깨진다).
+  // add('🎯','로고 제작','openLogoMaker()');   // [260804 운영자] 데스크톱 「콘텐츠 제작」 드롭다운과 같은 진입점 — 좁은 폭에서도 닿게
+  // [260805 운영자 2차] 「관련 없는건 숨겨줘」 — 링크 자료수집·에니어그램을 데스크톱 드롭다운과 같이 내림(도구 함수 생존). 롤백 = 주석 해제(양쪽 다).
+  // add('🔗','링크 자료수집','openLinkGrab()');
+  add('🧩','플랫폼 현황','openPlatformBoard()');
+  add('⇄','대시보드 화면 (메인)','setMainView(\'biz\')');   // [260723 평의회3 HIGH] 좁은 폭 토글 숨김 시에도 메인 복귀 경로 보장
+  add('🏢','사업 결과 비교','openBusinessBoard()');   // [260731 3차] 이름 = 데스크탑 세부메뉴와 통일(구 '연간 누적 실적'→'실적 분석'→'사업 결과 비교')
+  add('📊','연간 실적','openYearBoard()');   // [260731] 〃 (구 '연간 실적 (사업 현황)')
+  if(!isAdmin)add('📈','실적 조회','openAnalyticsBoard()');   // [260731] 〃 (구 '판매 현황')
+  if(isAdmin)add('✏️','직접 등록','openAdminWizard()');
+  if(isAdmin)add('⚙️','관리','openAdminPanel()');
+  add('💬','도우미 챗봇','_cbToggle()');
+   /* [260822 운영자] 콘텐츠 제작 모바일 항목 숨김 — 롤백 = 이 블록 주석 해제 */
+   /*
+   add('🎨','도화지','openBookingProcess()');
+   */
+  // add('🧭','에니어그램','openEnneagram()');   // [260805 운영자 2차] 숨김 — 위 링크 자료수집과 같은 축
+  h+='</div>';
+  const bg=document.createElement('div');
+  bg.className='bn-sheet-bg';
+  bg.onclick=function(e){if(e.target===bg)bg.remove();};
+  bg.innerHTML=h;
+  document.body.appendChild(bg);
+}
+
+// ============================================================
+// 콘텐츠 제작 — 네이버 블로그 글쓰기 도우미
+//  타겟 + 강조 포인트 + 상세페이지 OCR → 네이버 블로그용 초안 생성.
+//  생성 흐름: _nbGenerate() → Worker /api/blog/dispatch → GitHub Actions(nb-blog.yml, claude -p)
+//     → drafts/<id>.json 커밋 → _nbPollDraft()가 폴링해 수신.
+//  [블로그 개선 BW-1~5] 응답 = {text, tags(네이버 태그 30, BW-5), research(리서치 노트, BW-2)}.
+//     생성·코멘트 반영마다 versions[]에 스냅샷(1차·2차… 칩 전환 = BW-3, 인메모리 — 닫으면 소멸 유지).
+//  [블로그 개선 BW-6~8] 본문 속 「[사진: 설명 — 캡션: "…"]」 단독 줄 = 사진 자리(BW-6) — 결과 영역의
+//     [📷 사진 채우기] 뷰에서 슬롯 카드+사진 넣기 버튼으로 채움(사진은 현재 버전 객체 귀속·인메모리, 복사 시 HTML로 동봉).
+//     기승전결 아크(BW-7)·덕후 디테일(BW-8)·톤 변주(BW-1 강화)는 nb-blog.yml 프롬프트 계약이 담당.
+// ============================================================
+// (글 유형 템플릿 제거 — '왜·누구에게·무엇을' 목적·타겟·핵심 메시지 기반으로 재설계)
+var _NB_TONELIB_KEY='nb_tone_lib_v1';
+var _NB_GH={owner:'muteno',repo:'yeulmaru-promo',branch:'main',path:'docs/tone-refs.json'};
+var _NB_DRAFT_KEY='nb_draft_state_v2';
+// 1️⃣ 의도·목적 — AIDA(Attention→Interest→Desire→Action) 기반 단일 선택. 빈칸 자유서술 대신 '고르기'로 객관화.
+// 글의 목적은 고정 — 예술 사업(공연·전시·예술교육) 홍보. 사용자가 매번 고르지 않고 시스템이 항상 이 방향으로 씀.
+var _NB_FIXED_PURPOSE='예술 사업(공연·전시·예술교육 프로그램) 홍보 — 수요 계층에 정보를 전달하고, 더 널리 확산시키며, 관심과 구매(예매·참여) 욕구를 촉진하는 온라인 홍보 글.';
+// 1️⃣ 주요 타겟 — 속성별 드롭다운(객관). 2️⃣ 강조 포인트는 주관식 입력(아래 hooks).
+// [key, 라벨, 선택방식, 옵션]. single=하나만(무관 포함), multi=여러 개(무관 칩 자동), toggle=on/off 하나.
+var _NB_TGT_FIELDS=[
+  ['gender','성별','single',['무관','남성','여성']],
+  ['age','연령','multi',['10대','20대','30대','40대','50대','60대+']],
+  ['family','가족 구성','multi',['1인','부부만','자녀 동반','2세대 이상']],
+  ['fan','마니아 여부','toggle',['마니아']]
+];
+// 4️⃣ 기본 틀(글 구성) — 옵션. 안 잡으면 레퍼토리(톤 참조) 기반, 잡으면 이 틀에 맞춰 작성. 프리셋 선택 후 직접 편집 가능.
+var _NB_TEMPLATES=[
+  ['standard','표준 홍보형','1) 인사 + 공연 한 줄 소개\n2) 공연 개요와 매력 포인트\n3) 핵심 정보(일시·장소·출연·가격)\n4) 이런 분께 추천 / 관람 포인트\n5) 예매 안내 + 따뜻한 마무리'],
+  ['review','후기·현장형','1) 방문 계기 / 기대\n2) 현장 분위기 묘사\n3) 공연 하이라이트\n4) 솔직한 감상\n5) 추천 + 다음 공연 안내'],
+  ['info','정보 요약형','1) 핵심 정보 먼저 (일시·장소·가격·예매)\n2) 공연 개요\n3) 관람 포인트\n4) 예매 링크 / 문의']
+];
+function _nbDefaultState(){return {length:'보통', voice:'라디오 캐스터처럼 가볍고 경쾌한', emoji:true, tgt:{}, hooks:['',''], facts:{}, extra:'', tplMode:'auto', tplSel:'', tplText:'', output:'', outView:'edit', versions:[], verCur:-1, comments:[], ocrText:'', ocrFiles:[], ocrThumb:'', ocrBusy:false, perf:'', perfUrl:'', linkBusy:false, analyzeBusy:false, genBusy:false, _toneDraft:'', escHandler:null};}
+var _nbState=_nbDefaultState();
+
+// 상단 '콘텐츠 제작' 드롭다운 (네이버 블로그 + 향후 채널 확장)
+// [260711 운영자] 구 '상품 등록 및 홍보 신청' 드롭다운을 2개 대메뉴로 분리:
+//   상품 등록·변경(_prodregMenuBuild, 클릭 즉시 openTicketReg + hover 드롭다운) / 홍보 신청·확인(_promoMenuBuild) · 연간 일정은 사업 실적(_salesMenuBuild)으로 이동.
+// [260731 운영자] 위 2개 대메뉴 폐지 → _prodregMenuBuild는 판매 현황 세부 1번(_salesMenuBuild)으로, _promoMenuBuild는 캘린더 세부(_calMenuBuild)로 흡수.
+//   항목 문법(itemCss·헤더 라벨·기본 강조 배경·호버 알파) = 구 빌더 100% 계승 — 신규 색·형태 0.
+
+// 캘린더 세부 — 홍보 신청(기본) + 홍보 현황 2종. [260731 운영자] 홍보는 신청↔현황이 한 지붕(구 '홍보 신청·확인' 대메뉴 흡수).
+//   '홍보 현황' 단일 화면은 존재하지 않음 = 실제 보드 2개(openPromoBoard 온라인 · openPlatformBoard 오프라인)를 그대로 이름으로 씀.
+function _calMenuBuild(menu){
+  var itemCss='display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:0;text-align:left;font-size:13px;font-weight:600;color:var(--text);border-radius:9px;cursor:pointer;font-family:inherit;transition:background .12s';
+  menu.innerHTML='<div style="padding:8px 14px 6px;font-size:11px;color:var(--dim);font-weight:700">캘린더</div>'
+    +'<button type="button" onclick="_ddCloseAll();openBatchWizard()" style="'+itemCss+';background:rgba(74,77,231,0.06)" onmouseenter="this.style.background=\'rgba(74,77,231,0.12)\'" onmouseleave="this.style.background=\'rgba(74,77,231,0.06)\'"><span style="flex:1">홍보 신청</span><span style="font-size:10px;color:var(--accent);font-weight:700">기본</span></button>'
+    +'<button type="button" onclick="_ddCloseAll();openPromoBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">온라인 홍보 현황</button>'
+    +'<button type="button" onclick="_ddCloseAll();openPlatformBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">오프라인 홍보 현황</button>'   // [260714 운영자] 온라인 홍보 현황(openPromoBoard)·오프라인 홍보 현황(openPlatformBoard)
+    +'<button type="button" onclick="_ddCloseAll();openAnnualCalendar()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">연간 일정</button>';   // [260731 운영자 4차] 연간 일정 = 대시보드 세부에서 캘린더 세부 맨 마지막으로 이사(대시보드는 책 4면 전용)
+}
+// 대시보드 세부 — 연간 실적(openYearBoard, 구 '사업 현황' 대메뉴) + 사업 결과 비교(openBusinessBoard) + 연간 일정 + 회원 분포(admin, 구 '회원 관리' 대메뉴).
+//   [260731 운영자] '사업 현황'과 '연간 실적'은 같은 보드였음 → 표 내용(2012~2026 연간 실적)에 맞는 「연간 실적」만 남김.
+//   판매 현황·실적 입력은 여기 두지 않음 = 판매 현황 대메뉴와 같은 화면(한 화면 = 한 자리).
+function _salesDashboardMenuBuild(menu){
+  var itemCss='display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:0;text-align:left;font-size:13px;font-weight:600;color:var(--text);border-radius:9px;cursor:pointer;font-family:inherit;transition:background .12s';
+  menu.innerHTML='<div style="padding:8px 14px 6px;font-size:11px;color:var(--dim);font-weight:700">판매 현황</div>'
+     +'<button type="button" onclick="_ddCloseAll();openYearBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'"><span style="flex:1">연간 판매 실적</span></button>'
+     +(false?'<button type="button" onclick="_ddCloseAll();openBusinessBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">사업 결과 비교</button>':'')
+     +(false?'<button type="button" onclick="_ddCloseAll();openSalesBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">판매 실적</button>':'')
+      +(userRole==='admin'?'<div style="height:1px;background:var(--border);margin:6px 10px"></div><button type="button" onclick="_ddCloseAll();setTimeout(function(){ymTicketlinkOpen(false);},0)" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'"><span style="flex:1">판매 실적 갱신</span></button>':'');
+}
+function _bizMenuBuild(menu){
+  var itemCss='display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:0;text-align:left;font-size:13px;font-weight:600;color:var(--text);border-radius:9px;cursor:pointer;font-family:inherit;transition:background .12s';
+  // 사업 현황 세부 — 연간 실적 + 사업 실적 입력. 기존 항목은 조건부 숨김으로 유지해 복구 가능.
+   menu.innerHTML='<div style="padding:8px 14px 6px;font-size:11px;color:var(--dim);font-weight:700">대시보드</div>'
+       +'<button type="button" onclick="_ddCloseAll();openBusinessPerformanceBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'"><span style="flex:1">사업 실적 크게 보기</span></button>'
+     +(false?'<button type="button" onclick="_ddCloseAll();openSalesBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">판매 실적</button>':'')
+     +(false?'<button type="button" onclick="_ddCloseAll();openAnalyticsBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">실적 조회</button>':'')
+     +(false?'<button type="button" onclick="_ddCloseAll();openBusinessBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">사업 결과 비교</button>':'')
+     // [260812 운영자] 사업비 — 회계 담당자·관리자만. 「전 사업 실적 열람」의 자리이자 편집 진입로.
+     //   일반 사용자에게 안 띄우는 이유 = 이 화면이 유일하게 여는 축이 예산·집행 원장이라서다(사업 목록 행 클릭 링크는 종전대로 전원 열림).
+     +(false&&_isAcct()?'<button type="button" onclick="_ddCloseAll();openFinanceBoard()" title="사업별 예산·전표실적·판매수수료·정산서매출 — 회계 담당자는 여기서 수정" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">사업비</button>':'')
+     +(false&&userRole==='admin'?'<button type="button" onclick="_ddCloseAll();openMemberOverview()" title="거주지·연령·전국 분포 요약 (회원 조회는 여기서 진입)" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\';_memWarm()" onmouseleave="this.style.background=\'none\'">고객 분석</button>':'')
+     +'<div style="height:1px;background:var(--border);margin:6px 10px"></div>'
+      +'<button type="button" onclick="_ddCloseAll();openBizFinInput()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'"><span style="flex:1">사업비·정산 입력</span></button>';
+}
+// [260805 운영자 2차·3차] 콘텐츠 제작 = SNS / Edit / Utility 3구획.
+//   3차 정정: 「이미지 편집」·「영상 편집」은 도구가 아니라 **상위 분류**다(운영자 「이미지 편집이 더 대메뉴인데」) —
+//   도구 하나에 붙이는 게 아니라 그 아래 도구들(카드 제작·누끼따기 / 영상 편집·자막 삽입·영상 프롬프팅)을 담는다.
+//   [260805 운영자 4차] 「메뉴 안에 메뉴는 없어」 — 3차 드릴인 철거. 분류는 **모달 안 탭**으로 푼다:
+//   이미지 편집 = openCardMaker()(모달 안 탭 = 카드 제작·누끼따기) · 영상 편집 = openVideoEditor('edit')(모달 안 탭 3 · 260711부터 이미 그 형태).
+//   드롭다운은 데스크탑·모바일 아코디언 모두 **한 겹 6항목**으로 동일 — 분기 자체가 사라졌다.
+//   항목·라벨 문법(itemCss·hov·구획 라벨) = 구 빌더 자구 그대로 — 신규 값·색 0.
+// ⚠⚠ [260805 부팅 사고 수정] 이 상수들은 **`var` 대입이 부트보다 늦게 실행되는 자리**에 있다 — index.html은
+//   L2750~L32426이 **한 script 블록**이라 위에서 아래로 한 번에 돌고, 그 블록의 L4182 부트 IIFE가
+//   `initApp()`(L4490) → `buildNav()`(L5017) → **모바일 아코디언 즉시 빌드**(L5050 `_sub(_accP)` · 260723부터)
+//   → `_contentMenuBuild()`를 **여기보다 2만 줄 앞서** 부른다. 그 시점 `var`는 hoist만 되고 값은 `undefined`.
+//   ⓐ 260805 3차의 `_ctList(_CT_IMG)`는 **`undefined.map`으로 터져 initApp이 통째로 중단**됐고
+//      = 로그인 상태 새로고침이면 앱이 아예 안 떴다(순수 main·QA 무관 재현 · 4차 「메뉴 한 겹」이 그 호출부를 없애 터짐은 해소).
+//   ⓑ 남은 문자열 4개도 그대로 두면 **부트 시 아코디언이 `style="undefined"`로 그려진다**(안 터질 뿐 조용히 깨진다).
+//   고침 = 값은 이 자리(문맥)에 그대로 두고 **hoist되는 `_ctDefs()`로 감싸 첫 사용 때 보장**한다(함수 선언은 순서 무관).
+//   ⚠ 여기에 새 `_CT_*` 상수를 더할 땐 **반드시 `_ctDefs()` 안**에 넣어라 — 밖에 두면 같은 사고가 재발한다.
+var _CT_ITEM,_CT_HOV,_CT_HD,_CT_SEC;
+function _ctDefs(){
+  if(_CT_ITEM)return;
+  _CT_ITEM='display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:0;background:none;text-align:left;font-size:13px;font-weight:600;color:var(--text);border-radius:9px;cursor:pointer;font-family:inherit;transition:background .12s';
+  _CT_HOV=' onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'"';
+  _CT_HD='padding:8px 14px 6px;font-size:11px;color:var(--dim);font-weight:700';   // 머리 라벨 = 구 「콘텐츠 제작」 헤더 값 그대로
+  _CT_SEC='margin:6px 8px 0;padding:8px 6px 4px;font-size:11px;color:var(--dim);font-weight:700;border-top:1px solid var(--border)';   // 구획 라벨 = 구 「영상 편집기」·「PLAY ZONE」 값 그대로
+}
+function _ctItem(act,label){
+  _ctDefs();
+  return '<button type="button" onclick="'+act+'" style="'+_CT_ITEM+'"'+_CT_HOV+'>'+label+'</button>';
+}
+function _contentMenuBuild(menu){
+  _ctDefs();   // ⚠ 부트(buildNav)가 이 파일의 var 대입보다 앞서 부른다 — 위 _ctDefs 주석
+  menu.innerHTML='<div style="'+_CT_SEC+'">SNS</div>'
+    +_ctItem("_ddCloseAll();openKakaoDesigner()",'카카오채널 톡')   /* 구 「카카오 메세지 설계」 개명(260805 2차) — 공연 상세 링크 → 포스터 OCR → 카카오 76자 문구 후보 */
+    +_ctItem("_ddCloseAll();openNaverBlogTool()",'블로그·카페 포스팅')
+     +(false?_ctItem("_ddCloseAll();openPressKit()",'보도자료 만들기'):'')   /* [260806 운영자] 공연을 묶어 워드 보도자료 — 블로그 포스팅의 문서판 */   /* 구 「네이버 블로그」 개명(260805 2차) — 글쓰기 도우미 */
+     +'<div style="'+_CT_SEC+';display:none">Edit</div>'
+     +(false?_ctItem("_ddCloseAll();openCardMaker()",'이미지 편집'):'')   /* 모달 안 탭 = 1 카드 제작(사진 절삭+문구→PNG) · 2 누끼따기(배경 제거 /cutout/ 임베드) */
+    +'<div style="'+_CT_SEC+'">Utility</div>'
+     +(false?_ctItem("_ddCloseAll();openFileSlimmer()",'파일 용량 줄이기'):'')   /* 구 「용량 줄이기」 개명(260805 2차) — 엑셀·PPT·워드·한글·PDF 사진 재인코딩 */
+    +_ctItem("_ddCloseAll();openBookingProcess()",'도화지')   /* 구 PLAY ZONE 섹션에서 이사(260805 2차) — 다이어그램 에디터 */
+    ;   // 안내 문구 삭제(운영자 260710)
+  // ── 숨김(260805 운영자 2차 「관련 없는건 숨겨줘」) — 롤백 = 원하는 줄을 위 체인에 되붙이고 주석 해제. 도구 자체는 전부 생존(콘솔·딥링크로 열림).
+  //   _bnavMore(모바일 더보기 시트)의 링크 자료수집·에니어그램도 같이 내림(로고 제작 전례 = 양쪽 동시).
+  // +_ctItem("_ddCloseAll();openLogoMaker()",'로고 제작')   /* [260804 운영자] 이름·형태·느낌·색 → 로고 PNG (Nutlope/logocreator · 엔진 = 기존 GEMINI_API_KEY) · 260805 1차 숨김 유지 */
+  // +_ctItem("_ddCloseAll();openHwpEditor()",'한글문서 편집')   /* [260803 운영자] 문서 올림 → 미리보기 → 말로 수정 (claw-hwp 이식 — hwp/NOTICE.md) */
+  // +_ctItem("_ddCloseAll();openOfficeEditor()",'오피스문서 편집')   /* [260805 운영자] 워드·엑셀·PPT 올림 → 말로 수정 → 내려받기 (iOfficeAI/OfficeCLI — office-edit.yml 러너) */
+  // +_ctItem("_ddCloseAll();openDocMd()",'문서 → 마크다운')   /* [260805 운영자] 21종 올림 → 마크다운 (firecrawl/anydoc — anydoc-convert.yml 러너 · AI 미사용) */
+  // +_ctItem("_ddCloseAll();openLinkGrab()",'링크 자료수집')   /* [260721 운영자] URL 붙여넣기 = 자료 일괄 다운로드 */
+  // +_ctItem("_ddCloseAll();openEnneagram()",'에니어그램')   /* [260729 운영자] PLAY ZONE 이관분 */
+}

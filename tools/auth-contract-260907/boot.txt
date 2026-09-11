@@ -1,0 +1,227 @@
+public/standalone.html L5200-5425
+      //   8초 안에 안 오면 버리고 아래 정상 fetch(오늘의 경로)로. 최악 추가 대기 8초 상한(구: 소켓 포기까지 수 분 무표시).
+      //   타임아웃은 reject가 아니라 센티널 resolve — 패배한 타이머가 나중에 터져도 unhandledrejection(관리자 오류 토스트) 0.
+      try{ var _plto={}; var _plgot=await Promise.race([_pl.p,new Promise(function(rs){setTimeout(rs,8000,_plto);})]); if(_plgot!==_plto) return _plgot; }
+      catch(_e){}   // 프리로드 실패 = 아래 정상 fetch 폴백
+    }
+  }
+  // [260905 통합⑱] 같은 GET 이 이미 날아가는 중이면 그 응답을 복사해 쓴다(부팅 때 일일실적·판매설정 3번씩 겹치던 낭비 제거). 실패하면 아래 정상 fetch.
+  if(method==='GET'){ var _bp=path.replace(/[?&]fresh=1$/,''); var _inf=(_apiInflight[path]&&((typeof _ymDevConsistency!=='function'||!_ymDevConsistency())||_apiInflight[path].w===_apiWriteSeq)?_apiInflight[path]:null)||((_bp!==path&&_apiInflight[_bp]&&_apiInflight[_bp].w===_apiWriteSeq)?_apiInflight[_bp]:null);   // [⑱-2] fresh=1 도 그 사이 쓰기가 없었으면 합친다
+    if(_inf){ try{ var _shv=await _inf.p; return _apiClone(_shv); }catch(_e){} } }
+  const headers={'Content-Type':'application/json','X-App-Password':password};
+  // 서브 admin: 본인 PIN을 헤더에 동봉 (Worker가 검증해 admin 권한 부여)
+  const subPin=sessionStorage.getItem('subAdminPin');
+  if(subPin)headers['X-Sub-Admin-PIN']=subPin;
+  // [260812] 회계 담당자: 같은 문법으로 본인 PIN 동봉 — Worker가 담당자 시트 `회계여부`로 재검증해
+  //   **운영_사업비 쓰기만** 열어준다(다른 시트·다른 경로는 종전 admin 게이트 그대로).
+  const acctPin=sessionStorage.getItem('acctPin');
+  if(acctPin)headers['X-Acct-PIN']=acctPin; try{var _yu=sessionStorage.getItem('myApplicant')||'';if(_yu)headers['X-Ym-User']=encodeURIComponent(_yu);}catch(_eu){} /* [260906 수정이력] */
+  const o={method,headers};
+  if(body)o.body=JSON.stringify(body);
+  const _w=(method!=='GET'); if(_w){_apiWrites++; if(/^\/api\/(records|ops|sheet|messages|programs|ym\/)/.test(path))_apiWriteSeq++;}   // [⑱-2] 쓰기 순번 [⑱-4] 자료 표 쓰기만(presence 같은 신호는 제외)
+  try{
+     const localLlmPath=/^\/(?:api\/blog\/(?:dispatch|draft)|api\/promo\/(?:auto-run|auto-latest)|api\/content\/(?:kakao|structure|ocr|logo)|api\/monitor\/scan|api\/(?:hwp|office|press|anydoc|slim)\/dispatch)/.test(path);
+      const localDbPath=/^\/api\/(?:records(?:\/|$)|records-delete$|ops(?:\/|$)|sheet\/|qa(?:\/|$)|messages(?:\/|$)|config$|memo$|presence$)/.test(path);
+     if(localLlmPath)return (await misoLlmRoute(method,path,body)).json();
+     if(method==='GET'){   // [260905 통합⑱] GET 은 in-flight 표에 올려 두고, 끝나면 내린다
+       var _pf=fetch(path,o).then(async function(r){ if(!r.ok)throw new Error(r.status+': '+(await r.text())); return r.json(); });
+       _apiInflight[path]={p:_pf,w:_apiWriteSeq};
+       try{ return await _pf; } finally{ if(_apiInflight[path]&&_apiInflight[path].p===_pf)delete _apiInflight[path]; }
+     }
+     const r=await fetch(method==='GET'||localDbPath?path:`${API}${path}`,o);if(!r.ok)throw new Error(`${r.status}: ${await r.text()}`);const result=await r.json();if(result&&result.ok!==false&&typeof _ymInvalidateViews==='function')_ymInvalidateViews(path,body);return result;
+  }finally{ if(_w)_apiWrites=Math.max(0,_apiWrites-1); }   // finally 필수 — 예외에 감산이 새면 영구 busy = 자동 탑재 전면 사망(평의회6 경고)
+}
+
+// (isSuperAdmin 제거됨 — 슈퍼admin 개념 폐기, 권한은 role==='admin'로 통일)
+
+// Excel 시리얼(1899-12-30 기준) → "YYYY-MM-DD" 변환. 텍스트 날짜('2026-06-30'/'2026.6.30')도 허용
+// — 관리자 CRUD/시트 수기 편집으로 시리얼 대신 문자열이 저장돼도 표시가 깨지지 않게 (260610)
+function excelSerialToISO(serial){
+  if(serial===''||serial==null)return'';
+  if(isNaN(serial)){
+    var m=String(serial).trim().match(/^(\d{4})[.\-\/년]\s*(\d{1,2})[.\-\/월]\s*(\d{1,2})/);
+    if(m)return m[1]+'-'+String(m[2]).padStart(2,'0')+'-'+String(m[3]).padStart(2,'0');
+    return'';
+  }
+  var ms=(Number(serial)-25569)*86400*1000;
+  var d=new Date(ms);
+  return d.toISOString().slice(0,10);
+}
+// SharePoint 프로그램 시트 row → PERFS 객체
+function programToPerf(p){
+  var typeMap={'공연':'c','전시':'e','예술교육':'a','대관':'r','기타':'c'};
+  var cp=_canonPerf(p['풀네임']||p['줄임말']||'',p['장르']||p['구분']||'',p['장소']||'');
+  return {
+    s:excelSerialToISO(p['시작일']),
+    e:excelSerialToISO(p['종료일']),
+    n:cp.name,
+    f:cp.name,
+    t:typeMap[p['콘텐츠구분']]||'c',
+    o:0,   // [버그수정] 로딩 중 기본 0(닫힘) — updatePerfOpen() 실행 전 위저드가 열려도 미확정 하반기 공연이 선택지로 새지 않게
+    ss:excelSerialToISO(p['판매시작일']),   // 판매기간 = 사업 분석용(선택). 신청 게이트 아님
+    se:excelSerialToISO(p['판매종료일']),
+    ps:excelSerialToISO(p['홍보시작일']),   // 홍보 시작일(노출 게이트·필수). 홍보 노출 종료 = se(판매종료일)로 통합 — 구 pe(홍보종료일) 폐지(운영자 260710)
+    pf:(p['홍보노출']!=null?String(p['홍보노출']).trim():''),   // [260724] 홍보 ON/OFF 명시 플래그(Y/N) 원본. 값 없으면(미마이그레이션) _promoOn이 홍보시작일 유무로 폴백
+    m:p['담당자']||'',
+    l:cp.place,
+    u:p['URL']||p['공연 URL']||p['상세 링크']||p['링크']||'',
+    id:String(p['프로그램ID']||p['공연ID']||'').trim(),
+    bc:String(p['사업코드']||'').trim(),   // [260903 Phase2 M-5] 사업코드 — _finOf 가 이름보다 먼저 본다   // [정규화] 프로그램 시트 공유키(헤더='프로그램ID', 구'공연ID' 폴백) — records 저장 시 동반
+    g:cp.genre||String(p['구분']||'').trim(),   // [260710 운영자] N열 구분(장르 — 클래식·뮤지컬(대형)·연극…) = 판매현황 장르 폴백 소스. O~Q(공동기획·지원사업·GS아트센터협업)는 앱 미사용·엑셀 관리
+    // [260729 운영자] 프로그램 관리에서 지정하는 부가열(R열 이후 · 홍보노출과 같은 단일셀 라인). 빈값 = 미지정 → 종전 추정 경로 그대로(회귀 0).
+    rc:(function(v){var n=parseInt(String(v==null?'':v).replace(/[^0-9]/g,''),10);return (n>0&&n<=999)?n:0;})(p['회차']),   // 공연 회차 수(몇 회차인지) — 판매현황 분모(가용석×회차)의 명시 신호
+    g2:cp.genre||String(p['장르']||'').trim()   // [260729 운영자] 프로그램 관리 「장르」 주관식(부가열 · N열 '구분'과 별개 = 운영자 수동열 무접촉). 빈값 = 미지정 → 종전 폴백 사다리 그대로
+  };
+}
+// SharePoint에서 프로그램 시트 fetch → PERFS 채우기
+// [260801 운영자] 대관 DB 통합 — 구글 캘린더에서 시트로 편입된 대관 행(프로그램ID 'R<yymmdd>_<해시4>')은 PERFS에 안 싣는다.
+//   ① 표시 전용 결정 = 홍보 신청·판매 집계 대상 밖 → PERFS에 안 넣는 게 가장 확실한 이행(드롭다운·게이트·집계 전부가 PERFS를 읽는다).
+//   ② 화면은 종전대로 구글 라이브 오버레이(GCAL_RENTALS)가 그린다 — 셋업 「셋」 표기가 제목 파싱에만 있어 시트 열로 못 옮기기 때문.
+//      시트 행을 PERFS에 실으면 이름이 겹쳐 _gcDupSet이 라이브 배지를 숨기고 셋업 표기가 사라진다(회귀).
+//   ③ 편입분은 PERFS_GC에 따로 보관 — 앞으로 집계·조회가 필요하면 여기서 꺼내 쓴다(정본 PERFS 오염 0).
+var PERFS_GC=[],GCAL_SYNC_RE=/^R\d{6}_[0-9a-z]{4}$/;
+window._PERFS_FALLBACK=false;
+async function _loadProgramsFallback(){
+  try{
+    const r=await fetch('data/programs_fallback.json',{cache:'no-store'});
+    if(!r.ok)return [];
+    const j=await r.json();
+    const raw=(j&&j.programs)||[];
+    if(raw.length){window._PERFS_FALLBACK=true;console.warn('[loadPrograms] PB 0건 → data/programs_fallback.json 사용',raw.length);}
+    return raw;
+  }catch(_e){return [];}
+}
+async function loadPrograms(){
+  try{
+    const data=await api('GET','/api/programs');
+    if(!((data&&data.programs)||[]).length){data={programs:await _loadProgramsFallback()};}
+    try{ _canonFromPrograms(data.programs||[]); }catch(_ce){}   // [260903 DB우선] 표시명 정본 = programs 시트
+    const all=(data.programs||[]).map(programToPerf);
+    PERFS=_v46EduMerge(all.filter(function(p){return !GCAL_SYNC_RE.test(p.id||'');}));
+    PERFS_GC=all.filter(function(p){return GCAL_SYNC_RE.test(p.id||'');});
+    try{_panelRepaint();}catch(e){}
+  }catch(e){
+    try{
+      const fallback=await _loadProgramsFallback();
+      if(fallback.length){
+        try{ _canonFromPrograms(fallback); }catch(_ce){}
+        const all=fallback.map(programToPerf);
+        PERFS=_v46EduMerge(all.filter(function(p){return !GCAL_SYNC_RE.test(p.id||'');}));
+        PERFS_GC=all.filter(function(p){return GCAL_SYNC_RE.test(p.id||'');});
+        try{_panelRepaint();}catch(_e){}
+        return;
+      }
+    }catch(_e){}
+    console.error('[loadPrograms]',e);
+  }
+}
+
+// === 마스터 데이터 캐시 (관리자 모달용) ===
+var CONTENT_TYPES=[],MANAGERS=[],_programsCache=[];
+var _sheetCache={};
+// === 마스터 데이터 캐시 (작성 화면용 - Phase 3C-2) ===
+var PLATFORMS=[],CONTENT_FORMATS=[],STATUSES=[],PR_MANAGERS=[];
+
+// 마스터 시트 관리 메타 (3B-3에서 사용)
+const SHEET_CONFIG={
+  platform:{
+    title:'플랫폼 관리',
+    columns:[
+      {key:'플랫폼1',label:'플랫폼1',type:'text',required:true},
+      {key:'플랫폼2',label:'플랫폼2 (서브)',type:'text'},
+      {key:'플랫폼3',label:'표시명',type:'text',required:true}
+    ]
+  },
+  content:{
+    title:'콘텐츠 관리',
+    columns:[
+      {key:'콘텐츠구분',label:'콘텐츠구분',type:'text'},
+      {key:'콘텐츠형식',label:'콘텐츠형식',type:'text'},
+      {key:'진행상태',label:'진행상태',type:'text'}
+    ],
+    note:'한 row에 모든 컬럼 채울 필요 X. 각 컬럼 독립적인 enum 묶음(원본 시트 구조 그대로).'
+  },
+  manager:{
+    title:'사용자 관리',
+    inlineEdit:true,
+    // ⚠️ 이 배열 순서 = 실제 '담당자' 시트 물리적 컬럼 순서(A~P)와 1:1 매칭.
+    // saveSheetRow/saveInlineRow가 positional(A열부터 순서대로)로 저장하므로 절대 순서를 바꾸지 말 것.
+    // A담당부서 B담당자 C직위 D휴직 E홍보 F기관 G공연 H전시 I예술교육 J대관 K PIN L비밀번호 M계정 N관리자 O이메일 P회계
+    // (260704: 세로막대형 열 제거로 관리자/이메일이 한 칸 당겨짐 + 기관여부 열 반영 + 이메일 신규)
+    // (260812: 운영자 「회계 담당자가 새로 신규 필요(권한)」 → P열 `회계여부` **맨 끝 append**.
+    //   철칙대로 중간 삽입이 아니라 끝에 붙였으므로 A~O의 물리 자리는 한 칸도 안 움직인다 = 값 밀림 0.
+    //   시트에 P1 헤더가 아직 없으면 관리자 설정 화면의 [회계여부 열 만들기]가 한 번 심는다(`_mgrEnsureAcctCol`).
+    //   권한 = 사업비 편집 + 전 사업 실적 열람(운영자 260812 확정) — 판정 한 곳 = `_isAcct()`.)
+    columns:[
+      {key:'담당부서',label:'담당부서',type:'text'},
+      {key:'담당자',label:'이름',type:'text',required:true},
+      {key:'직위',label:'직위',type:'text'},
+      {key:'휴직여부',label:'휴직',type:'checkbox'},
+      {key:'기관여부',label:'기관',type:'checkbox'},
+      {key:'공연여부',label:'공연',type:'checkbox'},
+      {key:'전시여부',label:'전시',type:'checkbox'},
+      {key:'예술교육여부',label:'교육',type:'checkbox'},
+      {key:'대관여부',label:'대관',type:'checkbox'},
+      {key:'PIN',label:'PIN (4자리)',type:'text',hidden:true},
+      {key:'비밀번호',label:'비밀번호',type:'text',hidden:true},
+      {key:'계정여부',label:'활성',type:'checkbox'},
+      {key:'이메일',label:'이메일',type:'text'},
+      // [260906 권한열분리] 권한 열은 오른쪽 묶음(세로 구분선) — 프로그램 담당 열(기관·공연·전시·교육·대관)과 성격이 다르다. sep = 구분선 시작 열.
+      {key:'홍보여부',label:'홍보',type:'checkbox',sep:true},
+      {key:'관리자여부',label:'관리자',type:'checkbox'},
+      {key:'회계여부',label:'회계',type:'checkbox'}
+    ]
+  }
+};
+
+async function loadContentTypes(){
+  try{
+    const d=await api('GET','/api/sheet/content');
+    CONTENT_TYPES=(d.rows||[]).map(r=>r['콘텐츠구분']).filter(Boolean);
+  }catch(e){console.error('[loadContentTypes]',e);}
+}
+async function loadManagers(){
+  try{
+    const d=await api('GET','/api/sheet/manager');
+    MANAGERS=(d.rows||[]).filter(r=>!r['휴직여부']&&r['담당자']);
+  }catch(e){console.error('[loadManagers]',e);}
+}
+
+// 콘텐츠구분 → 담당자 여부 컬럼 매핑
+const TYPE_TO_FLAG={
+  '공연':'공연여부',
+  '전시':'전시여부',
+  '예술교육':'예술교육여부',
+  '대관':'대관여부',
+  '기타':null
+};
+function isFlagOn(v){
+  if(v===true||v===1||v==='1') return true;
+  if(v===null||v===undefined||v==='') return false;
+  const s=String(v).trim().toLowerCase();
+  // ON으로 인식할 값: true/1/y/yes/o/on/active/✓/✔/활성/예/사용/가능
+  return /^(true|1|y|yes|o|on|active|✓|✔|활성|예|사용|가능|t)$/i.test(s);
+}
+// [260724 운영자] 홍보 ON/OFF 단일 판정(SSOT) — 명시 플래그 '홍보노출'(Y/N) 우선, 값 없으면(미마이그레이션) 구 동작(홍보시작일 유무) 폴백.
+//   전 소비자(캘린더·레일·위저드·제출게이트·오프라인 패널)는 흩어진 !p.ps 대신 이 함수 하나만 본다 = "홍보 OFF"를 빈 날짜에서 파생하던 애매함 제거.
+//   perf 객체는 programToPerf가 pf(원본 플래그)·ps를 실어 줌. 저장 게이트(saveProgram)는 상위 방어로 그대로 유지.
+function _promoOn(p){ if(!p)return false; var f=(p.pf||''); return f!==''?isFlagOn(f):!!p.ps; }
+function filterManagersByType(contentType){
+  if(!contentType)return MANAGERS;
+  const flag=TYPE_TO_FLAG[contentType];
+  if(!flag)return MANAGERS;
+  return MANAGERS.filter(m=>isFlagOn(m[flag]));
+}
+function buildManagerOptions(contentType,selected){
+  const filtered=filterManagersByType(contentType);
+  let html='<option value="">(선택 안 함)</option>';
+  filtered.forEach(m=>{
+    html+='<option value="'+escapeHtml(m['담당자'])+'"'+(m['담당자']===selected?' selected':'')+'>';
+    html+=escapeHtml(m['담당자']);
+    if(m['담당부서'])html+=' ('+escapeHtml(m['담당부서'])+')';
+    html+='</option>';
+  });
+  return html;
+}
+function refreshManagerOptions(contentType){
+  const sel=document.querySelector('#prog-form [name="담당자"]');

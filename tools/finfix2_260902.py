@@ -1,0 +1,11 @@
+# -*- coding: utf-8 -*-
+# [260902] finfix v2: _finStatus 매칭 보강(PERFS+전시 스팬, 이름/괄호제목/_finOf)
+import json
+p='public/standalone.html'
+s=open(p,encoding='utf-8').read()
+old=json.loads("\"function _finStatus(r,lm){\\n  try{\\n    var names=(lm&&lm.byNo&&lm.byNo[r.no])||[];\\n    var today=(typeof dk==='function')?dk(new Date()):new Date().toISOString().slice(0,10);\\n    var best=null;\\n    names.forEach(function(nm){ var k=_uName(nm); ((typeof PERFS!=='undefined'&&PERFS)||[]).forEach(function(p){ if(p&&p.s&&p.e&&_uName(p.f||p.n)===k){ if(!best||p.e>best.e)best=p; } }); });\\n    if(!best){ var yr=Number(r.y)||0, cy=new Date().getFullYear(); return (yr&&yr<cy)?{lab:'완료',on:false}:{lab:'',on:false}; }\\n    if(today<best.s)return {lab:'예정',on:false};\\n    if(today>best.e)return {lab:'완료',on:false};\\n    return {lab:'진행 중',on:true};\\n  }catch(_e){ return {lab:'',on:false}; }\\n}\\n\"")
+new=json.loads("\"function _finStatus(r,lm){\\n  try{\\n    var today=(typeof dk==='function')?dk(new Date()):new Date().toISOString().slice(0,10);\\n    var y=Number(r.y)||new Date().getFullYear();\\n    var cands=[];\\n    ((typeof PERFS!=='undefined'&&PERFS)||[]).forEach(function(p){ if(p&&p.s&&p.e)cands.push({n:p.f||p.n,s:p.s,e:p.e}); });\\n    try{ if(typeof _exSpans==='function')(_exSpans()||[]).forEach(function(x){ if(x&&x.s&&x.e&&x.kind!=='대관')cands.push({n:x.n,s:x.s,e:x.e}); }); }catch(_x){}\\n    var rk=_uName(r.name||''); var m=(r.name||'').match(/[<〈]([^>〉]+)[>〉]/); var ik=m?_uName(m[1]):'';\\n    var best=null;\\n    cands.forEach(function(c){\\n      var ck=_uName(c.n||''); if(!ck)return; var hit=false;\\n      if(rk&&(rk===ck||(ck.length>=5&&rk.indexOf(ck)>=0)||(rk.length>=5&&ck.indexOf(rk)>=0)))hit=true;\\n      if(!hit&&ik&&ik.length>=5&&ck.indexOf(ik)>=0)hit=true;\\n      if(!hit){ try{ var f=_finOf(c.n,y); if(f&&f.no===r.no)hit=true; }catch(_f){} }\\n      if(hit&&(!best||c.e>best.e))best=c;\\n    });\\n    if(!best){ var cy=new Date().getFullYear(); return (y<cy)?{lab:'완료',on:false}:{lab:'',on:false}; }\\n    if(today<best.s)return {lab:'예정',on:false};\\n    if(today>best.e)return {lab:'완료',on:false};\\n    return {lab:'진행 중',on:true};\\n  }catch(_e){ return {lab:'',on:false}; }\\n}\\n\"")
+assert s.count(old)==1, 'anchor count=%d'%s.count(old)
+s=s.replace(old,new)
+open(p,'w',encoding='utf-8').write(s)
+print('replaced ok 1/1')

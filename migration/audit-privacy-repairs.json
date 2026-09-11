@@ -1,0 +1,193 @@
+{
+  "checkedAt": "2026-09-11T01:39:46.454Z",
+  "mappedStaffCount": 37,
+  "protectedPublicTitles": 4,
+  "identityAlignmentPassed": true,
+  "files": [
+    {
+      "path": "CLAUDE.md",
+      "beforeSha256": "8ea3de511c60324cfa49482cc4db0b9ab095744741ddc4d5576ff4971e94105e",
+      "afterSha256": "2cc6dc4678e0019e4ea7db85af9850ec4b5cf99180bd727fe695f2e68b86ef56",
+      "bytes": 68876,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "api/migrations/059_acct_manager.js",
+      "beforeSha256": "4806a9f0bc1c36a0d6fe8694bd2ef3a6c71f8ebf72fb29870bfc60e5ff76d72d",
+      "afterSha256": "6175cf9192ce53bb9139108c5e1de75278ff12a15bb52cf401ed38a8f1ca73e6",
+      "bytes": 1590,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": true
+    },
+    {
+      "path": "api/migrations/061_acct_default.js",
+      "beforeSha256": "342aaf4c5486b50e009076227eae4b9be9f02b433425cc798f15c86e9f7eee80",
+      "afterSha256": "91c127b3d6f0dd762ebbff434387ec0a0ce15dbbfa9ce20c23af8cc103f193c0",
+      "bytes": 1744,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": true
+    },
+    {
+      "path": "api/ym-plan-dev-lib.js",
+      "beforeSha256": "3abcf7e9c9b2e806cd919c216e2567f50a1889bd25c30ca2ac864478feabd73b",
+      "afterSha256": "6ba500250a8e31d7b22f8b92c870798d2c3b06b489a7b0f912e100f4e2875a87",
+      "bytes": 38112,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": true
+    },
+    {
+      "path": "api/ym-plan-lib.js",
+      "beforeSha256": "d35792284a406aea7b7cfddc782de22e8510d906852f74d9e1f303f069ae45f3",
+      "afterSha256": "1b01238b640fdfbcd2c952562daba982e821a8eed2c968a938ab52dd938ff75c",
+      "bytes": 36139,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": true
+    },
+    {
+      "path": "data/database/ymdata.jsonl",
+      "beforeSha256": "b71bc6054a077a151856d31016afa4eb99d61c02d4918ac740d3d29bea533999",
+      "afterSha256": "1fd1d9f53f981dcbed309d9a238ff2d7f7f6507adc185ef8bc3996b88105b6fc",
+      "bytes": 14371571,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "data/database/ymdata_dev.jsonl",
+      "beforeSha256": "7f075e8cb329ffedffe48ce5283866891839788ca441833da4dcb5692fbfc275",
+      "afterSha256": "77a140ad48656ddf28de936d1a5f38a1760c30577e3337b6312acaa27ce431da",
+      "bytes": 46015075,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "data/database/ymmeta_dev.jsonl",
+      "beforeSha256": "5ad51bb36d8eb4fb9c2d5af405d7fa93cc8f093d51957071a6535536a901034e",
+      "afterSha256": "2f57e3356c7ee410449d901669984898b7c4b89c322a3242be18258ea02f56d3",
+      "bytes": 210413,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "public/data/ops/Claude Log.csv",
+      "beforeSha256": "cb60f66cd77ca56729de07ff24355f9652f0778b3f34e455f8f368bdd990d01b",
+      "afterSha256": "243122ae1795f8cc25851b4c0d01d7f8ed6780c53bc35b9fe6b84e5effa71ec3",
+      "bytes": 65462,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "public/data/ops/PromoSpecial.csv",
+      "beforeSha256": "d5c7005f974be296f6e804ee024c409569cfc066fa9637160871b4fae64a537a",
+      "afterSha256": "68ca6e796718702bbfd7521b702fa826a6a0482e8d40083cb61bc8bb04dcc512",
+      "bytes": 15337,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "public/data/ops/도표.csv",
+      "beforeSha256": "4b4e24567c69d7648efc135bfaeba6a86f1a0dfea7a018c11be6321b5a9c91d8",
+      "afterSha256": "c20c4c7ccfc809424350b1117f040515e343164457342cd6f2b2b2b6bb1e4f7c",
+      "bytes": 1958,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "public/data/ops/로그.csv",
+      "beforeSha256": "4ea79727b71f979aeca0898c51e0a5dec035328e5a14299bd5699b65a7a2d0ac",
+      "afterSha256": "09d52dfb502009a4b370f50ec2d886f641d8b4ab1780605a6dd6e4ce02ba406c",
+      "bytes": 80769,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "public/data/ops/메시지.csv",
+      "beforeSha256": "78ec3829ff89204aeb1ab6acd788ccfe593378f409f6103b2816fb62d792d52d",
+      "afterSha256": "e62f2012bedc71f7f7449861302ae9a77e2c0e4d984a4a868fd72805c766cb75",
+      "bytes": 59144,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "public/data/ops/홍보기록.csv",
+      "beforeSha256": "9b026b936200da49394b00fbd3fec60f028ed3e8a54cbfe71b9657266dbc5016",
+      "afterSha256": "96d18d3eb7ba5f55f81ab91bb8ef400c96e41deffa87cc1547119746bf053fd9",
+      "bytes": 126057,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "public/standalone.html",
+      "beforeSha256": "e7284bbed9d940cf653fe3b70d7a31dbe2ae4c41bdd3939eb1bc8ebf9cc35333",
+      "afterSha256": "c45921b346621603f611dec953153d52c7d5cae9c5703266e6b8640045a11e8d",
+      "bytes": 6674257,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": true
+    },
+    {
+      "path": "public/ym-auth-ui.js",
+      "beforeSha256": "8e45f4ba6eb8f2c82e54e8c042fd087c9609c80e32f5100862e4b3791d35d775",
+      "afterSha256": "be99b312054ab28be55f826f2384c5f79f683aabfb9bc2c7e88363116c7cd5f5",
+      "bytes": 38223,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": true
+    },
+    {
+      "path": "src/data/special.ts",
+      "beforeSha256": "81764ef7aac8825a9f0d8ea8fc6d3eb4f5f875643d6ae3ec5af8cdb54b05a04e",
+      "afterSha256": "3e697fdb53537ceae7bcd3b20011200669d4ef8a756ece201494666b8a3b6886",
+      "bytes": 3123,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": true
+    },
+    {
+      "path": "src/data/yeulmaru.json",
+      "beforeSha256": "2e647c24d134260cc73cc5382ffead93aca1405fee88f98eb94490c8267ce47c",
+      "afterSha256": "a70b1b26dc99239c073217864c83776b1f96467f7f64162fb4c9c1bc68b21c75",
+      "bytes": 594188,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "tools/auth-contract-260907/role-contract.txt",
+      "beforeSha256": "7e047ae47480b78d4fa7164d1f8dfac16851c46279c617aa9e25fc598eca9f2c",
+      "afterSha256": "cb6e6232aeada930c6479d132d0585790548e8a47c7b132235c4531b3a22c97f",
+      "bytes": 2398960,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "tools/auth-contract-260907/role-functions.txt",
+      "beforeSha256": "49c3554ce3cf87466037d217a89f3d77e4fc33c1f655b269392a271ef6067a92",
+      "afterSha256": "82d60f3fd32b77983653f64b25fcd6fb0692b0db36909cc6da4ddf837e08513d",
+      "bytes": 90443,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "tools/codex_plan_candidate_260906.js",
+      "beforeSha256": "a5f0dec7914116e55a4151163f4235596059466fa49c152bb785d022050d180c",
+      "afterSha256": "0e6851c75b296ffcd75a772c08b8e75980127c896b8ed247cb9868fdcb20a2ee",
+      "bytes": 36172,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": true
+    },
+    {
+      "path": "tools/finance-audit.json",
+      "beforeSha256": "764cdd165d28856487e9b1bc6c60b155842794aa0a119dd0b0e0234c30f8cd7a",
+      "afterSha256": "9e91cbaae9c269dda059a08a0c7eecdeea1528450cea82cdc112c5d157c67c9e",
+      "bytes": 878706,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    },
+    {
+      "path": "tools/group_input_source.txt",
+      "beforeSha256": "32b0570db537f91fc75dd726337f8085fe2a36dcec1bcea95bbb7034c8091aff",
+      "afterSha256": "21026750e76394c4029c0e9fe858ace5544df77714c870ac46eb99fa1bd9cf92",
+      "bytes": 6647213,
+      "reason": "Replace residual staff-name substrings with existing aliases; preserve known public performance titles",
+      "structurePreserved": null
+    }
+  ],
+  "note": "Names aligned in memory against the prior local MISO capture using unchanged manager row fields. No original-to-alias mapping is saved. This targeted scan is not proof that all possible free-text personal information has been removed."
+}

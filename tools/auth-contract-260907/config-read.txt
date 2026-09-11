@@ -1,0 +1,34 @@
+api/ym-db.pb.js L643-675
+function getConfig(e) {
+  var __env = require(__hooks + "/ym-env-lib.js").envOf(e), __col = function (n) { return require(__hooks + "/ym-env-lib.js").col($app, n, __env); };   // [260904 발행관리] dev 요청은 *_dev 컬렉션
+  try {
+    var mc = __col("ymmeta");
+    var found = $app.findRecordsByFilter(mc, "sheet = '_config'", "", 1, 0);
+    var rec = found.length ? found[0] : null;
+    if (!rec) return e.json(200, { pets_visible: false, lock_minutes: 240 });
+    var raw = rec.get("headers") || {};
+    // Older _config records were created with an empty array in the JSON field;
+    // normalize that legacy shape before reading named settings.
+    var h = raw;
+    try { if (h && typeof h.string === "function") h = JSON.parse(h.string()); } catch (normalizeErr0) { h = {}; }
+    if (Array.isArray(h)) h = {};
+    return e.json(200, {
+      pets_visible: h.pets_visible === true,
+      lock_minutes: typeof h.lock_minutes === "number" ? h.lock_minutes : 240,
+      auth_required: h.auth_required === true
+    });
+  } catch (err) {
+    return e.json(500, { pets_visible: false, lock_minutes: 240, auth_required: false, error: String(err) });
+  }
+}
+
+function getMessages(e) {
+  var __env = require(__hooks + "/ym-env-lib.js").envOf(e), __col = function (n) { return require(__hooks + "/ym-env-lib.js").col($app, n, __env); };   // [260904 발행관리] dev 요청은 *_dev 컬렉션
+  try {
+    var mc = __col("ymmeta"), mm = $app.findRecordsByFilter(mc, "sheet = 'messages'", "", 1, 0), headers = mm.length ? (mm[0].get("headers") || []) : [];
+    if (headers && typeof headers.string === "function") { try { headers = JSON.parse(headers.string()); } catch (err0) {} }
+    var col = __col("ymdata"), recs = $app.findRecordsByFilter(col, "sheet = 'messages'", "rowIndex", 50000, 0), out = [];
+    for (var i = 0; i < recs.length; i++) { var data = recs[i].publicExport().data || {}; if (data && typeof data.string === "function") { try { data = JSON.parse(data.string()); } catch (err1) {} } var row = {}, has = false, dataKeys = Object.keys(data); for (var k = 0; k < dataKeys.length; k++) { row[dataKeys[k]] = data[dataKeys[k]] == null ? "" : String(data[dataKeys[k]]); if (row[dataKeys[k]].trim()) has = true; } if (has) { row._rowIndex = recs[i].get("rowIndex"); out.push(row); } }
+    return e.json(200, { messages: out });
+  }
+  catch (err) { return e.json(500, { messages: [], error: String(err) }); }

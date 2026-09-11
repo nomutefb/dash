@@ -1,0 +1,76 @@
+node_modules/
+.vite/
+dist/
+.coder/
+.opencode/
+.pocketbase/
+
+# Runtime / dev artifacts
+*.log
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+.DS_Store
+*.local
+
+# TypeScript build cache
+tsconfig.tsbuildinfo
+
+# PocketBase
+pb_data/
+pb_migrations/
+
+# Platform-managed, per-app env hook (Session Manager regenerates it at runtime)
+api/_runtime_env.js
+
+# 백업/롤백 사본은 커밋·발행 대상에서 제외 (디스크엔 유지)
+backups/
+.rollback/
+public/*.bak*
+
+# Exported workspace: keep live authentication and raw captures out of Git.
+.env
+.env.*
+!.env.example
+api/*-private.js
+*.raw
+*.raw.*
+*identity-map*
+*pseudonym-map*
+.export-status.tmp
+node_modules/
+
+# Superseded encoded installer and audit snapshots
+tools/apply_age2_260829.py
+tools/apply_finmodal_260829.py
+tools/apply_edu_plan_260829.py
+tools/apply_pastaud_alias_260828.py
+tools/apply_planbadge_260829.py
+tools/apply_valid_percent_260829.py
+tools/apply_yearreal_260829.py
+tools/apply_yrsync_260829.py
+tools/apply_yrsync_revert_260829.py
+tools/apply_yrsync2_260829.py
+tools/improve_dashboard_260907.py
+tools/install_member_sync_260907.py
+tools/live-consistency-audit.b64
+tools/plan_ui2_260906.py
+tools/plan_ui_260906.py
+tools/plan_ui3_260906.py
+tools/plan_ui4_260906.py
+tools/plan_ui5_260906.py
+tools/round-foundation-audit.b64
+tools/ticketlink_apply_260907.py
+tools/ticketlink_manual_260907.py
+tools/ticketlink_modal_close_260907.py
+tools/ticketlink_confirm_260907.py
+tools/ticketlink_history_260907.py
+tools/ticketlink_progress_260907.py
+tools/ticketlink_timeout_layout_260907.py
+tools/ticketlink_recovery_260907.py
+tools/ticketlink_settings_260907.py
+tools/ticketlink_ui_260907.py
+tools/ticketlink_ui_final_260907.py
+tools/update_group_260907.py

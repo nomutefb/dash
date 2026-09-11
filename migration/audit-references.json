@@ -1,0 +1,70 @@
+{
+  "filesScanned": 224,
+  "references": 193,
+  "resolved": 184,
+  "unresolved": [
+    {
+      "from": "api/content-kakao.pb.js",
+      "ref": "_runtime_proxy.js",
+      "kind": "pocketbase-hook",
+      "resolved": "api/_runtime_proxy.js",
+      "exists": false
+    },
+    {
+      "from": "api/miso-llm-adapter.pb.js",
+      "ref": "_runtime_proxy.js",
+      "kind": "pocketbase-hook",
+      "resolved": "api/_runtime_proxy.js",
+      "exists": false
+    },
+    {
+      "from": "api/miso-llm-bridge.pb.js",
+      "ref": "_runtime_proxy.js",
+      "kind": "pocketbase-hook",
+      "resolved": "api/_runtime_proxy.js",
+      "exists": false
+    },
+    {
+      "from": "api/ym-auth-lib.js",
+      "ref": "ym-auth-initial-private.js",
+      "kind": "pocketbase-hook",
+      "resolved": "api/ym-auth-initial-private.js",
+      "exists": false
+    },
+    {
+      "from": "api/ym-cron-lib.js",
+      "ref": "_runtime_proxy.js",
+      "kind": "pocketbase-hook",
+      "resolved": "api/_runtime_proxy.js",
+      "exists": false
+    },
+    {
+      "from": "api/ym-cron-lib.js",
+      "ref": "_runtime_env.js",
+      "kind": "pocketbase-hook",
+      "resolved": "api/_runtime_env.js",
+      "exists": false
+    },
+    {
+      "from": "api/ym-db.pb.js",
+      "ref": "_runtime_env.js",
+      "kind": "pocketbase-hook",
+      "resolved": "api/_runtime_env.js",
+      "exists": false
+    },
+    {
+      "from": "api/ym-db.pb.js",
+      "ref": "_runtime_proxy.js",
+      "kind": "pocketbase-hook",
+      "resolved": "api/_runtime_proxy.js",
+      "exists": false
+    },
+    {
+      "from": "index.html",
+      "ref": "/src/main.tsx",
+      "kind": "html-resource",
+      "resolved": "src/main.tsx",
+      "exists": false
+    }
+  ]
+}

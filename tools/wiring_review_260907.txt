@@ -1,0 +1,302 @@
+9537: function _pmSheetRows(){
+9538:   if(_pmSheetP)return _pmSheetP;
+9539:   _pmSheetP=api('GET','/api/ops?sheet='+encodeURIComponent('프로그램마스터')).then(function(j){
+9540:     var list=[];
+9541:     // [260904 Phase5] _json 봉인 폐기 — 열이 정본. 숫자 열은 Number, 별칭·병합_ID 는 JSON 배열, 빈 칸은 키 생략(옛 _json 과 같은 모양)
+9542:     var NUM={}; ['연도','부문코드','시작일','종료일','기간','판매시작일','판매종료일','데이터_원천수','회차수','기본좌석','발권유료','발권초대','재무_집행액','회차_건수','회차_첫공연일','회차_끝공연일','표시_사업비','표시_수익률','재무_수입','표시_수입','대장_관람객','재무_사업비','재무_객단가','재무_수익률','검토필요','재무_수강인원','교육_프로그램군','전시_티켓가격','원장_금액','원장_정상매수','검증_발권vs원장','원장_첫판매일','원장_끝판매일','재무_매출실적','보고서_유료','보고서_무료','보고서_관객','보고서_매출','보고서_사업비','보고서_수익률','재무_집행률','사업비_분할N','재무_최종예산','전시_일수','수입_분할N','티켓_가용좌석','티켓_유료판매','홍보시작일','홍보종료일','대장_판매금액','회차_공연횟수','회차_공연인원합','일일_유료판매','일일_유료금액','일일_점유율','일일_최종일자','오픈석실측','검증_회차합vs마스터','무료여부','웹_게시일'].forEach(function(k){NUM[k]=1;});
+9543:     var ARR={'별칭':1,'병합_ID':1}, SKIP={'_json':1,'프로그램ID':1,'구분':1,'매칭근거':1,'구ID':1,'사업코드':1};
+9544:     ((j&&j.rows)||[]).forEach(function(r){
+9545:       var o={}, ks=Object.keys(r||{});
+9546:       for(var i=0;i<ks.length;i++){ var k=ks[i]; if(SKIP[k])continue; var v=r[k]; if(v===''||v===null||v===undefined)continue;
+9547:         if(ARR[k]){ try{ v=JSON.parse(v); }catch(_e){} }
+9548:         else if(NUM[k]){ var t=String(v).trim(); if(/^-?\d+(\.\d+)?$/.test(t))v=Number(t); }
+9549:         o[k]=v; }
+9550:       if(!String(r['프로그램ID']||'').trim())return;
+9551:       o.구ID=String(r['구ID']||''); o.사업ID=String(r['프로그램ID']||''); o.사업코드=String(r['사업코드']||''); list.push(o); });
+9552:     if(list.length<100)throw new Error('프로그램마스터 시트 비어있음');
+9553:     return list;
+9554:   }).catch(function(e){ _pmSheetP=null; throw e; });
+9555:   return _pmSheetP;
+9556: }
+9557: /* ═══ [260903 Phase1 M-2] 프로그램 관리(programs 시트) → 프로그램마스터(_PM) 오버레이 ═══
+9558:    원칙(청사진 §2): 관리자 폼이 쓰는 programs 시트가 정체성(이름·기간·장소·사업코드·구분)의 정본.
+9559:    _PM(이력 시트 = v46 _json 봉인)은 같은 프로그램ID 가 있으면 그 열들을 programs 값으로 덮고, 없는 ID 는 새 행으로 추가한다.
+9560:    재무 파생열(사업비·수입·수익률 …)은 이력 값을 그대로 둔다(Phase 4·5 에서 살아있는 계산으로 교체).
+9561:    끄기: window._PM_OVERLAY=false (부팅 전). 대관(R… ID)·NO 빈 행은 PERFS 규칙과 같이 제외. */
+9562: function _pmOverlayPrograms(pm, progs){
+9563:   if(!Array.isArray(pm)||!Array.isArray(progs)||!progs.length)return {added:0,updated:0};
+9564:   var byId={}; pm.forEach(function(r){ if(r&&r.id!=null)byId[String(r.id)]=r; });
+9565:   function n8(v){ var s=String(v==null?'':v).trim(); var m=s.match(/^(\d{4})[-./]?(\d{2})[-./]?(\d{2})/); if(m)return Number(m[1]+m[2]+m[3]); var n=Number(s); if(n>20000&&n<80000){ var d=new Date(Math.round((n-25569)*86400000)); return d.getUTCFullYear()*10000+(d.getUTCMonth()+1)*100+d.getUTCDate(); } return 0; }
+9566:   function d8(v){ v=String(v||''); return v.length>=8?v.slice(4,6)+'.'+v.slice(6,8):''; }
+9567:   var BUN={'공연':'공연','전시':'전시','예술교육':'교육','대관':'공연','기타':'기타'};
+9568:   var added=0,updated=0;
+9569:   progs.forEach(function(p){
+9570:     var id=String(p['프로그램ID']||p['공연ID']||'').trim();
+9571:     if(!id||/^R/i.test(id))return;                       // 대관(구글 캘린더 편입) 제외 — PERFS 규칙과 동일
+9572:     if(p['NO']===''||p['NO']==null)return;
+9573:     var ct=String(p['콘텐츠구분']||'').trim();
+9574:     var bun=BUN[ct]||'기타';
+9575:     var isRent=(ct==='대관');
+9576:     var s=n8(p['시작일']),e=n8(p['종료일'])||s;
+9577:     var sch=(function(){ var a=d8(s),b=d8(e); return (b&&b!==a)?(a+'~'+b):a; })();
+9578:     var yr=s?Math.floor(s/10000):null;
+9579:     var name=String(p['풀네임']||'').trim();
+9580:     var short=String(p['줄임말']||'').trim();
+9581:     var rc=parseInt(String(p['회차']||'').replace(/[^0-9]/g,''),10);
+9582:     var fields={
+9583:       명칭:name||null, 일정:sch||null, 장소:String(p['장소']||'').trim()||null,
+9584:       사업코드:String(p['사업코드']||'').trim(),
+9585:       _s:s||99999999, _e:e||0, _ps:n8(p['판매시작일'])||0, _hs:n8(p['홍보시작일'])||0,
+9586:       _g2:(bun==='전시')?'전시':(String(p['장르']||p['구분']||'').trim()||null),   /* [260903] 전시는 '전시' 고정 */
+9587:       횟수:(rc>0?rc:null)
+9588:     };
+9589:     var cur=byId[id];
+9590:     if(cur){
+9591:       Object.keys(fields).forEach(function(k){ var v=fields[k]; if(v===null||v===undefined||v==='')return; cur[k]=v; });
+9592:       if(short){ if(!Array.isArray(cur.별칭))cur.별칭=[]; if(cur.별칭.indexOf(short)<0)cur.별칭.push(short); }
+9593:       cur.출처='programs';
+9594:       updated++;
+9595:     }else{
+9596:       var gu=(bun==='교육')?'교육':(bun==='전시')?(isRent?'대관전시':'기획전시'):(isRent?'대관공연':'기획공연');
+9597:       var rec={id:id,연도:yr,구분:gu,명칭:name,일정:sch,장소:fields.장소,횟수:fields.횟수,수강인원:null,출처:'programs',비고:null,앱_프로그램명:null,
+9598:         사업비:null,수입:null,수익률:null,무료여부:null,사업비분할:null,수입분할:null,구분2:(isRent?'대관':'기획'),사업코드:fields.사업코드,분야:bun,
+9599:         _s:fields._s,_e:fields._e,_ps:fields._ps,_hs:fields._hs,_st:'',_wg:0,_g2:fields._g2,별칭:(short?[short]:null),보고서명:null};
+9600:       pm.push(rec); byId[id]=rec; added++;
+9601:     }
+9602:   });
+9603:   try{ console.log('[260903 M-2] programs 오버레이',{added:added,updated:updated}); }catch(_e){}
+9604:   return {added:added,updated:updated};
+9605: }
+9606: 
+9614:   if(typeof _ymDevConsistency==='function'&&_ymDevConsistency()&&__ymEpoch!==_ymViewEpoch)return _pmLoad();
+9615:   _PM=list.map(function(p){
+9616:     var bu=Number(p.부문코드);var ca=String(p.카테고리||'');
+9617:     var gu=(bu===3)?'교육':(bu===2)?(ca.indexOf('대관')>-1?'대관전시':'기획전시'):(bu===1)?(ca==='기획공연'?'기획공연':'대관공연'):'기타';
+9618:     var s=d8(p.시작일),e=d8(p.종료일);var sch=(e&&e!==s)?(s+'~'+e):s;
+9619:       return {id:String(p.사업ID),연도:Number(p.연도)||null,구분:gu,명칭:p.정본명||'',일정:sch,장소:p.장소||null,횟수:(p.회차수==null?null:p.회차수),수강인원:(p.재무_수강인원==null?null:p.재무_수강인원),출처:p.출처||'db_v46',비고:(p.상태&&p.상태!=='정상')?('['+p.상태+']'):(p.비고!=null?String(p.비고):null),앱_프로그램명:null,사업비:(p.표시_사업비==null?null:p.표시_사업비),수입:(p.표시_수입==null?null:p.표시_수입),수익률:(p.표시_수익률==null?null:p.표시_수익률),무료여부:(p.무료여부==null?null:p.무료여부),사업비분할:(p.사업비_분할N==null?null:p.사업비_분할N),수입분할:(p.수입_분할N==null?null:p.수입_분할N),구분2:(function(c){return c==='b'?'대관':(c==='a'?'기획':(p.표시_구분||'—'));})(String(p.구ID||p.사업ID||'').charAt(12)) /* [WA80-v1] 기획/대관 = 구ID(v46) 13번째 글자 · [260902] 사업ID는 프로그램ID로 바뀌어 구ID로 판정 */,사업코드:String(p.사업코드||''),분야:(p.표시_분야||null),_s:(Number(p.시작일)||99999999),_e:(Number(p.종료일)||0),_ps:(Number(p.판매시작일)||0),_hs:(Number(p.홍보시작일)||0),_st:String(p.상태||''),_wg:(Number(p.웹_게시일)||0),_g2:(p.세부장르||p.장르||null),별칭:(Array.isArray(p.별칭)?p.별칭:null),보고서명:(p.보고서명||null)} /* [WA80-v1] 장르 */ /* [WA85-v1] 별칭(구명·문헌명)·보고서명 — v55 programs.json */;
+9620:   });
+9621:   try{ _pmOverlayPrograms(_PM,_progRows); }catch(_oe){ console.warn('[260903 M-2] programs 오버레이 실패',_oe); }
+9622:   _BPL=[];_PM_BY_ID={};_BPL_BY_KEY={};
+9623:   _PM.forEach(function(r){_PM_BY_ID[String(r.id)]=r;});
+9624:   console.log('[WA31] 프로그램 마스터 = db_v46/programs.json',_PM.length);
+9625:   return {pm:_PM,bpl:_BPL};
+9626: }).catch(function(err){
+9627:   console.warn('[WA31] db_v46 로드 실패 — 구 마스터 폴백',err);
+9628:   _pmLoading=null;return _pmLoadLegacy();
+9629: });
+9630: return _pmLoading;
+9631: }
+9632: function _pmLoadLegacy(){
+9633: if(_pmLoading)return _pmLoading;
+9634:    _pmLoading=Promise.all([
+9635:      fetch('data/program_master.json').then(function(r){if(!r.ok)throw new Error('program master data '+r.status);return r.json();}),
+9636:      fetch('data/biz_program_links.json').then(function(r){if(!r.ok)throw new Error('business program links data '+r.status);return r.json();})
+9637:    ]).then(function(data){
+9638:      var pm=data[0],bpl=data[1];
+9639:      if(!pm||!Array.isArray(pm['행'])||pm['행'].length!==1549)throw new Error('program master data must contain 1549 rows');
+9640:      if(!bpl||!Array.isArray(bpl['행'])||bpl['행'].length!==139)throw new Error('business program links data must contain 139 rows');
+9641:      _PM=pm['행'];_BPL=bpl['행'];_PM_BY_ID={};_BPL_BY_KEY={};
+9642:      _PM.forEach(function(r){_PM_BY_ID[String(r.id)]=r;});
+9643:      _BPL.forEach(function(r){
+9644:        var key=String(r['연도'])+'|'+String(r['부문'])+'|'+String(r['사업명']);
+9645:        if(!_BPL_BY_KEY[key])_BPL_BY_KEY[key]=[];
+9646:        _BPL_BY_KEY[key].push(String(r['프로그램ID']));
+9647:      });
+9648:      try{if(document.getElementById('rail-yrm')&&typeof _railYrmRender==='function')_railYrmRender();}catch(_e){}
+9649:      return {pm:_PM,bpl:_BPL};
+9650:    }).catch(function(e){console.error('[program master]',e);throw e;}).finally(function(){_pmLoading=null;});
+9651:    return _pmLoading;
+9652:  }
+9653:  function _pmCounts(year){
+9654:    var out={기획공연:0,대관공연:0,기획전시:0,대관전시:0,교육:0};
+9655:    (_PM||[]).forEach(function(r){if(Number(r['연도'])===Number(year)&&Object.prototype.hasOwnProperty.call(out,r['구분']))out[r['구분']]++;});
+9656:    return out;
+9657:  }
+9658: function _bizOvRailLegacy(el){
+9659:   // ⚠ 틀 = 판매 실적 레일(`_railYrmFrame`) 그대로 — 머리줄 + 유리박스 + `.bizm-card` + **`#rail-yrm-uha` 슬롯**.
+9660:   //   슬롯을 빼면 상세(#srail-uha)가 갈 곳을 잃는다(레일이 그 자리를 전제로 옮겨 담는다).
+9661:   var year=_bizOvYearPick(); if(year==='all')year=_finYears()[0]||new Date().getFullYear(); var rows=_finRows(year);
+9662:   var h='<div style="position:relative">'+_bizmHead('','사업 지표',' ')+_BIZM_BOX;
+9663:   if(!rows.length){
+9664:     h+='<div class="bizm-card" data-bizmfill style="padding:34px 18px;text-align:center;color:var(--dim);font-size:13px;display:flex;align-items:center;justify-content:center">'+year+'년 사업비 자료가 없습니다</div>'
+9665:       +'<div id="rail-yrm-uha"></div></div></div>';
+9666:     el.innerHTML=h; return;
+9667:   }
+9668:   // [260813 운영자 「**회계 구분별 사업지표는 필요없고**」] 구 「회계구분별」 카드 철거.
+9669:   //   축은 안 잃는다 — 회계구분은 좌 열 「분야별」 표의 **비고 열**로 옮겨 사업마다 그대로 보인다(같은 화면 안 이동).
+9670:   // [260813 운영자 「분야별 표 이거 우측으로 보내줘」] 좌 열에 있던 「분야별」 표를 이 레일로 옮긴다.
+9671:   //   ⚠ 표 조립은 **한 글자도 안 바꿨다** — 좌 열에 있던 것을 그대로 들고 왔다(자리만 이동).
+9672:   //   높이 = 운영자 「흰색 박스는 항상 높이가 고정이고 내용이 많아지면 스크롤로 내려가야해」 →
+9673:   //     `data-bizmcap`(상·하한을 유리 박스 안선에 못박음) + 안쪽 칸이 스크롤러. 카드 자체는 안 늘어난다.
+9674:   // [260813 운영자] 구 「사업별」 → **분야별**(선택자로 한 분야만) · 열 = NO › 사업명 › 사업비 › 수입 › 수익률 › 비고.
+9675:   //   지시: 「사업별을 > 분야별로 해서 (박스 안) 우측 상단에 공연 전시 예술교육 선택자 · 기본 공연 ·
+9676:   //          사업no 디테일한 뒤에 실제 표기는 공연-01만 · 분야는 이제 선택자에서 걸러지니까 없어도 됨 ·
+9677:   //          회계 구분 - 이거 **비고**라고 표기해서 맨 우측 · 사업명이 좀 더 표출되어야 함 ·
+9678:   //          no › 사업명 › 사업비 수입 수익률 비고 이렇게 순차적으로」
+9679:   //   ⚠ 사업명 칸이 넓어진 실제 출처 = **분야 열을 뺀 자리**다(사업명은 `max-width:0;width:100%`라 남는 폭을 통째로 흡수한다).
+9680:   //     회계구분은 지운 게 아니라 「비고」 이름으로 맨 오른쪽에 그대로 서 있다 = 거르기 축(회계) 유실 0.
+9681:   var _ovCats=_bizOvCats(rows), _ovCat=_bizOvCatPick(rows), _ovRows=rows.filter(function(r){ return r.cat===_ovCat; });
+9682:   // [260812 8차] 미기입 건수는 **지금 보고 있는 분야 기준**으로 센다(선택자가 걸러낸 뒤라 전체 건수를 적으면 표와 어긋난다).
+9683:   var _blkOv=_ovRows.filter(function(r){ return _finBlank(r).length; }).length;
+11144:   return out;
+11145: }
+11146: // 파생값 한 곳 — 원본 엑셀 수식과 같은 식. 저장하지 않고 매번 센다.
+11147: //   수익율 = 매출 ÷ (전표실적 + 판매수수료) × 100  (원본 25공연 P열 `=J/(G+I)*100` · 25전시 M열 동일 ·
+11148: //   25교육 각주 「수익률은 판매수수료를 지출에 포함한 계산값」 = 세 분야가 같은 식으로 수렴한다)
+11149: function _finCalc(r){
+11150:   var cost=(r.vou||0)+(r.fee||0);
+11151:   return {cost:cost,diff:(r.rev||0)-(r.vou||0),margin:cost>0?((r.rev||0)/cost*100):null,
+11152:           ppl:(r.paid||0)+(r.inv||0),exec:(r.bud>0)?((r.vou||0)/r.bud*100):null};
+11153: }
+11154: function _finWon(v){ return (v==null||!isFinite(v))?'—':Number(v).toLocaleString(undefined,{maximumFractionDigits:1})+'원'; }
+11155: // [260812 9차 운영자 「수익률에 단위 % 들어가있으니까 여기에 % 직접적으로 안써줘도됌」]
+11156: //   `bare=true`면 값만 — 열 머리가 이미 「(단위: %)」라고 말하는 자리에서 쓴다(KPI 등 다른 자리는 종전대로 %가 붙는다).
+11157: function _finPct(v,bare){ return (v==null||!isFinite(v))?'—':(v.toFixed(1)+(bare?'':'%')); }
+11158: // ── [260813 운영자] 사업 개요 표기 자 = **두 층**(KPI = 억 · 표 = 백만원) ──────────────────────
+11159: //   지시: 「사업비는 **0.0억**으로 표기했으면 좋겠고 · 수익도 0.0억 · 수익률은 정상」
+11160: //        「각 분야별 사업별 … 그 부분에 **예산을 백만원 단위로 하고 반올림**할게 그니까 1,470,284,757 이면 **1,470 백만 원**」
+11161: //   왜 한 자로 안 통일하나 = 두 자리가 요구하는 해상도가 다르다. KPI는 **전체 규모 한 눈**(19.2억)이라 억이 맞고,
+11162: //     표는 **사업끼리 비교**라 억으로 줄이면 차이가 뭉갠다(1,470,284,757 ↔ 1,455,038,020 = 둘 다 14.7억으로 같아진다).
+11163: //   ⚠ 파생값 미저장 계약과 무관 — 이 둘은 **표기 함수**다(값을 만들지 않고 있는 값을 읽는 자만 바꾼다).
+11164: //   ⚠ -0 방지: Math.round(-400000/1e6) = -0 → toLocaleString()이 「-0」을 뱉는다(반올림해 0이 된 적자가 마이너스로 보인다).
+11165: function _finEok(v){ if(v==null||!isFinite(v))return '—'; var n=Math.round(v/1e7)/10; return (n===0?0:n).toFixed(1); }
+11166: function _finMil(v){ if(v==null||!isFinite(v))return '—'; var n=Math.round(v/1e6); return (n===0?0:n).toLocaleString(); }
+11167: // 회계 담당자 — 담당자 시트 `회계여부`(맨 끝 append 열). 관리자는 상위 권한이라 포함한다.
+11168: function _isAcct(){ try{ if(typeof userRole!=='undefined'&&userRole==='admin')return true; return sessionStorage.getItem('isAcct')==='1'; }catch(_e){ return false; } }
+11169: // 시트 적재 — 시트가 아직 없으면 `/api/ops`가 `note:'시트 없음 (미동기화)'` + 빈 rows로 답한다(에러 아님)
+11170: //   = 첫 사용자는 **씨앗만으로** 정상 렌더된다. 시트 신설은 첫 저장(`opsWriteSheet`→`ensureSheet`)이 한다.
+11171: function _finLoad(force){
+11172:   if(_finState.rows&&!force)return Promise.resolve(_finState.rows);
+11173:   if(_finState.busy&&_finState._p&&!force)return _finState._p;
+11174:   _finState.busy=1;
+11175:   _finState._p=api('GET','/api/ops?sheet='+encodeURIComponent(_FIN_SHEET)+(force?'&fresh=1':''))
+11176:     .then(function(d){ _finState.rows=(d&&d.rows)?d.rows:[]; _finState.note=(d&&d.note)||null; _finState.err=null; })
+11177:     .catch(function(e){ _finState.rows=[]; _finState.note=null; _finState.err=e; console.warn('[사업비]',e); })
+11178:     .then(function(){ _finState.busy=0; _finIdxClear(); return _finState.rows; });
+11179:   return _finState._p;
+11180: }
+11181: // 선적재 — 사업 목록이 그려질 때 **한 번만** 시트를 부른다(`_finState.rows`가 차면 이 함수는 무발화).
+11182: //   씨앗만으로도 표는 이미 옳게 그려지므로 이건 「시트 값으로 갱신」 축이다 → 도착했고 시트에 행이 있을 때만 다시 그린다.
+11183: //   ⚠ 재그리기는 **화면에 있는 것**만 — 없는 DOM을 부르면 다른 면을 억지로 띄우게 된다.
+11184: function _finWarm(){
+11185:   if(_finState.rows||_finState.busy)return;
+11186:   _finLoad().then(function(rows){
+11187:     if(!rows||!rows.length)return;
+11188:     try{ if(document.getElementById('biz-body'))_bizRender(); }catch(_e){}
+11189:     try{ if(document.getElementById('biz-main')&&typeof _bizInlineRender==='function')_bizInlineRender(); }catch(_e){}   // 이 함수는 스스로 `_mainView!=='biz'`면 즉시 돌아간다 = 다른 화면 오폭 0
+11190:     try{ if(_bizPerfModal&&_bizPerfModal.body)_bizPerfModalRender(); }catch(_e2){}
+11191:   });
+11192: }
+11193: // ── 사업비 모달 = **정본 한 벌**(`_finModal`) ─────────────────────────────────────────────
+11194: //   진입은 둘인데 창은 하나다: ⓐ 사업 결과 목록의 그 행(`_finOpen` — 「거기에 매달아야함」)
+11195: //   ⓑ 사업비 보드의 그 줄(`openFinanceBoard`). 둘이 같은 함수를 부르므로 표기·편집이 갈릴 수가 없다
+11196: //   (`_bizListBuild`/`_bizListTable` 쌍둥이 사고에서 배운 규율 — `tools/check_biz_list.py`와 같은 축).
+11197: //   골격 = `_srailRoundsOpen`(운영_회차상세 편집 모달) 100% 계승 — 셸·머리줄·버튼·유실 방지 가드 전부.
+11198: var _finEdit={no:null,year:null,on:false,busy:false,baseSig:null,baseTotal:0,back:null};
+11199: function _finClose(){ var el=document.getElementById('fin-modal'); if(el)el.remove(); _finEdit={no:null,year:null,on:false,busy:false,baseSig:null,baseTotal:0,back:null}; }
+11200: // 이 행 시그니처 — 저장 직전 「내가 연 뒤 남이 고쳤나」 감지용(숫자 표현 차이는 정규화로 흡수)
+11201: function _finSig(r){ if(!r)return ''; return ['bud','vou','fee','rev','paid','inv'].map(function(k){return _finNum(r[k]!==undefined?r[k]:'');}).join('|')+'|'+String(r.lnk||r['연결키']||''); }
+11202: function _finRowByNo(no,year){ var ix=_finIdx(year); return ix.byNo[no]||null; }
+11203: // 사업 결과 목록 행 → 사업비. 못 찾으면 「연결 안 됨」 창을 열어 회계가 그 자리에서 연결키를 매달 수 있게 한다.
+11204: // ===== [PA1-v1] 종료 공연 예매자 정보 모달 (운영자 260828 「판매현황에서 지나간 공연 누르면 예매자 성향만 모달로」) =====
+11205: // 데이터 = data/예매집단분석_과거_260828.json (통합장부 2015~2026 × 회원명부 전화 정확일치 · 서버측 생성)
+11206: // 렌더 = 기존 _anaAudienceHtml 재사용(잠깐 _audSeg를 바꿔치기 후 원복 — 판매중 화면 영향 0)
+11207: var _pastAud=null,_pastAudP=null;
+11208: function _pastAudLoad(){ if(_pastAud)return Promise.resolve(_pastAud); if(_pastAudP)return _pastAudP;
+11209:   _pastAudP=fetch('data/예매집단분석_과거_260828.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(d){_pastAud=(d&&Array.isArray(d['공연']))?d:{'공연':[]};return _pastAud;}).catch(function(){_pastAud={'공연':[]};return _pastAud;});
+11210:   return _pastAudP; }
+11211: function _pastAudNorm(s){return String(s||'').normalize('NFKC').replace(/^20\d\d(년)?\s*/,'').replace(/\s*[-–]\s*여수\s*$/,'').replace(/[\s<>＜＞〈〉「」『』'"“”‘’:：_\-–,.!?？~·&＆×xX()（）\[\]\/]/g,'').toLowerCase();}
+11212: function _pastAudClose(){var m=document.getElementById('pastaud-modal');if(m)m.remove();}
+11213: /*[PA2-v1] 화면 공연명 → 장부 공연명 대응표(연도|정규화명 → 정규화된 장부명). 260828 운영자 지시: 첨부 4건만. 기존 매칭 흐름은 불변 */
+11214: var _pastAudAlias={'2026|신년음악회':'gs칼텍스예울마루신년음악회','2026|브런치콘서트i클래식과함께하는미술관여행i':'gs칼텍스예울마루브런치콘서트','2026|브런치콘서트ii클래식과함께하는미술관여행ii':'gs칼텍스예울마루브런치콘서트클래식과함께하는미술관여행ii','2026|실내악페스티벌실내악그이상의세계':'gs칼텍스예울마루실내악페스티벌'};
+11215: function _pastAudOpen(name,year){
+11216:   _pastAudLoad().then(function(d){
+11217:     var n=_pastAudNorm(name),list=(d&&d['공연'])||[];n=_pastAudAlias[String(year)+'|'+n]||n;
+11218:     var cand=list.filter(function(x){return !year||!x['연도']||String(x['연도'])===String(year);});
+11219:     var hit=cand.find(function(x){return _pastAudNorm(x['공연'])===n;})
+11220:       ||cand.find(function(x){var m=_pastAudNorm(x['공연']);return n.length>=6&&(m.indexOf(n)>=0||n.indexOf(m)>=0);})
+11221:       ||list.find(function(x){var m=_pastAudNorm(x['공연']);return n.length>=6&&(m.indexOf(n)>=0||n.indexOf(m)>=0);});
+11222:     _pastAudClose();
+11223:     var head='<div style="font-size:15px;font-weight:800;margin:2px 30px 2px 2px">'+escapeHtml(name)+' <span style="font-weight:400;color:var(--dim);font-size:12px">'+((hit&&hit['연도'])?hit['연도']+'년 · ':'')+'예매자 정보</span></div>';
+11224:     var inner;
+11225:     if(hit){ var keep=_audSeg; _audSeg={'공연':[hit]}; try{ inner=_anaAudienceHtml({name:hit['공연']})||''; }catch(_e){ inner=''; } _audSeg=keep;
+11226:       if(!inner)inner='<div style="padding:24px 6px;color:var(--dim);font-size:13px">표시할 예매자 정보가 없어요.</div>';
+11227:     } else { inner='<div style="padding:20px 6px;color:var(--dim);font-size:13px">이 공연의 예매자 데이터가 장부에 없어요. (기획공연 예매이력 밖 — 대관·전시·교육 등)</div>'; }
+11228:     var wrap=document.createElement('div');wrap.id='pastaud-modal';
+11229:     wrap.innerHTML='<div class="modal-bg show" onclick="if(event.target===this)_pastAudClose()"><div class="modal" style="width:880px;max-width:96vw;text-align:left;max-height:88vh;overflow:auto">'
+11230:       +'<button class="modal-x" onclick="_pastAudClose()" title="닫기" aria-label="닫기">✕</button>'
+11231:       +head+'<div id="pastaud-body">'+inner+'</div></div></div>';
+11232:     document.body.appendChild(wrap);
+11233:   });
+11234: }
+11235: function _finOpen(name,year){
+19950:  function add(id,field,base,view){issues.push({id:id,field:field,base:text(base),view:text(view)});}
+19951:  function compare(id,field,base,view,numeric){checks++;if(numeric&&text(base)!==''&&text(view)!==''){if(Number(base)===Number(view))return;}if(text(base)!==text(view))add(id,field,base,view);}
+19952:  function index(rows,key,target,label){(rows||[]).forEach(function(r){var id=text(r[key]);if(!id){add('',label+' ID 없음','','');return;}if(target[id])add(id,label+' ID 중복','1','2+');else target[id]=r;});}
+19953:  index(data.master,'프로그램ID',master,'마스터'); index(data.biz,'사업NO',biz,'사업');
+19954:  (data.sales||[]).forEach(function(r){var id=text(r.프로그램ID),m=master[id];if(!m){add(id,'판매 → 마스터 참조','마스터 행','없음');return;}compare(id,'판매 명칭',m.정본명||m.판매명칭,r.명칭);compare(id,'판매 사업코드',m.사업코드,r.사업코드);if(text(m.회차수)!=='')compare(id,'판매 회차',m.회차수,r.총회차,true);});
+19955:  (data.programs||[]).forEach(function(r){var id=text(r.프로그램ID),m=master[id];if(!m){add(id,'프로그램 → 마스터 참조','마스터 행','없음');return;}compare(id,'프로그램 명칭',m.정본명,r.정본명);compare(id,'프로그램 사업코드',m.사업코드,r.사업코드);compare(id,'프로그램 수입',m.표시_수입,r.수입,true);});
+19956:  var bm=[['사업명','사업명'],['실지출','전표실적'],['수입','정산서매출'],['판매수수료','판매수수료'],['유료관객','유료인원'],['무료관객','초대인원']];
+19957:  (data.planBiz||[]).forEach(function(r){var id=text(r.사업코드),m=biz[id];if(!m){add(id,'사업 → 원장 참조','사업 행','없음');return;}bm.forEach(function(pair){compare(id,'사업 '+pair[0],m[pair[1]],r[pair[0]],pair[0]!=='사업명');});});
+19958:  (data.daily||[]).forEach(function(r){var id=text(r.프로그램ID),m=master[id];if(!m){add(id,'일일실적 → 마스터 참조','마스터 행','없음');return;}compare(id,'일일실적 명칭',m.정본명,r.명칭);compare(id,'일일실적 사업코드',m.사업코드,r.사업코드);});
+19959:  return {checks:checks,issues:issues};
+19960: }
+19961: async function _ymCheckDB(){
+19962:  if(!_ymDevConsistency())return;
+19963:  _ypModal('yp-db-check','<div class="modal-bg show" style="z-index:9800"><div class="modal" style="max-width:1000px;width:96vw;max-height:85vh;overflow:auto;padding:24px"><button class="modal-x" aria-label="일치 검사 닫기" onclick="_ypClose(&quot;yp-db-check&quot;)">✕</button><h3>DB 일치 검사</h3><div id="yp-db-check-result">현재 DB 조회 중</div></div></div>');
+19964:  try{
+19965:   var paths=['/api/ops?sheet='+encodeURIComponent('프로그램마스터')+'&fresh=1&nocache=1','/api/ops?sheet='+encodeURIComponent('사업비')+'&fresh=1&nocache=1','/api/ops?sheet='+encodeURIComponent('판매설정')+'&fresh=1&nocache=1','/api/ym/plan/programs','/api/ym/plan/biz','/api/ops?sheet='+encodeURIComponent('일일실적')+'&fresh=1&nocache=1'];
+19966:   var results=await Promise.all(paths.map(function(path){return api('GET',path);}));
+19967:   results.forEach(function(r){if(!r||!Array.isArray(r.rows))throw new Error('조회 응답 누락');});
+19968:   var result=_ymCompareDB({master:results[0].rows,biz:results[1].rows,sales:results[2].rows,programs:results[3].rows,planBiz:results[4].rows,daily:results[5].rows});
+19969:   var h='<p>현재 DB 기준 '+result.checks+'개 항목 검사 · 불일치 '+result.issues.length+'건</p><p>이름·사업코드·회차·동일 의미의 사업 금액과 관객·프로그램 수입·일일실적 참조를 비교합니다. 사업 합계와 개별 프로그램 값은 서로 같은 값으로 간주하지 않습니다.</p>';
+19970:   if(result.issues.length)h+='<table class="adm-tbl"><thead><tr><th>ID</th><th>항목</th><th>DB 기준</th><th>조회 값</th></tr></thead><tbody>'+result.issues.slice(0,200).map(function(x){return '<tr><td>'+escapeHtml(x.id)+'</td><td>'+escapeHtml(x.field)+'</td><td>'+escapeHtml(x.base||'(빈칸)')+'</td><td>'+escapeHtml(x.view||'(빈칸)')+'</td></tr>';}).join('')+'</tbody></table>'+(result.issues.length>200?'<p>앞의 200건 표시</p>':'');
+19971:   _ypBody('yp-db-check-result',h);
+19972:  }catch(e){_ypBody('yp-db-check-result','조회 실패: '+escapeHtml(_ypErr(e)));}
+19973: }
+19974: 
+19975: function backToAdminMenu(){openAdminPanel();}
+19976: 
+19977: // === Coming Soon 모달 (미구현 메뉴용) ===
+19978: function showComingSoon(label){
+19979:   const html='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeComingSoon)"><div class="modal" style="width:auto;min-width:320px;max-width:90vw;--mpad-y:36px;--mpad-x:40px;text-align:center">'+_mhead(label,'아직 준비 중이에요')+'<div style="font-size:56px;margin-bottom:12px;line-height:1">😉</div><button onclick="closeComingSoon()" class="btn btn--primary btn--md">확인</button></div></div>';
+19980:   let el=document.getElementById('coming-soon');
+19981:   if(!el){el=document.createElement('div');el.id='coming-soon';document.body.appendChild(el);}
+19982:   el.innerHTML=html;
+19983: }
+19984: function closeComingSoon(){const el=document.getElementById('coming-soon');if(el)el.innerHTML='';}
+19985: 
+19986: // 모달 배경 클릭 닫기 — 드래그 종료가 우연히 modal-bg에서 발생한 경우 무시
+19987: // (textarea/input 안에서 텍스트 선택 드래그하다 마우스를 벗어나 놓으면 click이 modal-bg에서 발생하는 버그 방지)
+19988: function modalBgMouseDown(e){
+19989:   e.currentTarget._mds=(e.target===e.currentTarget);
+19990: }
+19991: function modalBgClick(e,closeFn){
+19992:   if(e.currentTarget._mds&&e.target===e.currentTarget){
+19993:     e.currentTarget._mds=false;
+19994:     closeFn();
+19995:   }
+19996: }
+19997: 
+19998: // === admin 접수 처리 (신청 중 → 예정) ===
+19999: async function approvePromoFromBoard(rowIndex){
+20000:   if(userRole!=='admin'){showToast('관리자만 접수할 수 있어요','error');return;}
+20001:   const r=records.find(function(x){return x._rowIndex===rowIndex;});
+20002:   if(!r){showToast('신청을 찾을 수 없어요','error');return;}
+20003:   const _st=r['진행 상태']||'';
+20004:   if(_st!=='신청 중'){showToast('신청 중 상태만 접수할 수 있어요','error');return;}
+20005:   const _ca=canApprove(r,rowIndex);
+20006:   if(!_ca.ok){showToast(_ca.reason,'error');return;}
+20007:   const title=r['콘텐츠 제목']||'(제목 없음)';
+20008:   const ok=await showConfirm('"'+title+'"\n\n이 신청을 접수(예정)할까요?');
+20009:   if(!ok)return;
+20010:   showOverlayLoad();
+20011:   try{
+20012:     // 예정 승인 시 재신청사유 소거 — 재신청 1회분이 소비됨(이후 다시 신청중→보류면 정상적으로 재신청 가능)
+20013:     const row = buildRecordRow(r, {'진행 상태':'예정','재신청사유':''});
+20014:     await api('PATCH','/api/records/'+rowIndex,{values: row});
+20015:     // 메시지함 hook (일반: 신청중→예정)
+20016:     try{
+20017:       const _rs1 = (r['날짜']||'') + ' ' + (r['플랫폼 1']||'') + ' ' + (r['콘텐츠 제목']||'');
+20018:       pushMessage({
+20019:         recipient: r['신청자']||'',

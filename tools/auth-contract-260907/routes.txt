@@ -1,0 +1,48 @@
+"GET", "/api/records", getRecords);
+"GET", "/api/programs", getPrograms);
+"GET", "/api/sheet/{slug}", getSheet);
+"GET", "/api/ops", getOps);
+"GET", "/api/ym/program", getProgramJoin);   // [260905 통합⑰]
+"GET", "/api/ym/calendar", getCalendarJoin);   // [260905 통합⑲]
+"POST", "/api/ym/codes/reindex", postCodesReindex);
+"GET", "/api/holidays", getHolidays);
+"GET", "/api/config", getConfig);
+"GET", "/api/messages", getMessages);
+"GET", "/api/lastmod", getLastmod);
+"GET", "/api/ym/holidays", getHolidays);
+"GET", "/api/ym/config", getConfig);
+"GET", "/api/ym/messages", getMessages);
+"GET", "/api/ym/lastmod", getLastmod);
+"GET", "/api/presence", getPresence);
+"GET", "/api/gcal", getGcal);
+"GET", "/api/monitor/feed", getMonitorFeed);
+"GET", "/api/visitors", getVisitors);
+"GET", "/api/memo", getMemo);
+"GET", "/api/chatbot/faq", getChatbotFaq);
+"GET", "/api/chatbot/rules", getChatbotRules);
+"GET", "/api/qa", getQa);
+"GET", "/api/diagrams", getDiagrams);
+"POST", "/api/records", postRecords);
+"PATCH", "/api/records/{rowIndex}", patchRecords);
+"DELETE", "/api/records/{rowIndex}", deleteRecords);
+"DELETE", "/api/records", deleteRecords);
+"DELETE", "/api/records-delete", deleteRecords);
+"POST", "/api/records-delete", deleteRecords);
+"POST", "/api/sheet/{slug}", postSheet);
+"PATCH", "/api/sheet/{slug}/{rowIndex}", patchSheet);
+"DELETE", "/api/sheet/{slug}/{rowIndex}", deleteSheet);
+"POST", "/api/ops", postOps);
+"POST", "/api/ops/row", opsRow);     // [260903 H-4]
+"PATCH", "/api/ops/row", opsRow);
+"DELETE", "/api/ops/row", opsRow);
+"POST", "/api/qa", postQa);
+"PATCH", "/api/qa", patchQa);
+"POST", "/api/messages", postMessages);   // [260901] 알림 저장 복구
+"PATCH", "/api/messages/{id}", patchMessages);
+"DELETE", "/api/messages/{id}", deleteMessages);
+"POST", "/api/config", postConfig);
+"POST", "/api/memo", postMemo);
+"POST", "/api/presence", postPresence);
+"POST", "/api/auth/verify-pin", authVerifyPin);
+"POST", "/api/auth/set-pin", authSetPin);
+"POST", "/api/ym-db/fix-holidays", fixHolidays);

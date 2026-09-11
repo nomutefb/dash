@@ -1,0 +1,139 @@
+{
+  "checkedAt": "2026-09-10T15:30:50.272Z",
+  "mainLiteralRepairs": 25,
+  "programShortTitles": 1,
+  "repairs": [
+    {
+      "path": "api/ym-cron-lib.js",
+      "reason": "Restore public organization label",
+      "beforeSha256": "e9b4eddfc2ae3826e61cc3a3a4c8b4ac8991e152c54eef0f44b43b93a2cc733f",
+      "afterSha256": "12cec1269b7b1559144a272b8260d3650c7239f49a51bdb9ad73f2536c3b87ed"
+    },
+    {
+      "path": "src/data/programs.ts",
+      "reason": "Restore performance short title",
+      "beforeSha256": "a2bb5ebce0d502fe7d9d794e0e357f785a97bd4b35e0e231099c0a9e94a0e374",
+      "afterSha256": "7cfd3c77e8263e212beb11cbbe79263557380bdc3885399098f9d2576b4c8886"
+    },
+    {
+      "path": "public/standalone.html",
+      "reason": "Restore app title and nonpersonal UI literals",
+      "beforeSha256": "775daf72e09ce6b52a9382188cdad502caf7e4e949f9f48fd3779518eccf2599",
+      "afterSha256": "d4856f3d9b8a395cf9dff0bfd3e50e81d1beb958f401c0350ae8bf80acff8547"
+    },
+    {
+      "path": "public/manifest.webmanifest",
+      "reason": "Restore PWA short name",
+      "beforeSha256": "99867d7ef668008a973ef2d248d3cc3daa7ae58cf0973f1320f56c94b13855f6",
+      "afterSha256": "d162f6b96da9257a6e7a3efbca4cbe838797871977d5b75366df3cd9aa8ab0d1"
+    },
+    {
+      "path": "public/data/ops/홍보기록.csv",
+      "reason": "Preserve unassigned staff and unknown-region sentinel",
+      "beforeSha256": "27ccfad1db5c3200fc99b99167ff81c689f89c796d4a615e578b8a1ccc6f5f5f",
+      "afterSha256": "9b026b936200da49394b00fbd3fec60f028ed3e8a54cbfe71b9657266dbc5016"
+    },
+    {
+      "path": "src/data/yeulmaru.json",
+      "reason": "Preserve unassigned staff and unknown-region sentinel",
+      "beforeSha256": "673b33a98ff7e0dd06ec1ecc6738241410faf7285028ab0c6143dc72454b492d",
+      "afterSha256": "2e647c24d134260cc73cc5382ffead93aca1405fee88f98eb94490c8267ce47c"
+    },
+    {
+      "path": "api/migrations/063_addr_hardening.js",
+      "reason": "Preserve unassigned staff and unknown-region sentinel",
+      "beforeSha256": "a9f119fa2fe7695891a900ba697a45e382b153c400a6661a0ff48525b4f11c40",
+      "afterSha256": "d17b4b4dbf2ddd4ed590f33da50fc6462d92f75b9ca9bbba4d79c911497acb02"
+    },
+    {
+      "path": "api/ym-addr-lib.js",
+      "reason": "Preserve unassigned staff and unknown-region sentinel",
+      "beforeSha256": "24b28c3c05fc17186f09e9f356835c2adc9c7eb1d7ff3ca6f369e41c75f9e77d",
+      "afterSha256": "349bceb831341990e0e09d8cded75cf1d3fb7c537981f10a851ec03f3bf5fb96"
+    },
+    {
+      "path": "api/ym-member-summary-lib.js",
+      "reason": "Preserve unassigned staff and unknown-region sentinel",
+      "beforeSha256": "9e75054d4476c22623e4beb6a8b3440d4dea03b70ad94a68902da1dd8336798c",
+      "afterSha256": "8d7cdbba82b1b59c8062d8db8a2d0ae8b3d801cfcd6cc2c7a2f09b12453152f9"
+    },
+    {
+      "path": "public/standalone.html",
+      "reason": "Preserve unassigned staff and unknown-region sentinel",
+      "beforeSha256": "d4856f3d9b8a395cf9dff0bfd3e50e81d1beb958f401c0350ae8bf80acff8547",
+      "afterSha256": "19dda5f8f23abbf0cfccaa2ff51b003cc7280a116f11a87f344afdf2c6e1de3f"
+    },
+    {
+      "path": "data/database/ymdata_dev.jsonl",
+      "reason": "Preserve unassigned staff and unknown-region sentinel",
+      "beforeSha256": "c3e652ae7f86dddb9c4008b168cc84c2e834b15001943fe9a3ccaf3a9ac87f02",
+      "afterSha256": "7f075e8cb329ffedffe48ce5283866891839788ca441833da4dcb5692fbfc275"
+    },
+    {
+      "path": "data/database/ymdata.jsonl",
+      "reason": "Preserve unassigned staff and unknown-region sentinel",
+      "beforeSha256": "dff61b65cd7bab57d761c1cb3cc83cadde525b021c16aa9fa233411506a3de9c",
+      "afterSha256": "b71bc6054a077a151856d31016afa4eb99d61c02d4918ac740d3d29bea533999"
+    }
+  ],
+  "finalizedAt": "2026-09-11T01:36:52.173Z",
+  "finalFiles": [
+    {
+      "path": "api/ym-cron-lib.js",
+      "sha256": "12cec1269b7b1559144a272b8260d3650c7239f49a51bdb9ad73f2536c3b87ed",
+      "bytes": 9659
+    },
+    {
+      "path": "src/data/programs.ts",
+      "sha256": "7cfd3c77e8263e212beb11cbbe79263557380bdc3885399098f9d2576b4c8886",
+      "bytes": 8307
+    },
+    {
+      "path": "public/standalone.html",
+      "sha256": "c45921b346621603f611dec953153d52c7d5cae9c5703266e6b8640045a11e8d",
+      "bytes": 6674257
+    },
+    {
+      "path": "public/manifest.webmanifest",
+      "sha256": "d162f6b96da9257a6e7a3efbca4cbe838797871977d5b75366df3cd9aa8ab0d1",
+      "bytes": 983
+    },
+    {
+      "path": "public/data/ops/홍보기록.csv",
+      "sha256": "96d18d3eb7ba5f55f81ab91bb8ef400c96e41deffa87cc1547119746bf053fd9",
+      "bytes": 126057
+    },
+    {
+      "path": "src/data/yeulmaru.json",
+      "sha256": "a70b1b26dc99239c073217864c83776b1f96467f7f64162fb4c9c1bc68b21c75",
+      "bytes": 594188
+    },
+    {
+      "path": "api/migrations/063_addr_hardening.js",
+      "sha256": "d17b4b4dbf2ddd4ed590f33da50fc6462d92f75b9ca9bbba4d79c911497acb02",
+      "bytes": 3843
+    },
+    {
+      "path": "api/ym-addr-lib.js",
+      "sha256": "349bceb831341990e0e09d8cded75cf1d3fb7c537981f10a851ec03f3bf5fb96",
+      "bytes": 17932
+    },
+    {
+      "path": "api/ym-member-summary-lib.js",
+      "sha256": "8d7cdbba82b1b59c8062d8db8a2d0ae8b3d801cfcd6cc2c7a2f09b12453152f9",
+      "bytes": 5649
+    },
+    {
+      "path": "data/database/ymdata_dev.jsonl",
+      "sha256": "77a140ad48656ddf28de936d1a5f38a1760c30577e3337b6312acaa27ce431da",
+      "bytes": 46015075
+    },
+    {
+      "path": "data/database/ymdata.jsonl",
+      "sha256": "1fd1d9f53f981dcbed309d9a238ff2d7f7f6507adc185ef8bc3996b88105b6fc",
+      "bytes": 14371571
+    }
+  ],
+  "note": "Intermediate repair hashes retained as historical evidence; finalFiles contains the reviewed final state. Compared with b26d227, data changes are sentinel labels only; HTML shell difference is the restored apple-mobile-web-app-title.",
+  "additionalPrivacyRepairs": "audit-privacy-repairs.json"
+}

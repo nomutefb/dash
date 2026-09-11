@@ -1,0 +1,7 @@
+{
+  "path": "src/styles/yeulmaru.css",
+  "beforeSha256": "a26f908bde837ca047095f777e0dd4f2b734f2634a3428bd7bc3ec764aaa0880",
+  "afterSha256": "aa8bfd44bf864816ab3e55c88308d97d58284f67b3d85bfc9941faac2aebbd8a",
+  "reason": "Resolve public pet sprite from root instead of nonexistent src/styles/image path",
+  "assetExists": true
+}

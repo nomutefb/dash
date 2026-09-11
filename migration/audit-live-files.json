@@ -1,0 +1,2695 @@
+{
+  "checkedAt": "2026-09-10T15:21:24.209Z",
+  "files": [
+    {
+      "bytes": 713375,
+      "chars": 481877,
+      "encoding": "utf8",
+      "path": "src/data/yeulmaru.json",
+      "sourceSha256": "04815307d9e671d9ce0cf77b4af56bc5e1290929d7627d4133b7b32aac7a3b21",
+      "status": 200,
+      "localSha256": "a70b1b26dc99239c073217864c83776b1f96467f7f64162fb4c9c1bc68b21c75",
+      "identical": false,
+      "previousLocalSha256": "673b33a98ff7e0dd06ec1ecc6738241410faf7285028ab0c6143dc72454b492d"
+    },
+    {
+      "bytes": 1011,
+      "chars": 687,
+      "encoding": "utf8",
+      "path": "api/migrations/001_unified_baseline.js",
+      "sourceSha256": "fabbc386875b15bd37e7e39ef74ef48ec6e039ca30754b9488a9025911179a7c",
+      "status": 200,
+      "localSha256": "88d0cd4a1a35439a81dd65674aced62f53980cd9b4dea4278cb675083101915f",
+      "identical": false
+    },
+    {
+      "bytes": 2206,
+      "chars": 1854,
+      "encoding": "utf8",
+      "path": "api/migrations/002_dedupe_daily.js",
+      "sourceSha256": "b882749cb4fede0f43743e207692c70c5ea5f1ef8424965c084ea663f2cda8b9",
+      "status": 200,
+      "localSha256": "b882749cb4fede0f43743e207692c70c5ea5f1ef8424965c084ea663f2cda8b9",
+      "identical": true
+    },
+    {
+      "bytes": 1752,
+      "chars": 1242,
+      "encoding": "utf8",
+      "path": "api/migrations/003_drop_unused.js",
+      "sourceSha256": "6be42fa78a9cccfd6d207aec3394b4d4e7cfb04063dc825f1337bba674b366f8",
+      "status": 200,
+      "localSha256": "3b76c7e48f4b2d7e44fc86b0ea51f6f882877364f06e04a3e4d9e57e1824ace4",
+      "identical": false
+    },
+    {
+      "bytes": 2999,
+      "chars": 2587,
+      "encoding": "utf8",
+      "path": "api/migrations/004_rounds_into_sales.js",
+      "sourceSha256": "eb4a3f6cfbf19b561d30a835a61d71ec85c0c1c05fc5f722f07087ebfdd5d428",
+      "status": 200,
+      "localSha256": "eb4a3f6cfbf19b561d30a835a61d71ec85c0c1c05fc5f722f07087ebfdd5d428",
+      "identical": true
+    },
+    {
+      "bytes": 2297,
+      "chars": 1925,
+      "encoding": "utf8",
+      "path": "api/migrations/005_restore_rounds.js",
+      "sourceSha256": "7e407adb34a6293fa9e93d855ee6ab2085e3b559d4fd4df6d559f4be2e271b92",
+      "status": 200,
+      "localSha256": "9440e57ae59f6dfdd844e17f4dc70538c9933f9807cac7ee54dc05cac2ea00b0",
+      "identical": false
+    },
+    {
+      "bytes": 3057,
+      "chars": 2613,
+      "encoding": "utf8",
+      "path": "api/migrations/006_rounds_into_sales_again.js",
+      "sourceSha256": "ecafa328678ac054a249f1cfbe15551fa9eac7d723902b4c891930eced6c8a86",
+      "status": 200,
+      "localSha256": "ecafa328678ac054a249f1cfbe15551fa9eac7d723902b4c891930eced6c8a86",
+      "identical": true
+    },
+    {
+      "bytes": 10359,
+      "chars": 8694,
+      "encoding": "utf8",
+      "path": "api/migrations/007_programs_into_master.js",
+      "sourceSha256": "b9428e5913c604c35999baed130fc425b0008d3169cb002efccf7b93ef950826",
+      "status": 200,
+      "localSha256": "2b2c765d3034bdafc899f828ae9fb4d537237a4df209b083e3abf7eb54ab9927",
+      "identical": false
+    },
+    {
+      "bytes": 2628,
+      "chars": 2284,
+      "encoding": "utf8",
+      "path": "api/migrations/008_ops_schedule_merge.js",
+      "sourceSha256": "f90e1066479d8d06b68fe18d8347f85e1c8d5047578a45c38d5847cee7e95f4e",
+      "status": 200,
+      "localSha256": "974bc083c71f0909adcf3aece179c36092113155a86c2db550b9746144aa7923",
+      "identical": false
+    },
+    {
+      "bytes": 2707,
+      "chars": 2414,
+      "encoding": "utf8",
+      "path": "api/migrations/009_code_tables_merge.js",
+      "sourceSha256": "8dadcdee9eb074ab8bc0b6c749b9047baafbc99ce63edb8003f0c646f243211c",
+      "status": 200,
+      "localSha256": "25fde906116698d8662a326870b18cc07c5a307932b12a54d22d906ebd01d8bd",
+      "identical": false
+    },
+    {
+      "bytes": 3219,
+      "chars": 2722,
+      "encoding": "utf8",
+      "path": "api/migrations/011_schedule_merge2.js",
+      "sourceSha256": "ffcaed244a9c9d064b36f309aa9d354028c7da4be5a31b03ccfb4c0c966e13fa",
+      "status": 200,
+      "localSha256": "abf8384d758cbd12fe9ccd576d5f7529050b029283357d1ec2d1eae0c452bf82",
+      "identical": false
+    },
+    {
+      "bytes": 7142,
+      "chars": 5568,
+      "encoding": "utf8",
+      "path": "api/migrations/010_sales_into_master.js",
+      "sourceSha256": "341e2cf337a75c203b6dc57d1e0883825a0542fecb68666f0623d0e05c6d623b",
+      "status": 200,
+      "localSha256": "b8a0b260883e884f9e52759ae23517b780a05d2d72a2e3c61bf08da4f50f0160",
+      "identical": false
+    },
+    {
+      "bytes": 3519,
+      "chars": 2844,
+      "encoding": "utf8",
+      "path": "api/migrations/012_ledger_into_daily.js",
+      "sourceSha256": "22999e948133a1b65e06b320cff8a51e9b78d4160af961734b8dfbdb714c7c7f",
+      "status": 200,
+      "localSha256": "9f6c9f419536d1336c886d8bf6b689603efb02fcf1c425aafe02165fbcc66b0f",
+      "identical": false
+    },
+    {
+      "bytes": 5567,
+      "chars": 4254,
+      "encoding": "utf8",
+      "path": "api/migrations/013_biz_into_master.js",
+      "sourceSha256": "095df06790b35eb5589f16a002345d68233dbaf179c547ba2d417466b1f3aaab",
+      "status": 200,
+      "localSha256": "70b0411494b431ba63198af71945f87f23c4b05dc1c9f8610a219c7e14f3b322",
+      "identical": false
+    },
+    {
+      "bytes": 3543,
+      "chars": 3020,
+      "encoding": "utf8",
+      "path": "api/migrations/014_account_no.js",
+      "sourceSha256": "2957ca8d6e022204fa4b9ec9bb285436b8695292388c0db0e4b1d31b650f3ce4",
+      "status": 200,
+      "localSha256": "2957ca8d6e022204fa4b9ec9bb285436b8695292388c0db0e4b1d31b650f3ce4",
+      "identical": true
+    },
+    {
+      "bytes": 2788,
+      "chars": 2341,
+      "encoding": "utf8",
+      "path": "api/migrations/015_schedule_d8.js",
+      "sourceSha256": "f2d49890611044ee2bed816f86444a14538bf7698fbd561a61edf4b4b3b72791",
+      "status": 200,
+      "localSha256": "0ea5f5ea392661f9f5b325503ad2e1d41abf55cae973c230b6b84b80d3644de1",
+      "identical": false
+    },
+    {
+      "bytes": 2127,
+      "chars": 1767,
+      "encoding": "utf8",
+      "path": "api/migrations/016_records_program_id.js",
+      "sourceSha256": "7d915083631bccfeaa4fce7acadfbfa7b8f49b01dd3636872941e79b0d1245f0",
+      "status": 200,
+      "localSha256": "7d915083631bccfeaa4fce7acadfbfa7b8f49b01dd3636872941e79b0d1245f0",
+      "identical": true
+    },
+    {
+      "bytes": 4871,
+      "chars": 3742,
+      "encoding": "utf8",
+      "path": "api/migrations/017_rent_into_master.js",
+      "sourceSha256": "7ef1fafb6b0ab744ed176dfa17d3c588db04a364b6f8340648ea6b984c4b08e1",
+      "status": 200,
+      "localSha256": "26cd6caa4d18070065e8ff5c79737aba866fea0411f2f5eb2881a552f3fdc739",
+      "identical": false
+    },
+    {
+      "bytes": 1327,
+      "chars": 910,
+      "encoding": "utf8",
+      "path": "api/migrations/018_calendar_table.js",
+      "sourceSha256": "ffcd123997a4665d658c4f699e41b3ccb47b53ebf3fa53e0b0e687d5b2b02313",
+      "status": 200,
+      "localSha256": "d80af222e8fe8d82aadeed9abba5e470119c6b4ca3f24423b63ed9087daf87ee",
+      "identical": false
+    },
+    {
+      "bytes": 3080,
+      "chars": 2635,
+      "encoding": "utf8",
+      "path": "api/migrations/020_single_keys.js",
+      "sourceSha256": "b30e51be29c8943459cbd7492e021c3a954f9efb2f02ae3cec90115943b3059e",
+      "status": 200,
+      "localSha256": "b30e51be29c8943459cbd7492e021c3a954f9efb2f02ae3cec90115943b3059e",
+      "identical": true
+    },
+    {
+      "bytes": 5518,
+      "chars": 4443,
+      "encoding": "utf8",
+      "path": "api/migrations/019_records_into_calendar.js",
+      "sourceSha256": "2fba5f360fbac6338ef0c5a67c2388781063a35b34546b58aede2daeecb2f033",
+      "status": 200,
+      "localSha256": "d52a794043e07a0ae040f02ee4ef63b414b2b4602133e3bdc8572631567ddf6e",
+      "identical": false
+    },
+    {
+      "bytes": 2444,
+      "chars": 2048,
+      "encoding": "utf8",
+      "path": "api/migrations/022_master_compact.js",
+      "sourceSha256": "2ad14f78cbb1fa2c76883fcd7e74706d7d9601410d20a128f5f0afd33ae3b8f8",
+      "status": 200,
+      "localSha256": "2ad14f78cbb1fa2c76883fcd7e74706d7d9601410d20a128f5f0afd33ae3b8f8",
+      "identical": true
+    },
+    {
+      "bytes": 7186,
+      "chars": 5840,
+      "encoding": "utf8",
+      "path": "api/migrations/021_daily_ref_master.js",
+      "sourceSha256": "5e4540848991e4b5fa7f60c024bc787bb6aaad95bf02f11f829587fdf3b99256",
+      "status": 200,
+      "localSha256": "e9c6eba165d1e493fa4c3e0c4f98820c8b5f933256b85d09de3a681bb5eb796a",
+      "identical": false
+    },
+    {
+      "bytes": 1281,
+      "chars": 1006,
+      "encoding": "utf8",
+      "path": "api/migrations/024_pid_index.js",
+      "sourceSha256": "a2e8f3de70f90f0dd4ba9d05e057b4aaf6ec233553a5f3775ce77d73be229f53",
+      "status": 200,
+      "localSha256": "a2e8f3de70f90f0dd4ba9d05e057b4aaf6ec233553a5f3775ce77d73be229f53",
+      "identical": true
+    },
+    {
+      "bytes": 1688,
+      "chars": 1456,
+      "encoding": "utf8",
+      "path": "api/migrations/023_compact_rest.js",
+      "sourceSha256": "763ca6de5ed67971392379dd59b40529dfbdb7f953c931b445c0872f905af875",
+      "status": 200,
+      "localSha256": "763ca6de5ed67971392379dd59b40529dfbdb7f953c931b445c0872f905af875",
+      "identical": true
+    },
+    {
+      "bytes": 6380,
+      "chars": 5124,
+      "encoding": "utf8",
+      "path": "api/migrations/025_codes_calendar.js",
+      "sourceSha256": "a36b8ef0dc17a80074264eaca5a712e118bc5b4255beb2f41889bbda94999db1",
+      "status": 200,
+      "localSha256": "b397f0f49ba2734b95fae3887f828864d46cb21bf73412d730cb7d440c4775f3",
+      "identical": false
+    },
+    {
+      "bytes": 1608,
+      "chars": 1247,
+      "encoding": "utf8",
+      "path": "api/migrations/026_promo_flag.js",
+      "sourceSha256": "dd7d6276aca9dfb911f0d60b3eccd526d8f50c7bfd8b59fc3892063857a6c22c",
+      "status": 200,
+      "localSha256": "dd7d6276aca9dfb911f0d60b3eccd526d8f50c7bfd8b59fc3892063857a6c22c",
+      "identical": true
+    },
+    {
+      "bytes": 1644,
+      "chars": 1326,
+      "encoding": "utf8",
+      "path": "api/migrations/027_master_drop_empty.js",
+      "sourceSha256": "50d60682e4ba75ab0e23fdd918b220b4f057a7a37d897ca0ddf35eb90551f3d7",
+      "status": 200,
+      "localSha256": "0feaeb47b07cda0c64840b4bc53b4b8069121eefd8365746872416ecb376c66f",
+      "identical": false
+    },
+    {
+      "bytes": 4659,
+      "chars": 3729,
+      "encoding": "utf8",
+      "path": "api/migrations/028_master_merge_cols.js",
+      "sourceSha256": "75741a6cbae6cf6e189febbb3934d504a0d69bef6b390dd5b122e00af9fae6b6",
+      "status": 200,
+      "localSha256": "f6809c89a21ce7744257311e2f887688e96c69375df68f94f5194207a4d355e5",
+      "identical": false
+    },
+    {
+      "bytes": 2239,
+      "chars": 1772,
+      "encoding": "utf8",
+      "path": "api/migrations/029_calendar_pid_fix.js",
+      "sourceSha256": "6ad215755caca2ccfc8a255a165503e8cdee6d70e70011cc4ceccb0c4725f0f3",
+      "status": 200,
+      "localSha256": "6ad215755caca2ccfc8a255a165503e8cdee6d70e70011cc4ceccb0c4725f0f3",
+      "identical": true
+    },
+    {
+      "bytes": 26015,
+      "chars": 20833,
+      "encoding": "utf8",
+      "path": "api/migrations/030_biz_2012_2016.js",
+      "sourceSha256": "1563715c8e5c127483c5a700602f9eb8dffbfbfafc3047efd84c91a5af9ef810",
+      "status": 200,
+      "localSha256": "1563715c8e5c127483c5a700602f9eb8dffbfbfafc3047efd84c91a5af9ef810",
+      "identical": true
+    },
+    {
+      "bytes": 4847,
+      "chars": 3916,
+      "encoding": "utf8",
+      "path": "api/migrations/032_rental_merge.js",
+      "sourceSha256": "b305b703729acd2b66d48cf2d3cdaa4f955f8d5eeed1af4431e08b0c039ec421",
+      "status": 200,
+      "localSha256": "69596cf93a5df1541a2e0936ec1107fa5328e8a9990ee5d7f16319d31e11686e",
+      "identical": false
+    },
+    {
+      "bytes": 3619,
+      "chars": 2969,
+      "encoding": "utf8",
+      "path": "api/migrations/031_daily_drop_copies.js",
+      "sourceSha256": "df77ad52410c824567248ce0758daf2e26cf99089208bc2567494ed80c5efe30",
+      "status": 200,
+      "localSha256": "5339033f6e3cac1d245a0c6b6a51d247c476f7af159e85657ae960faf3485911",
+      "identical": false
+    },
+    {
+      "bytes": 2481,
+      "chars": 2074,
+      "encoding": "utf8",
+      "path": "api/migrations/033_pid_unify.js",
+      "sourceSha256": "38ad31d69805cb075a02762ac5e34f0d42527ad701c7b8015fee10ef945bf62f",
+      "status": 200,
+      "localSha256": "38ad31d69805cb075a02762ac5e34f0d42527ad701c7b8015fee10ef945bf62f",
+      "identical": true
+    },
+    {
+      "bytes": 14431,
+      "chars": 13599,
+      "encoding": "utf8",
+      "path": "api/migrations/034_program_merge1.js",
+      "sourceSha256": "ca30e89767d7ec6a9749c795c4aaca1c9387cb1040deff22cbd1b5b1200680bb",
+      "status": 200,
+      "localSha256": "696c14bc4fa2593916d43b9d6170dcec39c4cf85881327fd1adbdbfaea3e2ffe",
+      "identical": false
+    },
+    {
+      "bytes": 10915,
+      "chars": 9543,
+      "encoding": "utf8",
+      "path": "api/migrations/035_merge_decisions.js",
+      "sourceSha256": "1469d7cbda42b2222c51701b1636d4af7908249b318a04281848769d14ea87aa",
+      "status": 200,
+      "localSha256": "6632e1d76be0e3a2231156b864fc2fdc4df02f97bb7993589bafbef3d17f35cd",
+      "identical": false
+    },
+    {
+      "bytes": 54717,
+      "chars": 31357,
+      "encoding": "utf8",
+      "path": "api/migrations/036_report_names.js",
+      "sourceSha256": "27804e02b660e5f6a2722bfb9a0c4eba440f1c80e06b869ec165844198ae7efd",
+      "status": 200,
+      "localSha256": "e7615356f054a2da7f62d2e2a096291b3290e0a19b468f462c7442024cd67afe",
+      "identical": false
+    },
+    {
+      "bytes": 2087,
+      "chars": 1659,
+      "encoding": "utf8",
+      "path": "api/migrations/037_report_names_fix.js",
+      "sourceSha256": "17f80fb2c78a31a4449d695201d2399732ce67df7216642e6b2c4a9d0de5814a",
+      "status": 200,
+      "localSha256": "6052d42c43ee817dc51b13b6bfba0e6676ea3cae421ff8388b2eef948836f143",
+      "identical": false
+    },
+    {
+      "bytes": 9392,
+      "chars": 5850,
+      "encoding": "utf8",
+      "path": "api/migrations/038_name_tails.js",
+      "sourceSha256": "aa45ca1ed4f2b26281e93871ec7f212293c91d5853669a78025db54ab33c2bcd",
+      "status": 200,
+      "localSha256": "aa45ca1ed4f2b26281e93871ec7f212293c91d5853669a78025db54ab33c2bcd",
+      "identical": true
+    },
+    {
+      "bytes": 2360,
+      "chars": 1879,
+      "encoding": "utf8",
+      "path": "api/migrations/039_name_tails_2026.js",
+      "sourceSha256": "f1be26182cb028267a32e8bac35d94954b2da36b257bff3a9bc3851e4106ee97",
+      "status": 200,
+      "localSha256": "f1be26182cb028267a32e8bac35d94954b2da36b257bff3a9bc3851e4106ee97",
+      "identical": true
+    },
+    {
+      "bytes": 1084,
+      "chars": 930,
+      "encoding": "utf8",
+      "path": "api/migrations/040_jangdo_place.js",
+      "sourceSha256": "cf2ce69f94b050469ebdf48f8c8138211a36fbe101171d8d80b925c8eb3ed1ce",
+      "status": 200,
+      "localSha256": "ed636dba642ba10222162530fd9b432c38b1de0609c826bc769a6aae3bece51a",
+      "identical": false
+    },
+    {
+      "bytes": 6096,
+      "chars": 4265,
+      "encoding": "utf8",
+      "path": "api/migrations/041_place_unify.js",
+      "sourceSha256": "d3805a0135ec42deb1c71aaacb840031735cb6d509b2880b8462b2e62c1ff7f5",
+      "status": 200,
+      "localSha256": "d3805a0135ec42deb1c71aaacb840031735cb6d509b2880b8462b2e62c1ff7f5",
+      "identical": true
+    },
+    {
+      "bytes": 2175,
+      "chars": 1718,
+      "encoding": "utf8",
+      "path": "api/migrations/042_place_unify2.js",
+      "sourceSha256": "290e2ab3fc4360f2224c488500215b47c909bb20a1df6fc5d9f74bb762c14eb0",
+      "status": 200,
+      "localSha256": "290e2ab3fc4360f2224c488500215b47c909bb20a1df6fc5d9f74bb762c14eb0",
+      "identical": true
+    },
+    {
+      "bytes": 1802,
+      "chars": 1499,
+      "encoding": "utf8",
+      "path": "api/migrations/044_place_unify3.js",
+      "sourceSha256": "421e99b4e6d1acc75b45e5beb04068fd79db0f831ff71ebd87f7e81e6802d889",
+      "status": 200,
+      "localSha256": "421e99b4e6d1acc75b45e5beb04068fd79db0f831ff71ebd87f7e81e6802d889",
+      "identical": true
+    },
+    {
+      "bytes": 1424,
+      "chars": 1171,
+      "encoding": "utf8",
+      "path": "api/migrations/046_place_fill_web.js",
+      "sourceSha256": "b061f7c613ab39b214fb43b581945f0ae1529e073ef6c035d9cc2c4a361969b9",
+      "status": 200,
+      "localSha256": "b061f7c613ab39b214fb43b581945f0ae1529e073ef6c035d9cc2c4a361969b9",
+      "identical": true
+    },
+    {
+      "bytes": 1832,
+      "chars": 1500,
+      "encoding": "utf8",
+      "path": "api/migrations/043_jangdo_studio.js",
+      "sourceSha256": "2072231c85efc033df84b066738344b7d569540b3b21649cc7f28365d3db418d",
+      "status": 200,
+      "localSha256": "2072231c85efc033df84b066738344b7d569540b3b21649cc7f28365d3db418d",
+      "identical": true
+    },
+    {
+      "bytes": 4914,
+      "chars": 3035,
+      "encoding": "utf8",
+      "path": "api/migrations/045_names_1214.js",
+      "sourceSha256": "5522e01e2f7d3c2d5c887733352c369d69a5c3238affdc96744e9181d13f1661",
+      "status": 200,
+      "localSha256": "5522e01e2f7d3c2d5c887733352c369d69a5c3238affdc96744e9181d13f1661",
+      "identical": true
+    },
+    {
+      "bytes": 1734,
+      "chars": 1362,
+      "encoding": "utf8",
+      "path": "api/migrations/047_place_fill_ledger.js",
+      "sourceSha256": "980dc99e2e5512968e6d5162e82834f0917d7a443ad83fd10d2366be342ec6d3",
+      "status": 200,
+      "localSha256": "980dc99e2e5512968e6d5162e82834f0917d7a443ad83fd10d2366be342ec6d3",
+      "identical": true
+    },
+    {
+      "bytes": 8104,
+      "chars": 7169,
+      "encoding": "utf8",
+      "path": "api/migrations/048_ledger_merge.js",
+      "sourceSha256": "8f60467abb97b2c40110e3ba4f2ad45f8820940266bd41351298649e6c10d998",
+      "status": 200,
+      "localSha256": "972c495c30890f49b951c28f1321866313a93b4c9009b1fdf623e7af876ca42b",
+      "identical": false
+    },
+    {
+      "bytes": 942,
+      "chars": 825,
+      "encoding": "utf8",
+      "path": "api/migrations/049_place_fill_ledger2.js",
+      "sourceSha256": "c1f32bcdc6eca9e6dfaeb7ce28c9f280307cc08ee7b6052b68d0620e9883eeef",
+      "status": 200,
+      "localSha256": "c1f32bcdc6eca9e6dfaeb7ce28c9f280307cc08ee7b6052b68d0620e9883eeef",
+      "identical": true
+    },
+    {
+      "bytes": 1174,
+      "chars": 961,
+      "encoding": "utf8",
+      "path": "api/migrations/050_place_fill_final.js",
+      "sourceSha256": "b744985909ff34e407ba2103320642408aed15aa41b4da6ddfb4ad06eccadf8f",
+      "status": 200,
+      "localSha256": "b744985909ff34e407ba2103320642408aed15aa41b4da6ddfb4ad06eccadf8f",
+      "identical": true
+    },
+    {
+      "bytes": 1355,
+      "chars": 1166,
+      "encoding": "utf8",
+      "path": "api/migrations/053_fix_131031_place.js",
+      "sourceSha256": "3ffcbce77a56969bc5b58bd553db2b08d28d97fc72fa1f1493146ba4c02d578d",
+      "status": 200,
+      "localSha256": "3ffcbce77a56969bc5b58bd553db2b08d28d97fc72fa1f1493146ba4c02d578d",
+      "identical": true
+    },
+    {
+      "bytes": 9089,
+      "chars": 6922,
+      "encoding": "utf8",
+      "path": "api/migrations/052_split_and_add.js",
+      "sourceSha256": "ce13683eed58045f4ad51350f59c83245542ef35b66029cbf9be1647fd5f6fe9",
+      "status": 200,
+      "localSha256": "b5ccbf323b4c0500349e7615e9fc392608687ef3b1f0f8c5799497ced6a3dbdb",
+      "identical": false
+    },
+    {
+      "bytes": 2945,
+      "chars": 2287,
+      "encoding": "utf8",
+      "path": "api/migrations/051_ledger_names.js",
+      "sourceSha256": "922899609b688ab858479995d356cfdd6e4e715aae77f455cd23af9edf458a08",
+      "status": 200,
+      "localSha256": "4d4de6f902108ca1a099da93d84fa0eebdf48bfbdd42d012aca4fd341da5b9c2",
+      "identical": false
+    },
+    {
+      "bytes": 6769,
+      "chars": 5347,
+      "encoding": "utf8",
+      "path": "api/migrations/055_biz_split_2017_2022.js",
+      "sourceSha256": "f2f6844b12a84c4f1b2966d624f12c9a363c30d7c26afb9a5cc1f60fda8d354f",
+      "status": 200,
+      "localSha256": "2b2a16333c470feec3ae1a346a655e4296430b0df3f4457a07543e8f167b65d1",
+      "identical": false
+    },
+    {
+      "bytes": 10051,
+      "chars": 6159,
+      "encoding": "utf8",
+      "path": "api/migrations/054_biz_names.js",
+      "sourceSha256": "6667c4b660811a4fde8226e2ae14931c4b0365876dead9f8b4072902834bf195",
+      "status": 200,
+      "localSha256": "801b7d28e04cbfc63336d86db9063402a0473893e4793d3cda4bbc8fea570999",
+      "identical": false
+    },
+    {
+      "bytes": 8968,
+      "chars": 7571,
+      "encoding": "utf8",
+      "path": "api/migrations/057_form_v3.js",
+      "sourceSha256": "c817ba7d272b5754ed28021f82796131eb932ad56c9344368bd5781b4de39462",
+      "status": 200,
+      "localSha256": "cfa5a563f5fb38be657655d79279ee581c62f86607a07b316910b069b0f33604",
+      "identical": false
+    },
+    {
+      "bytes": 48887,
+      "chars": 35882,
+      "encoding": "utf8",
+      "path": "api/migrations/056_supplement.js",
+      "sourceSha256": "c89c062f124977d933fcc5a4dc5ff80dfc3f418721ab0fe7e816c19847fe62f5",
+      "status": 200,
+      "localSha256": "487af72c9bbeae9a4072cb9005a099fa9eafc8840f4797d885aa0d3c50f64c14",
+      "identical": false
+    },
+    {
+      "bytes": 1554,
+      "chars": 1221,
+      "encoding": "utf8",
+      "path": "api/migrations/059_acct_manager.js",
+      "sourceSha256": "e72de104dc19c3beee4d16203851e9231fb610148d0028159fb4eaf97c5dc605",
+      "status": 200,
+      "localSha256": "6175cf9192ce53bb9139108c5e1de75278ff12a15bb52cf401ed38a8f1ca73e6",
+      "identical": false
+    },
+    {
+      "bytes": 7883,
+      "chars": 6723,
+      "encoding": "utf8",
+      "path": "api/migrations/058_ledger_ghosts.js",
+      "sourceSha256": "c9c3927e9d84cd4c97cb36ae8f65d1fe87431f2cf2ca0e4b5036c65683138c2f",
+      "status": 200,
+      "localSha256": "4635b92b1495e5ee940f42578e06eb45d1eba3938da719b86afc36c2faee7aea",
+      "identical": false
+    },
+    {
+      "bytes": 1720,
+      "chars": 1293,
+      "encoding": "utf8",
+      "path": "api/migrations/061_acct_default.js",
+      "sourceSha256": "342aaf4c5486b50e009076227eae4b9be9f02b433425cc798f15c86e9f7eee80",
+      "status": 200,
+      "localSha256": "91c127b3d6f0dd762ebbff434387ec0a0ce15dbbfa9ce20c23af8cc103f193c0",
+      "identical": false
+    },
+    {
+      "bytes": 2412,
+      "chars": 1799,
+      "encoding": "utf8",
+      "path": "api/migrations/060_clear_stale_tickets.js",
+      "sourceSha256": "82d1b9b1912edce14781cfd9ed689ea55a2dda8adf61b10e9cdbd2ef8d473ec0",
+      "status": 200,
+      "localSha256": "0552d4f16d5ba58e274ac234f33e8958e045d918ded96e48a8ce7ace6b1f75e6",
+      "identical": false
+    },
+    {
+      "bytes": 3395,
+      "chars": 2725,
+      "encoding": "utf8",
+      "path": "api/migrations/062_addr_reparse.js",
+      "sourceSha256": "d34abdb818baac71b75054f8f5e9703896039902675ad3ac53883fa3656b0548",
+      "status": 200,
+      "localSha256": "d34abdb818baac71b75054f8f5e9703896039902675ad3ac53883fa3656b0548",
+      "identical": true
+    },
+    {
+      "bytes": 3843,
+      "chars": 3502,
+      "encoding": "utf8",
+      "path": "api/migrations/063_addr_hardening.js",
+      "sourceSha256": "d17b4b4dbf2ddd4ed590f33da50fc6462d92f75b9ca9bbba4d79c911497acb02",
+      "status": 200,
+      "localSha256": "d17b4b4dbf2ddd4ed590f33da50fc6462d92f75b9ca9bbba4d79c911497acb02",
+      "identical": true,
+      "previousLocalSha256": "a9f119fa2fe7695891a900ba697a45e382b153c400a6661a0ff48525b4f11c40"
+    },
+    {
+      "bytes": 2265,
+      "chars": 2139,
+      "encoding": "utf8",
+      "path": "api/migrations/065_round_foundation.js",
+      "sourceSha256": "6bc8e1f5d19be3d76643bc431b35f681e8633ca32a291ec0e377acadf7ab00d4",
+      "status": 200,
+      "localSha256": "6bc8e1f5d19be3d76643bc431b35f681e8633ca32a291ec0e377acadf7ab00d4",
+      "identical": true
+    },
+    {
+      "bytes": 2085,
+      "chars": 1845,
+      "encoding": "utf8",
+      "path": "api/migrations/064_joint_revenue.js",
+      "sourceSha256": "695fa1c57ccfa1bece896d2b7d1b454d898f40d186e01d5b755d3a3e0dd3b9c5",
+      "status": 200,
+      "localSha256": "bc60e4c621cbf68692ad0223b8bee509ab44fccf650e26a5f682c7c9acf6d84e",
+      "identical": false
+    },
+    {
+      "bytes": 5077,
+      "chars": 4577,
+      "encoding": "utf8",
+      "path": "api/_migration_order_guard_lib.js",
+      "sourceSha256": "853b20cf4f8ab58f8e9ab7c66100289de56a38df029fe209c05e8e195896fd30",
+      "status": 200,
+      "localSha256": "853b20cf4f8ab58f8e9ab7c66100289de56a38df029fe209c05e8e195896fd30",
+      "identical": true
+    },
+    {
+      "bytes": 732,
+      "chars": 616,
+      "encoding": "utf8",
+      "path": "api/_migration_order_guard.pb.js",
+      "sourceSha256": "d8b034c537f534a0dccf02defc8ad9d1404b657e5910d000ed82a11c8b1dc263",
+      "status": 200,
+      "localSha256": "d8b034c537f534a0dccf02defc8ad9d1404b657e5910d000ed82a11c8b1dc263",
+      "identical": true
+    },
+    {
+      "bytes": 622,
+      "chars": 592,
+      "encoding": "utf8",
+      "path": "api/migrations/066_round_today.js",
+      "sourceSha256": "cb9db7a7b5c29c5bbaeb3e96d434a5d2d172893fcf7cbd73759a08d433822c07",
+      "status": 200,
+      "localSha256": "cb9db7a7b5c29c5bbaeb3e96d434a5d2d172893fcf7cbd73759a08d433822c07",
+      "identical": true
+    },
+    {
+      "bytes": 1250,
+      "chars": 1076,
+      "encoding": "utf8",
+      "path": "api/migrations/067_exhibition_rounds.js",
+      "sourceSha256": "221dd4e31764623380e967e9a70984653c883a5c2e64599235fc1202d7679438",
+      "status": 200,
+      "localSha256": "221dd4e31764623380e967e9a70984653c883a5c2e64599235fc1202d7679438",
+      "identical": true
+    },
+    {
+      "bytes": 114,
+      "chars": 66,
+      "encoding": "utf8",
+      "path": "api/_tmp_addcol_260902.pb.js",
+      "sourceSha256": "05d0309c7801c69575c73df7ef19eb40d47ef7a1542fa7120d74d402f26bb2c9",
+      "status": 200,
+      "localSha256": "05d0309c7801c69575c73df7ef19eb40d47ef7a1542fa7120d74d402f26bb2c9",
+      "identical": true
+    },
+    {
+      "bytes": 112,
+      "chars": 68,
+      "encoding": "utf8",
+      "path": "api/_tmp_fix_place_260901.pb.js",
+      "sourceSha256": "240e6f5f70e22bee31f1122aab64fdc9c95aea51bf5f0c92fd6ad1ca313630de",
+      "status": 200,
+      "localSha256": "240e6f5f70e22bee31f1122aab64fdc9c95aea51bf5f0c92fd6ad1ca313630de",
+      "identical": true
+    },
+    {
+      "bytes": 5067,
+      "chars": 4741,
+      "encoding": "utf8",
+      "path": "api/content-kakao.pb.js",
+      "sourceSha256": "41329a584861b7aeba5dbb5687f888baf98e98a6bffb025a387532a0f352d8d5",
+      "status": 200,
+      "localSha256": "41329a584861b7aeba5dbb5687f888baf98e98a6bffb025a387532a0f352d8d5",
+      "identical": true
+    },
+    {
+      "bytes": 2105,
+      "chars": 2105,
+      "encoding": "utf8",
+      "path": "api/content-detail.pb.js",
+      "sourceSha256": "f34f08b4778b56aa7ddfd2e8ec861402eb3078ed252b6fbb35f0dd1983318b3d",
+      "status": 200,
+      "localSha256": "f34f08b4778b56aa7ddfd2e8ec861402eb3078ed252b6fbb35f0dd1983318b3d",
+      "identical": true
+    },
+    {
+      "bytes": 8378,
+      "chars": 7843,
+      "encoding": "utf8",
+      "path": "api/miso-llm-adapter.pb.js",
+      "sourceSha256": "42139000cc0ec66242209114bbd4af5ba9dda3fc4aee996ea9f42046ef408668",
+      "status": 200,
+      "localSha256": "42139000cc0ec66242209114bbd4af5ba9dda3fc4aee996ea9f42046ef408668",
+      "identical": true
+    },
+    {
+      "bytes": 1167,
+      "chars": 1167,
+      "encoding": "utf8",
+      "path": "api/KEYS.md",
+      "sourceSha256": "b127957d28840412e0b29484b0aa764ca6eced67348a70d7b2df98451fcc6993",
+      "status": 200,
+      "localSha256": "b127957d28840412e0b29484b0aa764ca6eced67348a70d7b2df98451fcc6993",
+      "identical": true
+    },
+    {
+      "bytes": 1572,
+      "chars": 1144,
+      "encoding": "utf8",
+      "path": "api/README.md",
+      "sourceSha256": "4ea4f25b4d1bc5d30d217148c041395969c661b54c941a66f32eaf06d0c067e1",
+      "status": 200,
+      "localSha256": "4ea4f25b4d1bc5d30d217148c041395969c661b54c941a66f32eaf06d0c067e1",
+      "identical": true
+    },
+    {
+      "bytes": 9847,
+      "chars": 9390,
+      "encoding": "utf8",
+      "path": "api/miso-llm-bridge.pb.js",
+      "sourceSha256": "79ca08bcb779758ff8d7c55c0109508aa9dc2c4e548d9b4ae567e95fbf3c260b",
+      "status": 200,
+      "localSha256": "79ca08bcb779758ff8d7c55c0109508aa9dc2c4e548d9b4ae567e95fbf3c260b",
+      "identical": true
+    },
+    {
+      "bytes": 7547,
+      "chars": 6725,
+      "encoding": "utf8",
+      "path": "api/round-today-260908.js",
+      "sourceSha256": "5285abc10698de9af5c3fe23fd5966bb7fa4935f8543d23b7f107444b5b05a15",
+      "status": 200,
+      "localSha256": "5285abc10698de9af5c3fe23fd5966bb7fa4935f8543d23b7f107444b5b05a15",
+      "identical": true
+    },
+    {
+      "bytes": 5837,
+      "chars": 5034,
+      "encoding": "utf8",
+      "path": "api/ym-acct-lib.js",
+      "sourceSha256": "2bde25aca15d503acbfce4deee57de4c3875dbdcd862c8d780563c20d05d14de",
+      "status": 200,
+      "localSha256": "2bde25aca15d503acbfce4deee57de4c3875dbdcd862c8d780563c20d05d14de",
+      "identical": true
+    },
+    {
+      "bytes": 16729,
+      "chars": 11738,
+      "encoding": "utf8",
+      "path": "api/ym-addr-lib.js",
+      "sourceSha256": "6e8d84042892a80479224fecaf93baefbc2df50d4132175b6d85ea957b809b1f",
+      "status": 200,
+      "localSha256": "349bceb831341990e0e09d8cded75cf1d3fb7c537981f10a851ec03f3bf5fb96",
+      "identical": false,
+      "previousLocalSha256": "24b28c3c05fc17186f09e9f356835c2adc9c7eb1d7ff3ca6f369e41c75f9e77d"
+    },
+    {
+      "bytes": 31239,
+      "chars": 28319,
+      "encoding": "utf8",
+      "path": "api/ym-auth-lib.js",
+      "sourceSha256": "a3d08cbf9feadd2f6982eb477f441403511977b511ca177c54f583f43ad8da28",
+      "status": 200,
+      "localSha256": "724531b6ad6880b51b1069270e2a2e0de056d7ab2b98f273aa0bb2daa6e7b103",
+      "identical": false
+    },
+    {
+      "bytes": 407789,
+      "chars": 249224,
+      "encoding": "utf8",
+      "path": "api/ym-addr-map.js",
+      "sourceSha256": "34c750f4412dc9005bb6768c06d4ef0ba4a66216e01185bd8e4ec89a19106d54",
+      "status": 200,
+      "localSha256": "b73cd582e3763b137357a35fe7ceb0aa8cddd4068490296cfbadc29aea72456f",
+      "identical": false
+    },
+    {
+      "bytes": 496,
+      "chars": 496,
+      "encoding": "utf8",
+      "path": "api/ym-auth.pb.js",
+      "sourceSha256": "fa10be8b0a9fe1668a25a1035bc99dda9a96a4863fca2792c255533a2502ec76",
+      "status": 200,
+      "localSha256": "fa10be8b0a9fe1668a25a1035bc99dda9a96a4863fca2792c255533a2502ec76",
+      "identical": true
+    },
+    {
+      "bytes": 12350,
+      "chars": 10661,
+      "encoding": "utf8",
+      "path": "api/ym-biz-lib.js",
+      "sourceSha256": "4c42bc1c4add7c537b7268051fb6a74855b519d1ff9609b499fa3d112fba0956",
+      "status": 200,
+      "localSha256": "d94b1ec58a0338f0ed5d2ddeb9c26af9691c34e5b0c2d07d22b05f2752c168f1",
+      "identical": false
+    },
+    {
+      "bytes": 1691,
+      "chars": 1329,
+      "encoding": "utf8",
+      "path": "api/ym-cache.pb.js",
+      "sourceSha256": "1e87a6c01593c70741fb0edb1b4e4f1a3d67d1bc92f80335d86984a7b28be277",
+      "status": 200,
+      "localSha256": "1e87a6c01593c70741fb0edb1b4e4f1a3d67d1bc92f80335d86984a7b28be277",
+      "identical": true
+    },
+    {
+      "bytes": 6094,
+      "chars": 5491,
+      "encoding": "utf8",
+      "path": "api/ym-changelog-lib.js",
+      "sourceSha256": "c6b3bf64c700fcbb9e48097464081bc9e33d8b2e96b909a2d9e3ec26edd374cc",
+      "status": 200,
+      "localSha256": "df143c56fbfd4cc5de4be6d8224e73fefc2e33934008b0f54f6fb58a6f0b8163",
+      "identical": false
+    },
+    {
+      "bytes": 2674,
+      "chars": 2254,
+      "encoding": "utf8",
+      "path": "api/ym-changelog.pb.js",
+      "sourceSha256": "d9e75f68db484a9d50bdd59b8d8c4746194d709813da81e56a0982d4e3a234d3",
+      "status": 200,
+      "localSha256": "d9e75f68db484a9d50bdd59b8d8c4746194d709813da81e56a0982d4e3a234d3",
+      "identical": true
+    },
+    {
+      "bytes": 1543,
+      "chars": 1335,
+      "encoding": "utf8",
+      "path": "api/ym-compact-lib.js",
+      "sourceSha256": "782d40c7863545919d5b641200741b75ec45fac02f4cf9bc793879f45de59cec",
+      "status": 200,
+      "localSha256": "782d40c7863545919d5b641200741b75ec45fac02f4cf9bc793879f45de59cec",
+      "identical": true
+    },
+    {
+      "bytes": 1342,
+      "chars": 1100,
+      "encoding": "utf8",
+      "path": "api/ym-compact.pb.js",
+      "sourceSha256": "6e185d2c3caa73fd4f4d70acb33e1d2f1e931aa176af51ac4ef9ae649314e65b",
+      "status": 200,
+      "localSha256": "6e185d2c3caa73fd4f4d70acb33e1d2f1e931aa176af51ac4ef9ae649314e65b",
+      "identical": true
+    },
+    {
+      "bytes": 9705,
+      "chars": 7775,
+      "encoding": "utf8",
+      "path": "api/ym-codes-lib.js",
+      "sourceSha256": "304b2bac2a500aa137210c4a415661ce45c39e1eeadc747088948d195305c5e4",
+      "status": 200,
+      "localSha256": "d906d782653c276a1488b5cdc37ec728223802ad7fbc8f2e0b4beabc67e3564c",
+      "identical": false
+    },
+    {
+      "bytes": 3604,
+      "chars": 3574,
+      "encoding": "utf8",
+      "path": "api/ym-crons.pb.js",
+      "sourceSha256": "b43e5626aa0efc3e50b4c502cde693030783df08fd13a487467f0a2752bffed4",
+      "status": 200,
+      "localSha256": "b43e5626aa0efc3e50b4c502cde693030783df08fd13a487467f0a2752bffed4",
+      "identical": true
+    },
+    {
+      "bytes": 5839,
+      "chars": 4950,
+      "encoding": "utf8",
+      "path": "api/ym-daily-join-lib.js",
+      "sourceSha256": "c5a3ae6dd28bfba542e817a92d6b4efaba7236a94cf1f492e5f0eae9abdd2c73",
+      "status": 200,
+      "localSha256": "9ef8944b861ca47d99378e465826bdd91eaff12d8f02cfee9493ca22ba50e7a4",
+      "identical": false
+    },
+    {
+      "bytes": 9659,
+      "chars": 9408,
+      "encoding": "utf8",
+      "path": "api/ym-cron-lib.js",
+      "sourceSha256": "12cec1269b7b1559144a272b8260d3650c7239f49a51bdb9ad73f2536c3b87ed",
+      "status": 200,
+      "localSha256": "12cec1269b7b1559144a272b8260d3650c7239f49a51bdb9ad73f2536c3b87ed",
+      "identical": true,
+      "previousLocalSha256": "e9b4eddfc2ae3826e61cc3a3a4c8b4ac8991e152c54eef0f44b43b93a2cc733f"
+    },
+    {
+      "bytes": 111715,
+      "chars": 104413,
+      "encoding": "utf8",
+      "path": "api/ym-db.pb.js",
+      "sourceSha256": "6f413a90c9dfca6bdc84401fd60a03c59363ed10e52096ea56eda3ee915a065c",
+      "status": 200,
+      "localSha256": "3e5b10afb2338797e70928bba52b2fc2366e0670abcb14f1fa2f82577fbfa77a",
+      "identical": false
+    },
+    {
+      "bytes": 9650,
+      "chars": 8870,
+      "encoding": "utf8",
+      "path": "api/ym-env-lib.js",
+      "sourceSha256": "aaf9d03b9e7c72fea0ca249c5c32f3c07e39081f9c820ada5402a0a4c8869f60",
+      "status": 200,
+      "localSha256": "d8cb8d191880570c8e0c9454062fcbc057d5171e127a4a47f264244a8dd40ba7",
+      "identical": false
+    },
+    {
+      "bytes": 2703,
+      "chars": 2351,
+      "encoding": "utf8",
+      "path": "api/ym-env.pb.js",
+      "sourceSha256": "ade4fc169146a38990cbaab26e52add85c3008a27afca8b2bbc6d47916257feb",
+      "status": 200,
+      "localSha256": "ade4fc169146a38990cbaab26e52add85c3008a27afca8b2bbc6d47916257feb",
+      "identical": true
+    },
+    {
+      "bytes": 7357,
+      "chars": 6494,
+      "encoding": "utf8",
+      "path": "api/ym-join-lib.js",
+      "sourceSha256": "b0be884113fe02888269132f653cf7cfc2ae0bb03e26062b5eac5077eb562a3b",
+      "status": 200,
+      "localSha256": "5ddfb11311d3fc9a043f0b8273a39cacf82854734d4ba03f9d8268763a3416fb",
+      "identical": false
+    },
+    {
+      "bytes": 1447,
+      "chars": 1447,
+      "encoding": "utf8",
+      "path": "api/ym-local-relay-lib.js",
+      "sourceSha256": "5d149348636b5b40d61fc61ebdfb6013a8315ac9df181d915ff0345bacfb1e8e",
+      "status": 200,
+      "localSha256": "5d149348636b5b40d61fc61ebdfb6013a8315ac9df181d915ff0345bacfb1e8e",
+      "identical": true
+    },
+    {
+      "bytes": 135,
+      "chars": 135,
+      "encoding": "utf8",
+      "path": "api/ym-local-relay.pb.js",
+      "sourceSha256": "fe42f54c81e82930cef533c966292ac231d4994a4c69927ab42404408a7277cf",
+      "status": 200,
+      "localSha256": "fe42f54c81e82930cef533c966292ac231d4994a4c69927ab42404408a7277cf",
+      "identical": true
+    },
+    {
+      "bytes": 450,
+      "chars": 387,
+      "encoding": "utf8",
+      "path": "api/ym-member-search.pb.js",
+      "sourceSha256": "5ec35d44708fed42ea5bd64281abc4ed6d527592437cf4b96d61bccb75cf8a81",
+      "status": 200,
+      "localSha256": "5ec35d44708fed42ea5bd64281abc4ed6d527592437cf4b96d61bccb75cf8a81",
+      "identical": true
+    },
+    {
+      "bytes": 5726,
+      "chars": 4959,
+      "encoding": "utf8",
+      "path": "api/ym-member-summary-lib.js",
+      "sourceSha256": "ccc62d50870ded311104176742e7f931d6205f013e23ecc254aa40ea5fda04b0",
+      "status": 200,
+      "localSha256": "8d7cdbba82b1b59c8062d8db8a2d0ae8b3d801cfcd6cc2c7a2f09b12453152f9",
+      "identical": false,
+      "previousLocalSha256": "9e75054d4476c22623e4beb6a8b3440d4dea03b70ad94a68902da1dd8336798c"
+    },
+    {
+      "bytes": 11135,
+      "chars": 9346,
+      "encoding": "utf8",
+      "path": "api/ym-member-search-lib.js",
+      "sourceSha256": "c2f0d9003695537c5cc38b50a10ee8ddf64e0d8a44689ba6ca961158696bf3a7",
+      "status": 200,
+      "localSha256": "4ecf7b44cd6fd68f6f13928eb2f41a6d30f700a5882b819ed4a4302422efc970",
+      "identical": false
+    },
+    {
+      "bytes": 11902,
+      "chars": 11012,
+      "encoding": "utf8",
+      "path": "api/ym-member-sync-lib.js",
+      "sourceSha256": "0a5ed2c5879e547b958ea4c8bf132d94c9ab2f2a9dfc28d79039a5dd43f631f0",
+      "status": 200,
+      "localSha256": "0a5ed2c5879e547b958ea4c8bf132d94c9ab2f2a9dfc28d79039a5dd43f631f0",
+      "identical": true
+    },
+    {
+      "bytes": 4338,
+      "chars": 3821,
+      "encoding": "utf8",
+      "path": "api/ym-ops-alias-lib.js",
+      "sourceSha256": "64aa99e213d9c31e0e426075a68d95674e7f527bcb0471e7487f43cf889778f8",
+      "status": 200,
+      "localSha256": "41a12c2587d0eb0318d4186476485ca96f5510a9f67c9d8abcfe02d67e8d5dad",
+      "identical": false
+    },
+    {
+      "bytes": 874,
+      "chars": 778,
+      "encoding": "utf8",
+      "path": "api/ym-member-summary.pb.js",
+      "sourceSha256": "2fda44e4444422ce238dd5a82679fb2b3c34b8b4ef6828c12362916913b4d987",
+      "status": 200,
+      "localSha256": "2fda44e4444422ce238dd5a82679fb2b3c34b8b4ef6828c12362916913b4d987",
+      "identical": true
+    },
+    {
+      "bytes": 1353,
+      "chars": 1353,
+      "encoding": "utf8",
+      "path": "api/ym-member-sync.pb.js",
+      "sourceSha256": "0e60534706660603628c14c0ed76dd1b4db2360b547491e10062898b5af35043",
+      "status": 200,
+      "localSha256": "0e60534706660603628c14c0ed76dd1b4db2360b547491e10062898b5af35043",
+      "identical": true
+    },
+    {
+      "bytes": 36227,
+      "chars": 28513,
+      "encoding": "utf8",
+      "path": "api/ym-plan-lib.js",
+      "sourceSha256": "1fd9e8ba8c2d3fa95699b663788af425525b433788049640ecb9295805e144ea",
+      "status": 200,
+      "localSha256": "1b01238b640fdfbcd2c952562daba982e821a8eed2c968a938ab52dd938ff75c",
+      "identical": false
+    },
+    {
+      "bytes": 2395,
+      "chars": 1766,
+      "encoding": "utf8",
+      "path": "api/ym-plan.pb.js",
+      "sourceSha256": "f9979fb210b7fef1c329c16e7432f651f8ca9045a18d7829fbc4e5d146646e2a",
+      "status": 200,
+      "localSha256": "f9979fb210b7fef1c329c16e7432f651f8ca9045a18d7829fbc4e5d146646e2a",
+      "identical": true
+    },
+    {
+      "bytes": 14202,
+      "chars": 12053,
+      "encoding": "utf8",
+      "path": "api/ym-programs-lib.js",
+      "sourceSha256": "1f8dfabe6b82e606fa94ef532e3efa0bd998e510206583e6f9a1f0784531ef70",
+      "status": 200,
+      "localSha256": "21fd54001005f356e02a58c24e45d4f209b5dc13f95c9d9db7e3569f023425a4",
+      "identical": false
+    },
+    {
+      "bytes": 38200,
+      "chars": 30322,
+      "encoding": "utf8",
+      "path": "api/ym-plan-dev-lib.js",
+      "sourceSha256": "2debd70c97fbabdfee22e484520862afeb46c1d031daba73d156e6a533ba5c36",
+      "status": 200,
+      "localSha256": "6ba500250a8e31d7b22f8b92c870798d2c3b06b489a7b0f912e100f4e2875a87",
+      "identical": false
+    },
+    {
+      "bytes": 2195,
+      "chars": 2167,
+      "encoding": "utf8",
+      "path": "api/ym-read-rows-lib.js",
+      "sourceSha256": "58bcca6eb55cb7386850224510c97e5d02e66d0c781d1b3a15591ca89c9c2a95",
+      "status": 200,
+      "localSha256": "58bcca6eb55cb7386850224510c97e5d02e66d0c781d1b3a15591ca89c9c2a95",
+      "identical": true
+    },
+    {
+      "bytes": 215,
+      "chars": 185,
+      "encoding": "utf8",
+      "path": "api/ym-round-applicability-lib.js",
+      "sourceSha256": "5fd8bb2cd5625c7029db6766fecbc36e749594019056ade9ee2367ec58e501bf",
+      "status": 200,
+      "localSha256": "5fd8bb2cd5625c7029db6766fecbc36e749594019056ade9ee2367ec58e501bf",
+      "identical": true
+    },
+    {
+      "bytes": 12781,
+      "chars": 10710,
+      "encoding": "utf8",
+      "path": "api/ym-records-lib.js",
+      "sourceSha256": "71128df40163dadd8cf73309b115c95e25256f4ba870d4ce36c3a2711d119c65",
+      "status": 200,
+      "localSha256": "27b66e2fb16c30d9e3b91045753e5d70b680de8e6353760172b2adcb45d4729c",
+      "identical": false
+    },
+    {
+      "bytes": 4156,
+      "chars": 3676,
+      "encoding": "utf8",
+      "path": "api/ym-round-metrics-lib.js",
+      "sourceSha256": "5530cb5a8d0890a79c38a2f09a1b2514db8081f3855ccd420de7df81958e78ef",
+      "status": 200,
+      "localSha256": "5530cb5a8d0890a79c38a2f09a1b2514db8081f3855ccd420de7df81958e78ef",
+      "identical": true
+    },
+    {
+      "bytes": 7292,
+      "chars": 6640,
+      "encoding": "utf8",
+      "path": "api/ym-ticketlink-field-lib.js",
+      "sourceSha256": "9576cddbe8914f9f3904eef87c61357376d4183ba4d07976c40b8a1d883838eb",
+      "status": 200,
+      "localSha256": "017b2d2b843143f70be29ee536003311652b886b964e97774fc7cd94d46efd5d",
+      "identical": false
+    },
+    {
+      "bytes": 10703,
+      "chars": 8790,
+      "encoding": "utf8",
+      "path": "api/ym-sales-lib.js",
+      "sourceSha256": "dfa75c5802acee27781c6c82eaf393f6d4a01556211c415f06669c546662366d",
+      "status": 200,
+      "localSha256": "50b1acba9de180025d5bad55ad7afce5fedcbe898ffe8b69e3a8d7332ede688a",
+      "identical": false
+    },
+    {
+      "bytes": 36142,
+      "chars": 32704,
+      "encoding": "utf8",
+      "path": "api/ym-ticketlink-lib.js",
+      "sourceSha256": "202bd3d1ab71654093749f9b72a2edc785dd8f34ada9cf31569068781460da10",
+      "status": 200,
+      "localSha256": "202bd3d1ab71654093749f9b72a2edc785dd8f34ada9cf31569068781460da10",
+      "identical": true
+    },
+    {
+      "bytes": 3603,
+      "chars": 3325,
+      "encoding": "utf8",
+      "path": "api/ym-ticketlink-round-lib.js",
+      "sourceSha256": "1abc727f8c0807fded846b7806dc3e4fe5ef6369f6750f52d496bd1e7522dadf",
+      "status": 200,
+      "localSha256": "1abc727f8c0807fded846b7806dc3e4fe5ef6369f6750f52d496bd1e7522dadf",
+      "identical": true
+    },
+    {
+      "bytes": 1891,
+      "chars": 1891,
+      "encoding": "utf8",
+      "path": "api/ym-ticketlink.pb.js",
+      "sourceSha256": "b6ffd494b39e0473978e8aaab6692b9950ea4116dcbbe79f86365b13ecc396ee",
+      "status": 200,
+      "localSha256": "b6ffd494b39e0473978e8aaab6692b9950ea4116dcbbe79f86365b13ecc396ee",
+      "identical": true
+    },
+    {
+      "bytes": 25355,
+      "chars": 20805,
+      "encoding": "utf8",
+      "path": "api/ym-views-lib.js",
+      "sourceSha256": "b33cbf52797c9d4a40b1da0b5c05ce4393b580f7b64cc2881757e70ca8e73f26",
+      "status": 200,
+      "localSha256": "91ba5e0b514e305473d75a81620865ed9af758ab4ca03c95f777328a1a989c3e",
+      "identical": false
+    },
+    {
+      "bytes": 11149,
+      "chars": 14868,
+      "encoding": "base64",
+      "path": "public/image/pets/pet_love.png",
+      "sourceSha256": "ce7a3e4447304c552798f29fadabe89a7ef6b2b54a4199c8dd46befb561ab146",
+      "status": 200,
+      "localSha256": "ce7a3e4447304c552798f29fadabe89a7ef6b2b54a4199c8dd46befb561ab146",
+      "identical": true
+    },
+    {
+      "bytes": 113869,
+      "chars": 151828,
+      "encoding": "base64",
+      "path": "public/image/pets/pet_crab.png",
+      "sourceSha256": "f7e43c615451edb377a624950761d1824070334855eabf7081b9865c2375de50",
+      "status": 200,
+      "localSha256": "f7e43c615451edb377a624950761d1824070334855eabf7081b9865c2375de50",
+      "identical": true
+    },
+    {
+      "bytes": 79494,
+      "chars": 105992,
+      "encoding": "base64",
+      "path": "public/image/pets/pet.webp",
+      "sourceSha256": "d0d5add4ecb552000ca5548721d2307cc37cf16d1df1b67f76de4054d47ccb34",
+      "status": 200,
+      "localSha256": "d0d5add4ecb552000ca5548721d2307cc37cf16d1df1b67f76de4054d47ccb34",
+      "identical": true
+    },
+    {
+      "bytes": 270225,
+      "chars": 360300,
+      "encoding": "base64",
+      "path": "public/image/01_Labor.png",
+      "sourceSha256": "e9185a67e002e04ecd82e6b535bf6f7fdfc3a4634c7b9ce983dcb160689c797f",
+      "status": 200,
+      "localSha256": "e9185a67e002e04ecd82e6b535bf6f7fdfc3a4634c7b9ce983dcb160689c797f",
+      "identical": true
+    },
+    {
+      "bytes": 255617,
+      "chars": 340824,
+      "encoding": "base64",
+      "path": "public/image/02_cafe.png",
+      "sourceSha256": "947d7e92b01fa42fc069c2f7e01561d7d574741299b34e005e3af79f4e0e236f",
+      "status": 200,
+      "localSha256": "947d7e92b01fa42fc069c2f7e01561d7d574741299b34e005e3af79f4e0e236f",
+      "identical": true
+    },
+    {
+      "bytes": 200529,
+      "chars": 267372,
+      "encoding": "base64",
+      "path": "public/image/03_insta.png",
+      "sourceSha256": "6deb91208c1c5c8e3d4d74b724a8830a8785257555dfe471ec3834fe21074a1f",
+      "status": 200,
+      "localSha256": "6deb91208c1c5c8e3d4d74b724a8830a8785257555dfe471ec3834fe21074a1f",
+      "identical": true
+    },
+    {
+      "bytes": 232113,
+      "chars": 309484,
+      "encoding": "base64",
+      "path": "public/image/05_blog.png",
+      "sourceSha256": "9793a879167b622f02f36f0d1c93c81b8e7fa6d7f109f1ff9e287145fc51d856",
+      "status": 200,
+      "localSha256": "9793a879167b622f02f36f0d1c93c81b8e7fa6d7f109f1ff9e287145fc51d856",
+      "identical": true
+    },
+    {
+      "bytes": 213841,
+      "chars": 285124,
+      "encoding": "base64",
+      "path": "public/image/04_youtube.png",
+      "sourceSha256": "2c3fa7af5ae0cd8f082cbb2dbe092cab5ac0c056c0be2bb5c87461fe509ead63",
+      "status": 200,
+      "localSha256": "2c3fa7af5ae0cd8f082cbb2dbe092cab5ac0c056c0be2bb5c87461fe509ead63",
+      "identical": true
+    },
+    {
+      "bytes": 214055,
+      "chars": 285408,
+      "encoding": "base64",
+      "path": "public/image/06_kakao.png",
+      "sourceSha256": "49481a0c175f714bf4a58a936fc0075d271929e358293fc2fc06d1b64330bb01",
+      "status": 200,
+      "localSha256": "49481a0c175f714bf4a58a936fc0075d271929e358293fc2fc06d1b64330bb01",
+      "identical": true
+    },
+    {
+      "bytes": 230907,
+      "chars": 307876,
+      "encoding": "base64",
+      "path": "public/image/07_SMS.png",
+      "sourceSha256": "ce8f5d9cb39d329faed3ce414f3550dad421950a359ed1f3cdd41c85e07fe21f",
+      "status": 200,
+      "localSha256": "ce8f5d9cb39d329faed3ce414f3550dad421950a359ed1f3cdd41c85e07fe21f",
+      "identical": true
+    },
+    {
+      "bytes": 175703,
+      "chars": 234272,
+      "encoding": "base64",
+      "path": "public/image/08_HP.png",
+      "sourceSha256": "c70f886748a980070515ce2f68e3e2fa027488041f3708ef057f8a4f26b7cacb",
+      "status": 200,
+      "localSha256": "c70f886748a980070515ce2f68e3e2fa027488041f3708ef057f8a4f26b7cacb",
+      "identical": true
+    },
+    {
+      "bytes": 209421,
+      "chars": 279228,
+      "encoding": "base64",
+      "path": "public/image/09_Emergency.png",
+      "sourceSha256": "ba08fa129260025b463ffc5da518550351473ec34898fdddb4c7890eaf780ea6",
+      "status": 200,
+      "localSha256": "ba08fa129260025b463ffc5da518550351473ec34898fdddb4c7890eaf780ea6",
+      "identical": true
+    },
+    {
+      "bytes": 441287,
+      "chars": 588384,
+      "encoding": "base64",
+      "path": "public/image/10_background.jpg",
+      "sourceSha256": "cef440950b3d729a9fcdbe062869c4dbac6107e3aa6af6359bfc682935659e38",
+      "status": 200,
+      "localSha256": "cef440950b3d729a9fcdbe062869c4dbac6107e3aa6af6359bfc682935659e38",
+      "identical": true
+    },
+    {
+      "bytes": 498,
+      "chars": 664,
+      "encoding": "base64",
+      "path": "public/image/app-icon.svg",
+      "sourceSha256": "0fbac0709adf69ff61cc6cff1211dfe774f98dd7a49be0c4a4e7b36672614198",
+      "status": 200,
+      "localSha256": "0fbac0709adf69ff61cc6cff1211dfe774f98dd7a49be0c4a4e7b36672614198",
+      "identical": true
+    },
+    {
+      "bytes": 14073,
+      "chars": 18764,
+      "encoding": "base64",
+      "path": "public/image/apple-touch-icon.png",
+      "sourceSha256": "35586cce49081397cc991b04c0f05cb035e8fe04ecc201d02eccdb6fc51ba6b5",
+      "status": 200,
+      "localSha256": "35586cce49081397cc991b04c0f05cb035e8fe04ecc201d02eccdb6fc51ba6b5",
+      "identical": true
+    },
+    {
+      "bytes": 277800,
+      "chars": 370400,
+      "encoding": "base64",
+      "path": "public/image/bg-yeulmaru.webp",
+      "sourceSha256": "c5af3185d16cc2d1f5d881dd0a70f9327ea2642b96c15e1f5971c8a041081e49",
+      "status": 200,
+      "localSha256": "c5af3185d16cc2d1f5d881dd0a70f9327ea2642b96c15e1f5971c8a041081e49",
+      "identical": true
+    },
+    {
+      "bytes": 6988,
+      "chars": 9320,
+      "encoding": "base64",
+      "path": "public/image/classyvogue-latin.woff2",
+      "sourceSha256": "a79d047e03333ebf5bda306b427bf8e9fb568f3c88f8f039d0b71a451cd67bbd",
+      "status": 200,
+      "localSha256": "a79d047e03333ebf5bda306b427bf8e9fb568f3c88f8f039d0b71a451cd67bbd",
+      "identical": true
+    },
+    {
+      "bytes": 672,
+      "chars": 896,
+      "encoding": "base64",
+      "path": "public/image/favicon-16.png",
+      "sourceSha256": "c3342a5d371b63e9067bc1c8e30dc0d127cb021cb9601b257eab658d49c6b8ec",
+      "status": 200,
+      "localSha256": "c3342a5d371b63e9067bc1c8e30dc0d127cb021cb9601b257eab658d49c6b8ec",
+      "identical": true
+    },
+    {
+      "bytes": 1555,
+      "chars": 2076,
+      "encoding": "base64",
+      "path": "public/image/favicon-32.png",
+      "sourceSha256": "99458f98264b1a17e50fbad6ab0e9684849ba9b823ec7e2312912a6ab5bde55a",
+      "status": 200,
+      "localSha256": "99458f98264b1a17e50fbad6ab0e9684849ba9b823ec7e2312912a6ab5bde55a",
+      "identical": true
+    },
+    {
+      "bytes": 1496,
+      "chars": 1996,
+      "encoding": "base64",
+      "path": "public/image/favicon.svg",
+      "sourceSha256": "8ffc4851b5ad3e50f819cbe7bf826792f9b11ec91ed13acdd8d7d450a566c7a2",
+      "status": 200,
+      "localSha256": "8ffc4851b5ad3e50f819cbe7bf826792f9b11ec91ed13acdd8d7d450a566c7a2",
+      "identical": true
+    },
+    {
+      "bytes": 6645,
+      "chars": 8860,
+      "encoding": "base64",
+      "path": "public/image/logo-yeulmaru-white.png",
+      "sourceSha256": "e4c55d02e0fb20da14ffb4365faa973474d8002b5c4647e8e3875dffc36c4728",
+      "status": 200,
+      "localSha256": "e4c55d02e0fb20da14ffb4365faa973474d8002b5c4647e8e3875dffc36c4728",
+      "identical": true
+    },
+    {
+      "bytes": 163076,
+      "chars": 217436,
+      "encoding": "base64",
+      "path": "public/image/noto-sans-kr-700.woff2",
+      "sourceSha256": "81377c518da2995dea04bc99f390f092e5930d3eda816696853d0f6b78edc665",
+      "status": 200,
+      "localSha256": "81377c518da2995dea04bc99f390f092e5930d3eda816696853d0f6b78edc665",
+      "identical": true
+    },
+    {
+      "bytes": 159688,
+      "chars": 212920,
+      "encoding": "base64",
+      "path": "public/image/noto-sans-kr-400.woff2",
+      "sourceSha256": "3ec0886a1a46b186a7b3eb297a06f055797d181dc0ae489d4a8bf08885923442",
+      "status": 200,
+      "localSha256": "3ec0886a1a46b186a7b3eb297a06f055797d181dc0ae489d4a8bf08885923442",
+      "identical": true
+    },
+    {
+      "bytes": 37852,
+      "chars": 50472,
+      "encoding": "base64",
+      "path": "public/image/og-image.png",
+      "sourceSha256": "b06fa04e498f20df4b707d4abc2f21962d1decee4fe09599c6b6c1d024cf7f77",
+      "status": 200,
+      "localSha256": "b06fa04e498f20df4b707d4abc2f21962d1decee4fe09599c6b6c1d024cf7f77",
+      "identical": true
+    },
+    {
+      "bytes": 75007,
+      "chars": 100012,
+      "encoding": "base64",
+      "path": "public/image/promomap-all.jpg",
+      "sourceSha256": "991f44a547cfdb8fe9c26f25024b8c8cf46974edebc8c407a5fd779b76a28b53",
+      "status": 200,
+      "localSha256": "991f44a547cfdb8fe9c26f25024b8c8cf46974edebc8c407a5fd779b76a28b53",
+      "identical": true
+    },
+    {
+      "bytes": 468692,
+      "chars": 624924,
+      "encoding": "base64",
+      "path": "public/image/promomap-ov-all.png",
+      "sourceSha256": "65cddce366dacf18f993060c4777f308987bc6607a55a80119920dfaf0f580ad",
+      "status": 200,
+      "localSha256": "65cddce366dacf18f993060c4777f308987bc6607a55a80119920dfaf0f580ad",
+      "identical": true
+    },
+    {
+      "bytes": 490974,
+      "chars": 654632,
+      "encoding": "base64",
+      "path": "public/image/promomap-ov-gwangyang.png",
+      "sourceSha256": "706b454ecafb0e1d39f4b04b3d580f96bbdfdc37d9edb4b13ceb375939d7bf1b",
+      "status": 200,
+      "localSha256": "706b454ecafb0e1d39f4b04b3d580f96bbdfdc37d9edb4b13ceb375939d7bf1b",
+      "identical": true
+    },
+    {
+      "bytes": 67449,
+      "chars": 89932,
+      "encoding": "base64",
+      "path": "public/image/promomap-gwangyang.jpg",
+      "sourceSha256": "4bf9dbe89c7b7990b3d81ab81ad7ce3373fcc1bc6de257ab64cddb8e67b53aaa",
+      "status": 200,
+      "localSha256": "4bf9dbe89c7b7990b3d81ab81ad7ce3373fcc1bc6de257ab64cddb8e67b53aaa",
+      "identical": true
+    },
+    {
+      "bytes": 685520,
+      "chars": 914028,
+      "encoding": "base64",
+      "path": "public/image/promomap-ov-suncheon.png",
+      "sourceSha256": "ecb0b90d3c287818de191855c4a5bc99acadd391e2de158df9a298c062388404",
+      "status": 200,
+      "localSha256": "ecb0b90d3c287818de191855c4a5bc99acadd391e2de158df9a298c062388404",
+      "identical": true
+    },
+    {
+      "bytes": 566618,
+      "chars": 755492,
+      "encoding": "base64",
+      "path": "public/image/promomap-ov-yeosu.png",
+      "sourceSha256": "f8fb860b45b7301cf6ba5d5f5d236662f30baa34bed25d76c8d269fefbc3ca96",
+      "status": 200,
+      "localSha256": "f8fb860b45b7301cf6ba5d5f5d236662f30baa34bed25d76c8d269fefbc3ca96",
+      "identical": true
+    },
+    {
+      "bytes": 93826,
+      "chars": 125104,
+      "encoding": "base64",
+      "path": "public/image/promomap-suncheon.jpg",
+      "sourceSha256": "01e837dea964083cd27d9c162a0775f7a0ffaa593a09e07f4dfafe97d7879627",
+      "status": 200,
+      "localSha256": "01e837dea964083cd27d9c162a0775f7a0ffaa593a09e07f4dfafe97d7879627",
+      "identical": true
+    },
+    {
+      "bytes": 864,
+      "chars": 593,
+      "encoding": "utf8",
+      "path": "public/image/promomap-README.txt",
+      "sourceSha256": "183c89d23967110f51864f4f61ecc30545cd79718111f8a61f6cba7df5d1f268",
+      "status": 200,
+      "localSha256": "183c89d23967110f51864f4f61ecc30545cd79718111f8a61f6cba7df5d1f268",
+      "identical": true
+    },
+    {
+      "bytes": 65788,
+      "chars": 87720,
+      "encoding": "base64",
+      "path": "public/image/promomap-yeosu.jpg",
+      "sourceSha256": "45d8f513ca270ddfb9734321cd92d21ad383bc1a5d7667d1a99704c0b596ed94",
+      "status": 200,
+      "localSha256": "45d8f513ca270ddfb9734321cd92d21ad383bc1a5d7667d1a99704c0b596ed94",
+      "identical": true
+    },
+    {
+      "bytes": 11735,
+      "chars": 15648,
+      "encoding": "base64",
+      "path": "public/image/pwa-icon-192-maskable.png",
+      "sourceSha256": "a9cee877206b2b6efbdfc89c2cf15698c0f17483b135ae2ba03653522e764171",
+      "status": 200,
+      "localSha256": "a9cee877206b2b6efbdfc89c2cf15698c0f17483b135ae2ba03653522e764171",
+      "identical": true
+    },
+    {
+      "bytes": 15417,
+      "chars": 20556,
+      "encoding": "base64",
+      "path": "public/image/pwa-icon-192.png",
+      "sourceSha256": "bf3588599fb89a98f3324cc674c2a3bb1257d270a5e9289d31780c4363302860",
+      "status": 200,
+      "localSha256": "bf3588599fb89a98f3324cc674c2a3bb1257d270a5e9289d31780c4363302860",
+      "identical": true
+    },
+    {
+      "bytes": 35060,
+      "chars": 46748,
+      "encoding": "base64",
+      "path": "public/image/pwa-icon-512-maskable.png",
+      "sourceSha256": "204c8a6ea65127664123c751936fcd2ba0d8ea039fee94a356325cfa4de551b4",
+      "status": 200,
+      "localSha256": "204c8a6ea65127664123c751936fcd2ba0d8ea039fee94a356325cfa4de551b4",
+      "identical": true
+    },
+    {
+      "bytes": 7192,
+      "chars": 9592,
+      "encoding": "base64",
+      "path": "public/image/yeul_face.png",
+      "sourceSha256": "766015d44f7bd99b98777a9457b0e8aba2a759d0f4c6c4bbb06a0d942ecf3f4b",
+      "status": 200,
+      "localSha256": "766015d44f7bd99b98777a9457b0e8aba2a759d0f4c6c4bbb06a0d942ecf3f4b",
+      "identical": true
+    },
+    {
+      "bytes": 43916,
+      "chars": 58556,
+      "encoding": "base64",
+      "path": "public/image/pwa-icon-512.png",
+      "sourceSha256": "c64b95b062d7c2afa001b910888a6b949797276d8021cc20c04b2a31d9c7459d",
+      "status": 200,
+      "localSha256": "c64b95b062d7c2afa001b910888a6b949797276d8021cc20c04b2a31d9c7459d",
+      "identical": true
+    },
+    {
+      "bytes": 58693,
+      "chars": 78260,
+      "encoding": "base64",
+      "path": "public/images/ci/yeulmaru-english-2line-negative.png",
+      "sourceSha256": "854a5c1278844854fbbecd4eb1d7387a7603e5671efce3fb0678e2208f9c9860",
+      "status": 200,
+      "localSha256": "854a5c1278844854fbbecd4eb1d7387a7603e5671efce3fb0678e2208f9c9860",
+      "identical": true
+    },
+    {
+      "bytes": 1865445,
+      "chars": 2487260,
+      "encoding": "base64",
+      "path": "public/image/yeul.png",
+      "sourceSha256": "413f40f125373a5c32be840625683630fac2b0caf1e2ef9919c13a39cdd831c9",
+      "status": 200,
+      "localSha256": "413f40f125373a5c32be840625683630fac2b0caf1e2ef9919c13a39cdd831c9",
+      "identical": true
+    },
+    {
+      "bytes": 38959,
+      "chars": 51948,
+      "encoding": "base64",
+      "path": "public/images/ci/yeulmaru-english-2line-source.png",
+      "sourceSha256": "1a97ae7266e5ffd612de5f61838faaad2f31c7f9bc27c1697c8e58d8871127d7",
+      "status": 200,
+      "localSha256": "1a97ae7266e5ffd612de5f61838faaad2f31c7f9bc27c1697c8e58d8871127d7",
+      "identical": true
+    },
+    {
+      "bytes": 44718,
+      "chars": 59624,
+      "encoding": "base64",
+      "path": "public/images/ci/yeulmaru-korean-lockup.png",
+      "sourceSha256": "37a81911926d7a5289ab069bfd040b44633b9fade11934ac1eecb33a1fdd47ae",
+      "status": 200,
+      "localSha256": "37a81911926d7a5289ab069bfd040b44633b9fade11934ac1eecb33a1fdd47ae",
+      "identical": true
+    },
+    {
+      "bytes": 733320,
+      "chars": 977760,
+      "encoding": "base64",
+      "path": "public/images/yeulmaru-hero.jpg",
+      "sourceSha256": "2669d8680648c529c957fd5d01bc5f8141844c9bac6798478b886f48227eab27",
+      "status": 200,
+      "localSha256": "2669d8680648c529c957fd5d01bc5f8141844c9bac6798478b886f48227eab27",
+      "identical": true
+    },
+    {
+      "bytes": 15575,
+      "chars": 7590,
+      "encoding": "utf8",
+      "path": "public/persona/yeuli.md",
+      "sourceSha256": "ebdd8e8786e83b374a0077f06c8223669683835ce9487b918ba62ea69efe05b8",
+      "status": 200,
+      "localSha256": "ebdd8e8786e83b374a0077f06c8223669683835ce9487b918ba62ea69efe05b8",
+      "identical": true
+    },
+    {
+      "bytes": 24473,
+      "chars": 32632,
+      "encoding": "base64",
+      "path": "public/images/yeulmaru-logo-1line.png",
+      "sourceSha256": "b9a03840de60b8cf0b38ba4450eb988c59a3d84e8e42a0ee01990a433621250d",
+      "status": 200,
+      "localSha256": "b9a03840de60b8cf0b38ba4450eb988c59a3d84e8e42a0ee01990a433621250d",
+      "identical": true
+    },
+    {
+      "bytes": 15406,
+      "chars": 20544,
+      "encoding": "base64",
+      "path": "public/favicon.ico",
+      "sourceSha256": "43e9370f84171656172110dbb8fd1101fe81e66d8532d83c5b10a97550a1ae6e",
+      "status": 200,
+      "localSha256": "43e9370f84171656172110dbb8fd1101fe81e66d8532d83c5b10a97550a1ae6e",
+      "identical": true
+    },
+    {
+      "bytes": 309531,
+      "chars": 412708,
+      "encoding": "base64",
+      "path": "public/images/yeulmaru-logo-2line.png",
+      "sourceSha256": "4cf0eee15a30421d6797ea0a6ee34105d3d1cbda54ad45c2d55790f479e8f75f",
+      "status": 200,
+      "localSha256": "4cf0eee15a30421d6797ea0a6ee34105d3d1cbda54ad45c2d55790f479e8f75f",
+      "identical": true
+    },
+    {
+      "bytes": 890,
+      "chars": 802,
+      "encoding": "utf8",
+      "path": "public/manifest.webmanifest",
+      "sourceSha256": "e0b6e93c8710724e5770d21f6beabe7f2973a2345235041f64350faabcdb5aba",
+      "status": 200,
+      "localSha256": "d162f6b96da9257a6e7a3efbca4cbe838797871977d5b75366df3cd9aa8ab0d1",
+      "identical": false,
+      "previousLocalSha256": "99867d7ef668008a973ef2d248d3cc3daa7ae58cf0973f1320f56c94b13855f6"
+    },
+    {
+      "bytes": 6925,
+      "chars": 6289,
+      "encoding": "utf8",
+      "path": "public/healthcheck.html",
+      "sourceSha256": "9e3238ab10d37caab8442973268f922a653f206df575d0b80d244f868d6018bb",
+      "status": 200,
+      "localSha256": "9e3238ab10d37caab8442973268f922a653f206df575d0b80d244f868d6018bb",
+      "identical": true
+    },
+    {
+      "bytes": 1916,
+      "chars": 1633,
+      "encoding": "utf8",
+      "path": "public/ui-system-preview.html",
+      "sourceSha256": "2abbfb808785227dd5714fd14b7648e6c0e9f469ce9e8c35c32e050ae2133b4b",
+      "status": 200,
+      "localSha256": "2abbfb808785227dd5714fd14b7648e6c0e9f469ce9e8c35c32e050ae2133b4b",
+      "identical": true
+    },
+    {
+      "bytes": 5148,
+      "chars": 4725,
+      "encoding": "utf8",
+      "path": "public/verify.html",
+      "sourceSha256": "b34e7141f943a295ff4ed50b0dbd41f8c0c9be8adc989cfbf4aca1b6016754cd",
+      "status": 200,
+      "localSha256": "b34e7141f943a295ff4ed50b0dbd41f8c0c9be8adc989cfbf4aca1b6016754cd",
+      "identical": true
+    },
+    {
+      "bytes": 38201,
+      "chars": 36444,
+      "encoding": "utf8",
+      "path": "public/ym-auth-ui.js",
+      "sourceSha256": "c663a9a53d95e620c3dcc817217ca80dd9dfbb160481978d49df6bad09ba7670",
+      "status": 200,
+      "localSha256": "be99b312054ab28be55f826f2384c5f79f683aabfb9bc2c7e88363116c7cd5f5",
+      "identical": false
+    },
+    {
+      "bytes": 10776,
+      "chars": 9745,
+      "encoding": "utf8",
+      "path": "public/ym-group-ui.js",
+      "sourceSha256": "aab02d4acf60abf4bac882c4bad572b6e6da2f7cae08fb800e2a888546b67dbc",
+      "status": 200,
+      "localSha256": "aab02d4acf60abf4bac882c4bad572b6e6da2f7cae08fb800e2a888546b67dbc",
+      "identical": true
+    },
+    {
+      "bytes": 1665,
+      "chars": 1665,
+      "encoding": "utf8",
+      "path": "public/ym-local-relay-ui.js",
+      "sourceSha256": "b6b60962fbd156e9c469bb2e02ef2594b93740e79de4ef5261caae235480fae8",
+      "status": 200,
+      "localSha256": "b6b60962fbd156e9c469bb2e02ef2594b93740e79de4ef5261caae235480fae8",
+      "identical": true
+    },
+    {
+      "bytes": 11721,
+      "chars": 10297,
+      "encoding": "utf8",
+      "path": "public/ym-member-sync-ui.js",
+      "sourceSha256": "67b296d897231697be796fb9a9bfc434b996119ae28d85ba187a25a47889ef31",
+      "status": 200,
+      "localSha256": "67b296d897231697be796fb9a9bfc434b996119ae28d85ba187a25a47889ef31",
+      "identical": true
+    },
+    {
+      "bytes": 6695617,
+      "chars": 5150927,
+      "encoding": "utf8",
+      "path": "public/standalone.html",
+      "sourceSha256": "7580d3459de5bb96acf9c9fbc5b420310ce951eb1d0fd851a1d0ecb791772e03",
+      "status": 200,
+      "localSha256": "c45921b346621603f611dec953153d52c7d5cae9c5703266e6b8640045a11e8d",
+      "identical": false,
+      "previousLocalSha256": "775daf72e09ce6b52a9382188cdad502caf7e4e949f9f48fd3779518eccf2599"
+    },
+    {
+      "bytes": 10266,
+      "chars": 8834,
+      "encoding": "utf8",
+      "path": "public/ym-motion.js",
+      "sourceSha256": "4abefd6a7f4f45f623d76bd7e1d8266b0895d0d4c20e8dba9f0e49a375345bc9",
+      "status": 200,
+      "localSha256": "4abefd6a7f4f45f623d76bd7e1d8266b0895d0d4c20e8dba9f0e49a375345bc9",
+      "identical": true
+    },
+    {
+      "bytes": 17596,
+      "chars": 15186,
+      "encoding": "utf8",
+      "path": "public/ym-perf.js",
+      "sourceSha256": "d5fbd2178583315517bc4ad7078051c7e2ea20542458eb3834b44828a3f38fba",
+      "status": 200,
+      "localSha256": "d5fbd2178583315517bc4ad7078051c7e2ea20542458eb3834b44828a3f38fba",
+      "identical": true
+    },
+    {
+      "bytes": 2217,
+      "chars": 1911,
+      "encoding": "utf8",
+      "path": "public/ym-relay-permission-ui.js",
+      "sourceSha256": "544aa8f8cc03b330c92cdb87e7eaf2c637603782adb53d29570347daeba0fa00",
+      "status": 200,
+      "localSha256": "544aa8f8cc03b330c92cdb87e7eaf2c637603782adb53d29570347daeba0fa00",
+      "identical": true
+    },
+    {
+      "bytes": 32105,
+      "chars": 27698,
+      "encoding": "utf8",
+      "path": "public/ym-ticketlink-ui.js",
+      "sourceSha256": "e8c64cb2facfeef91dbe2ce437d04be72a82e4b8e117731386cd5d2e21a59d38",
+      "status": 200,
+      "localSha256": "e8c64cb2facfeef91dbe2ce437d04be72a82e4b8e117731386cd5d2e21a59d38",
+      "identical": true
+    },
+    {
+      "bytes": 33328,
+      "chars": 33322,
+      "encoding": "utf8",
+      "path": "public/ym-ui-components.css",
+      "sourceSha256": "bd235d53eb9568ad515f8e898f63d8773819ddc043d6270200a85dd614cd8ebd",
+      "status": 200,
+      "localSha256": "bd235d53eb9568ad515f8e898f63d8773819ddc043d6270200a85dd614cd8ebd",
+      "identical": true
+    },
+    {
+      "bytes": 4306,
+      "chars": 4306,
+      "encoding": "utf8",
+      "path": "public/ym-ui-tokens.css",
+      "sourceSha256": "553ecb252b8222fd634b86f09fa4cf00550e1c8568ad8a0a6d447f050f3089c2",
+      "status": 200,
+      "localSha256": "553ecb252b8222fd634b86f09fa4cf00550e1c8568ad8a0a6d447f050f3089c2",
+      "identical": true
+    },
+    {
+      "bytes": 91064,
+      "chars": 86162,
+      "encoding": "utf8",
+      "path": "public/ym-ui-components.js",
+      "sourceSha256": "469d235f6ae30441f56a42749ea7fb39d96174776d21c7fa0017009f5bd489cd",
+      "status": 200,
+      "localSha256": "469d235f6ae30441f56a42749ea7fb39d96174776d21c7fa0017009f5bd489cd",
+      "identical": true
+    },
+    {
+      "bytes": 6706805,
+      "chars": 3950547,
+      "encoding": "utf8",
+      "path": "public/members.js",
+      "sourceSha256": "8ff0ebd3992b4f721db1f5db44140e3b08c68aedb21a5cffbccab574c7a52e52",
+      "status": 200,
+      "localSha256": "736bd1226dcfc6d0bc35ba3d75d7ef800366b8e282121df3fb5ee4b0c6c5052e",
+      "identical": false
+    },
+    {
+      "bytes": 277800,
+      "chars": 370400,
+      "encoding": "base64",
+      "path": "src/assets/bg-yeulmaru.webp",
+      "sourceSha256": "c5af3185d16cc2d1f5d881dd0a70f9327ea2642b96c15e1f5971c8a041081e49",
+      "status": 200,
+      "localSha256": "c5af3185d16cc2d1f5d881dd0a70f9327ea2642b96c15e1f5971c8a041081e49",
+      "identical": true
+    },
+    {
+      "bytes": 32789,
+      "chars": 30220,
+      "encoding": "utf8",
+      "path": "src/components/calendar/CalendarView.tsx",
+      "sourceSha256": "4cb815abdda883136b1ad4c59754c5ba1871a8de46fbec7ca4fa359b91c3d081",
+      "status": 200,
+      "localSha256": "0a13159dceaba9409aab62f5e2c55cb0adcdf4cce813b9a84f15058a192520b0",
+      "identical": false
+    },
+    {
+      "bytes": 2170,
+      "chars": 2146,
+      "encoding": "utf8",
+      "path": "src/components/common/DetailModal.tsx",
+      "sourceSha256": "c95370e3bd32c1a1f271264adc6a9a90ac4cc2be050625edba9ef1dda3544e89",
+      "status": 200,
+      "localSha256": "c95370e3bd32c1a1f271264adc6a9a90ac4cc2be050625edba9ef1dda3544e89",
+      "identical": true
+    },
+    {
+      "bytes": 8272,
+      "chars": 7559,
+      "encoding": "utf8",
+      "path": "src/components/gate/PinGate.tsx",
+      "sourceSha256": "51f9804b76953295e9437f65014b9e66ad5b2cd40dc350bd273330db8eeb2afc",
+      "status": 200,
+      "localSha256": "13374cc24d12403c0baf6cba02fbecf423c97c20edf19f25c62d013843d5aa59",
+      "identical": false
+    },
+    {
+      "bytes": 5890,
+      "chars": 5334,
+      "encoding": "utf8",
+      "path": "src/components/gate/PinGate.css",
+      "sourceSha256": "85cb6c27df7816216f87338851772e06379dc5cc143267c3f0f88691738eae5b",
+      "status": 200,
+      "localSha256": "85cb6c27df7816216f87338851772e06379dc5cc143267c3f0f88691738eae5b",
+      "identical": true
+    },
+    {
+      "bytes": 2809,
+      "chars": 2597,
+      "encoding": "utf8",
+      "path": "src/components/layout/AppShell.tsx",
+      "sourceSha256": "b476eba5e12396b5e4bccb982929e26e9577c3a7903394a29ca38a20aafe5afe",
+      "status": 200,
+      "localSha256": "b476eba5e12396b5e4bccb982929e26e9577c3a7903394a29ca38a20aafe5afe",
+      "identical": true
+    },
+    {
+      "bytes": 535,
+      "chars": 364,
+      "encoding": "utf8",
+      "path": "src/components/layout/YeulmaruNav.css",
+      "sourceSha256": "179cd01d0d6c21899e77ef04b56d3e0e7d8d1a2beb6335d8135e0cac5f26fd3b",
+      "status": 200,
+      "localSha256": "179cd01d0d6c21899e77ef04b56d3e0e7d8d1a2beb6335d8135e0cac5f26fd3b",
+      "identical": true
+    },
+    {
+      "bytes": 13977,
+      "chars": 12521,
+      "encoding": "utf8",
+      "path": "src/components/layout/YeulmaruNav.tsx",
+      "sourceSha256": "3a88cc40cf7af5d42f8dd2c19942c4caac61ce2ca7151c136d674966e23a0a5a",
+      "status": 200,
+      "localSha256": "61a3f5fee8c4633f80516fe4fa5b8cc858a78e2b43bb334b0541a9ca4be37011",
+      "identical": false
+    },
+    {
+      "bytes": 69426,
+      "chars": 64844,
+      "encoding": "utf8",
+      "path": "src/components/performance/PerformanceView.tsx",
+      "sourceSha256": "d4e99ded78d7839daa08a5398495fc410d591db233c65069f8f2fd21fde74ccd",
+      "status": 200,
+      "localSha256": "2c0f7f836250274bca57dd1ded9194a2a908435f0db4c60f4b84ff913bb125ae",
+      "identical": false
+    },
+    {
+      "bytes": 2927,
+      "chars": 2132,
+      "encoding": "utf8",
+      "path": "src/components/performance/performance-types.ts",
+      "sourceSha256": "95bff5862b73cfd878d5163ed81f0d9d89c707af1b0d48da146c207089db149f",
+      "status": 200,
+      "localSha256": "95bff5862b73cfd878d5163ed81f0d9d89c707af1b0d48da146c207089db149f",
+      "identical": true
+    },
+    {
+      "bytes": 10121,
+      "chars": 9806,
+      "encoding": "utf8",
+      "path": "src/components/performance/SalesDetail.tsx",
+      "sourceSha256": "cb5b40e315b5b4624ac7644a55d8e6c715aa2baf66737177b4933658c27145ad",
+      "status": 200,
+      "localSha256": "5c0634e3bd07a368cf23079f40d92dd59c55ea43e336b7009bfbe5f205ea2e5a",
+      "identical": false
+    },
+    {
+      "bytes": 9389,
+      "chars": 8819,
+      "encoding": "utf8",
+      "path": "src/components/programs/ProgramsView.tsx",
+      "sourceSha256": "db5c3172fea92a650c72bfd9df46b39d744ba28b59a8067db0ce823ba79a0176",
+      "status": 200,
+      "localSha256": "db5c3172fea92a650c72bfd9df46b39d744ba28b59a8067db0ce823ba79a0176",
+      "identical": true
+    },
+    {
+      "bytes": 140,
+      "chars": 140,
+      "encoding": "utf8",
+      "path": "src/components/ui/aspect-ratio.tsx",
+      "sourceSha256": "08b0aa0b05efc573c7d63363c03e83d4b101bfeb54140764e96ddea30659cfcc",
+      "status": 200,
+      "localSha256": "08b0aa0b05efc573c7d63363c03e83d4b101bfeb54140764e96ddea30659cfcc",
+      "identical": true
+    },
+    {
+      "bytes": 1977,
+      "chars": 1977,
+      "encoding": "utf8",
+      "path": "src/components/ui/accordion.tsx",
+      "sourceSha256": "6b84cb28b5c8e2129d854cffb8c5ba0161758d577db6db30a380cf593a8c0705",
+      "status": 200,
+      "localSha256": "6b84cb28b5c8e2129d854cffb8c5ba0161758d577db6db30a380cf593a8c0705",
+      "identical": true
+    },
+    {
+      "bytes": 4434,
+      "chars": 4434,
+      "encoding": "utf8",
+      "path": "src/components/ui/alert-dialog.tsx",
+      "sourceSha256": "2ede53a17b342a8265b924563f08d352dc7358a91585b0332b3d4a055b692407",
+      "status": 200,
+      "localSha256": "2ede53a17b342a8265b924563f08d352dc7358a91585b0332b3d4a055b692407",
+      "identical": true
+    },
+    {
+      "bytes": 1584,
+      "chars": 1584,
+      "encoding": "utf8",
+      "path": "src/components/ui/alert.tsx",
+      "sourceSha256": "ed78a053a9db783f48d5dfab7398b630f87c17ed2e237b6f30a3eb153675960c",
+      "status": 200,
+      "localSha256": "ed78a053a9db783f48d5dfab7398b630f87c17ed2e237b6f30a3eb153675960c",
+      "identical": true
+    },
+    {
+      "bytes": 2712,
+      "chars": 2712,
+      "encoding": "utf8",
+      "path": "src/components/ui/breadcrumb.tsx",
+      "sourceSha256": "c3d3dcb0d82fc5e91d8830bac7fead905686fe876f1f42c3ed872bb0a6b6584e",
+      "status": 200,
+      "localSha256": "c3d3dcb0d82fc5e91d8830bac7fead905686fe876f1f42c3ed872bb0a6b6584e",
+      "identical": true
+    },
+    {
+      "bytes": 1405,
+      "chars": 1405,
+      "encoding": "utf8",
+      "path": "src/components/ui/avatar.tsx",
+      "sourceSha256": "fb33bc4865b74d1f0239b1782dbdc4cc2d38690ba6e245e9e3b024c256b14c2b",
+      "status": 200,
+      "localSha256": "fb33bc4865b74d1f0239b1782dbdc4cc2d38690ba6e245e9e3b024c256b14c2b",
+      "identical": true
+    },
+    {
+      "bytes": 1128,
+      "chars": 1128,
+      "encoding": "utf8",
+      "path": "src/components/ui/badge.tsx",
+      "sourceSha256": "db977d821af56ae3fb7952182d9c0a076a10c75c38bc2d2b000827e720423d32",
+      "status": 200,
+      "localSha256": "db977d821af56ae3fb7952182d9c0a076a10c75c38bc2d2b000827e720423d32",
+      "identical": true
+    },
+    {
+      "bytes": 1901,
+      "chars": 1901,
+      "encoding": "utf8",
+      "path": "src/components/ui/button.tsx",
+      "sourceSha256": "415ccc47cf69a2a87db699cc6da7f1fdcb799a1f40dab3a6220d91ac8da8abbe",
+      "status": 200,
+      "localSha256": "415ccc47cf69a2a87db699cc6da7f1fdcb799a1f40dab3a6220d91ac8da8abbe",
+      "identical": true
+    },
+    {
+      "bytes": 1858,
+      "chars": 1858,
+      "encoding": "utf8",
+      "path": "src/components/ui/card.tsx",
+      "sourceSha256": "69afcf9c8e58ca6c3acf43c5b1ec9186bb6c88952f0ff49345dd2666f93d5480",
+      "status": 200,
+      "localSha256": "69afcf9c8e58ca6c3acf43c5b1ec9186bb6c88952f0ff49345dd2666f93d5480",
+      "identical": true
+    },
+    {
+      "bytes": 6224,
+      "chars": 6224,
+      "encoding": "utf8",
+      "path": "src/components/ui/carousel.tsx",
+      "sourceSha256": "69686986376cbc02a5f907b1ca8a7a759808c4e8df1200517c57ec749e8484cd",
+      "status": 200,
+      "localSha256": "69686986376cbc02a5f907b1ca8a7a759808c4e8df1200517c57ec749e8484cd",
+      "identical": true
+    },
+    {
+      "bytes": 7555,
+      "chars": 7555,
+      "encoding": "utf8",
+      "path": "src/components/ui/calendar.tsx",
+      "sourceSha256": "12bf2e464080393f253d70ab23acdc126c963a68e0c45d4a7f2b8941552aa404",
+      "status": 200,
+      "localSha256": "12bf2e464080393f253d70ab23acdc126c963a68e0c45d4a7f2b8941552aa404",
+      "identical": true
+    },
+    {
+      "bytes": 10763,
+      "chars": 10763,
+      "encoding": "utf8",
+      "path": "src/components/ui/chart.tsx",
+      "sourceSha256": "b40d1236f168c746b228adec6bc4e9d196ea362a7910878f161d3c359a013b89",
+      "status": 200,
+      "localSha256": "b40d1236f168c746b228adec6bc4e9d196ea362a7910878f161d3c359a013b89",
+      "identical": true
+    },
+    {
+      "bytes": 1075,
+      "chars": 1075,
+      "encoding": "utf8",
+      "path": "src/components/ui/checkbox.tsx",
+      "sourceSha256": "5d63ceb67188dfa3bb5837f062c74014f1b18d455ab60786f0e979062dcd2b1e",
+      "status": 200,
+      "localSha256": "5d63ceb67188dfa3bb5837f062c74014f1b18d455ab60786f0e979062dcd2b1e",
+      "identical": true
+    },
+    {
+      "bytes": 329,
+      "chars": 329,
+      "encoding": "utf8",
+      "path": "src/components/ui/collapsible.tsx",
+      "sourceSha256": "f4cdd104de29928bfcd40b865c7d08eed9157a537fbb8b5e6d0921f02b63cc04",
+      "status": 200,
+      "localSha256": "f4cdd104de29928bfcd40b865c7d08eed9157a537fbb8b5e6d0921f02b63cc04",
+      "identical": true
+    },
+    {
+      "bytes": 7428,
+      "chars": 7428,
+      "encoding": "utf8",
+      "path": "src/components/ui/context-menu.tsx",
+      "sourceSha256": "b3abf3bb92fc028dd9a4c5dc6a10093b7f1346be8841fabb214fa08e5f40b181",
+      "status": 200,
+      "localSha256": "b3abf3bb92fc028dd9a4c5dc6a10093b7f1346be8841fabb214fa08e5f40b181",
+      "identical": true
+    },
+    {
+      "bytes": 4899,
+      "chars": 4899,
+      "encoding": "utf8",
+      "path": "src/components/ui/command.tsx",
+      "sourceSha256": "a19d8fdb1d4a6c02c071e1f35afab99b2e759c5cd04ded8c2bfd6ad84dfb8962",
+      "status": 200,
+      "localSha256": "a19d8fdb1d4a6c02c071e1f35afab99b2e759c5cd04ded8c2bfd6ad84dfb8962",
+      "identical": true
+    },
+    {
+      "bytes": 7623,
+      "chars": 7623,
+      "encoding": "utf8",
+      "path": "src/components/ui/dropdown-menu.tsx",
+      "sourceSha256": "d735ab9c4f2d438ef0ebb20954fd22a04d86d40c83ca61aa4f706a5628b7d592",
+      "status": 200,
+      "localSha256": "d735ab9c4f2d438ef0ebb20954fd22a04d86d40c83ca61aa4f706a5628b7d592",
+      "identical": true
+    },
+    {
+      "bytes": 3021,
+      "chars": 3021,
+      "encoding": "utf8",
+      "path": "src/components/ui/drawer.tsx",
+      "sourceSha256": "774316527ddc577fc54012a0c898ebcf7cf8f11152126e550828b53004a5b70c",
+      "status": 200,
+      "localSha256": "774316527ddc577fc54012a0c898ebcf7cf8f11152126e550828b53004a5b70c",
+      "identical": true
+    },
+    {
+      "bytes": 4163,
+      "chars": 4163,
+      "encoding": "utf8",
+      "path": "src/components/ui/form.tsx",
+      "sourceSha256": "9c345c2690b80cd43a81c568d7c7f0e1c102304a10f80f32d5294a6927f903b7",
+      "status": 200,
+      "localSha256": "9c345c2690b80cd43a81c568d7c7f0e1c102304a10f80f32d5294a6927f903b7",
+      "identical": true
+    },
+    {
+      "bytes": 3834,
+      "chars": 3834,
+      "encoding": "utf8",
+      "path": "src/components/ui/dialog.tsx",
+      "sourceSha256": "371e11684c43406bb6a5e22c09aebb98728c43ad021ce5318530c29a0a05ccf7",
+      "status": 200,
+      "localSha256": "371e11684c43406bb6a5e22c09aebb98728c43ad021ce5318530c29a0a05ccf7",
+      "identical": true
+    },
+    {
+      "bytes": 1237,
+      "chars": 1237,
+      "encoding": "utf8",
+      "path": "src/components/ui/hover-card.tsx",
+      "sourceSha256": "00f9086b1412843e04e01d31d2fab00a25d65d789d1a382e41f01b1f3c167c3b",
+      "status": 200,
+      "localSha256": "00f9086b1412843e04e01d31d2fab00a25d65d789d1a382e41f01b1f3c167c3b",
+      "identical": true
+    },
+    {
+      "bytes": 791,
+      "chars": 791,
+      "encoding": "utf8",
+      "path": "src/components/ui/input.tsx",
+      "sourceSha256": "b326e2af874b14aa2ac18096ddbec512c6258f3fafc20ba6c8262818d48e6a5b",
+      "status": 200,
+      "localSha256": "b326e2af874b14aa2ac18096ddbec512c6258f3fafc20ba6c8262818d48e6a5b",
+      "identical": true
+    },
+    {
+      "bytes": 8605,
+      "chars": 8605,
+      "encoding": "utf8",
+      "path": "src/components/ui/menubar.tsx",
+      "sourceSha256": "da0c7ace239ead75f7fbc46ffbae8ddf177477445354500d7304a276065ea7b3",
+      "status": 200,
+      "localSha256": "da0c7ace239ead75f7fbc46ffbae8ddf177477445354500d7304a276065ea7b3",
+      "identical": true
+    },
+    {
+      "bytes": 724,
+      "chars": 724,
+      "encoding": "utf8",
+      "path": "src/components/ui/label.tsx",
+      "sourceSha256": "2eac8fbb04002c42b0fbc4062d20d131e421796eaf65c37d2049e29e42ecbc5a",
+      "status": 200,
+      "localSha256": "2eac8fbb04002c42b0fbc4062d20d131e421796eaf65c37d2049e29e42ecbc5a",
+      "identical": true
+    },
+    {
+      "bytes": 5128,
+      "chars": 5128,
+      "encoding": "utf8",
+      "path": "src/components/ui/navigation-menu.tsx",
+      "sourceSha256": "74f3b1b937e42582093a1671cf7f5c7250cd884922d51f201632317af9c24209",
+      "status": 200,
+      "localSha256": "74f3b1b937e42582093a1671cf7f5c7250cd884922d51f201632317af9c24209",
+      "identical": true
+    },
+    {
+      "bytes": 2857,
+      "chars": 2857,
+      "encoding": "utf8",
+      "path": "src/components/ui/pagination.tsx",
+      "sourceSha256": "3cf842058c34ed47f86462f3b5254f1e968f3249c16aadeb392836ed172853a9",
+      "status": 200,
+      "localSha256": "3cf842058c34ed47f86462f3b5254f1e968f3249c16aadeb392836ed172853a9",
+      "identical": true
+    },
+    {
+      "bytes": 1280,
+      "chars": 1280,
+      "encoding": "utf8",
+      "path": "src/components/ui/popover.tsx",
+      "sourceSha256": "d853c561833e545879a56e2c4de18a92653de1e55e9e7fae463540679924ac0c",
+      "status": 200,
+      "localSha256": "d853c561833e545879a56e2c4de18a92653de1e55e9e7fae463540679924ac0c",
+      "identical": true
+    },
+    {
+      "bytes": 1689,
+      "chars": 1689,
+      "encoding": "utf8",
+      "path": "src/components/ui/resizable.tsx",
+      "sourceSha256": "baf45edbbf7ebc0cfdc1f08dd054a004260d5677086ed7f03c054a0767285f6b",
+      "status": 200,
+      "localSha256": "baf45edbbf7ebc0cfdc1f08dd054a004260d5677086ed7f03c054a0767285f6b",
+      "identical": true
+    },
+    {
+      "bytes": 791,
+      "chars": 791,
+      "encoding": "utf8",
+      "path": "src/components/ui/progress.tsx",
+      "sourceSha256": "8c036da4baed076de68d27719929dc98151a81b51456bfa6a2488d835303b1d7",
+      "status": 200,
+      "localSha256": "8c036da4baed076de68d27719929dc98151a81b51456bfa6a2488d835303b1d7",
+      "identical": true
+    },
+    {
+      "bytes": 1467,
+      "chars": 1467,
+      "encoding": "utf8",
+      "path": "src/components/ui/radio-group.tsx",
+      "sourceSha256": "74f87531da1fde8d3c07dbd7b380ee6508a70d5c0af1c22e2d2c33d66cc79f10",
+      "status": 200,
+      "localSha256": "74f87531da1fde8d3c07dbd7b380ee6508a70d5c0af1c22e2d2c33d66cc79f10",
+      "identical": true
+    },
+    {
+      "bytes": 1642,
+      "chars": 1642,
+      "encoding": "utf8",
+      "path": "src/components/ui/scroll-area.tsx",
+      "sourceSha256": "d7d02600effca55d0dcadce8c09c97ebddda3a19c5fa1d52dc9f6f727b26c6b1",
+      "status": 200,
+      "localSha256": "d7d02600effca55d0dcadce8c09c97ebddda3a19c5fa1d52dc9f6f727b26c6b1",
+      "identical": true
+    },
+    {
+      "bytes": 4281,
+      "chars": 4281,
+      "encoding": "utf8",
+      "path": "src/components/ui/sheet.tsx",
+      "sourceSha256": "9051eb9d885a18c0521c63c945480effcfca29282d2a342cb3ce7f9d080c6d38",
+      "status": 200,
+      "localSha256": "9051eb9d885a18c0521c63c945480effcfca29282d2a342cb3ce7f9d080c6d38",
+      "identical": true
+    },
+    {
+      "bytes": 5728,
+      "chars": 5728,
+      "encoding": "utf8",
+      "path": "src/components/ui/select.tsx",
+      "sourceSha256": "7c610e94ac135c52b8b76e7d780630fec63359dd34e73f67319d8c6ad273e93f",
+      "status": 200,
+      "localSha256": "7c610e94ac135c52b8b76e7d780630fec63359dd34e73f67319d8c6ad273e93f",
+      "identical": true
+    },
+    {
+      "bytes": 756,
+      "chars": 756,
+      "encoding": "utf8",
+      "path": "src/components/ui/separator.tsx",
+      "sourceSha256": "c956c4cca4b8442fa9314d6079b9f975e1ee39d5804aaf2966990f6258ac342a",
+      "status": 200,
+      "localSha256": "c956c4cca4b8442fa9314d6079b9f975e1ee39d5804aaf2966990f6258ac342a",
+      "identical": true
+    },
+    {
+      "bytes": 23621,
+      "chars": 23621,
+      "encoding": "utf8",
+      "path": "src/components/ui/sidebar.tsx",
+      "sourceSha256": "1639064b6211c19e48cc1e1f26b937f6e22b928e1ea3f9f898edee156921b0a7",
+      "status": 200,
+      "localSha256": "1639064b6211c19e48cc1e1f26b937f6e22b928e1ea3f9f898edee156921b0a7",
+      "identical": true
+    },
+    {
+      "bytes": 1077,
+      "chars": 1077,
+      "encoding": "utf8",
+      "path": "src/components/ui/slider.tsx",
+      "sourceSha256": "61e959d046f72e295d73a822b9afc7cc87ec6d1007905f2572e6117d7b2067b6",
+      "status": 200,
+      "localSha256": "61e959d046f72e295d73a822b9afc7cc87ec6d1007905f2572e6117d7b2067b6",
+      "identical": true
+    },
+    {
+      "bytes": 261,
+      "chars": 261,
+      "encoding": "utf8",
+      "path": "src/components/ui/skeleton.tsx",
+      "sourceSha256": "a72a9d8fc1c1999b5411a33391c5e70048863c5865629077280e943ca85689a8",
+      "status": 200,
+      "localSha256": "a72a9d8fc1c1999b5411a33391c5e70048863c5865629077280e943ca85689a8",
+      "identical": true
+    },
+    {
+      "bytes": 1139,
+      "chars": 1139,
+      "encoding": "utf8",
+      "path": "src/components/ui/switch.tsx",
+      "sourceSha256": "bd29ce723e952bc7f8fab367320347ca82fbb933f4da9872c7120d6765662ebe",
+      "status": 200,
+      "localSha256": "bd29ce723e952bc7f8fab367320347ca82fbb933f4da9872c7120d6765662ebe",
+      "identical": true
+    },
+    {
+      "bytes": 1288,
+      "chars": 1288,
+      "encoding": "utf8",
+      "path": "src/components/ui/sonner.tsx",
+      "sourceSha256": "60e74348b947c593a963dc2b908cc3412bdff4f46b584018d9cd8ec17d753879",
+      "status": 200,
+      "localSha256": "60e74348b947c593a963dc2b908cc3412bdff4f46b584018d9cd8ec17d753879",
+      "identical": true
+    },
+    {
+      "bytes": 1883,
+      "chars": 1883,
+      "encoding": "utf8",
+      "path": "src/components/ui/tabs.tsx",
+      "sourceSha256": "d9958fd005db42bcca4f2c12ede63500e74f1a9bd82ddc3a6bf6fcb369706f07",
+      "status": 200,
+      "localSha256": "d9958fd005db42bcca4f2c12ede63500e74f1a9bd82ddc3a6bf6fcb369706f07",
+      "identical": true
+    },
+    {
+      "bytes": 2765,
+      "chars": 2765,
+      "encoding": "utf8",
+      "path": "src/components/ui/table.tsx",
+      "sourceSha256": "1da243956282c040db49d5718d2f0093a705fbbdfa3a25f51c1a31a069c45093",
+      "status": 200,
+      "localSha256": "1da243956282c040db49d5718d2f0093a705fbbdfa3a25f51c1a31a069c45093",
+      "identical": true
+    },
+    {
+      "bytes": 1739,
+      "chars": 1739,
+      "encoding": "utf8",
+      "path": "src/components/ui/toggle-group.tsx",
+      "sourceSha256": "11592e3f7673ef518e2f82b939dc4752fe5ef7953f487f35595931c3d16fc37d",
+      "status": 200,
+      "localSha256": "11592e3f7673ef518e2f82b939dc4752fe5ef7953f487f35595931c3d16fc37d",
+      "identical": true
+    },
+    {
+      "bytes": 689,
+      "chars": 689,
+      "encoding": "utf8",
+      "path": "src/components/ui/textarea.tsx",
+      "sourceSha256": "aaf46918c590c2bf59e2afb7904dfd8e69317e12ee34ff93ed2746dd06cc994a",
+      "status": 200,
+      "localSha256": "aaf46918c590c2bf59e2afb7904dfd8e69317e12ee34ff93ed2746dd06cc994a",
+      "identical": true
+    },
+    {
+      "bytes": 1195,
+      "chars": 1195,
+      "encoding": "utf8",
+      "path": "src/components/ui/tooltip.tsx",
+      "sourceSha256": "6c4d295445f268fea5ea6cc8bab67452cca4e22fa344e7e20368262b7a2e842c",
+      "status": 200,
+      "localSha256": "6c4d295445f268fea5ea6cc8bab67452cca4e22fa344e7e20368262b7a2e842c",
+      "identical": true
+    },
+    {
+      "bytes": 1527,
+      "chars": 1527,
+      "encoding": "utf8",
+      "path": "src/components/ui/toggle.tsx",
+      "sourceSha256": "c9a401b2e134f28d870f3f44330b9d91d66bd2ac7ced3ad67039a2bb3d52e8f0",
+      "status": 200,
+      "localSha256": "c9a401b2e134f28d870f3f44330b9d91d66bd2ac7ced3ad67039a2bb3d52e8f0",
+      "identical": true
+    },
+    {
+      "bytes": 4530,
+      "chars": 3720,
+      "encoding": "utf8",
+      "path": "src/data/index.ts",
+      "sourceSha256": "5a883e22cc3f05ace8668e8b5e4d6ba05e52fd41e69d1e2f5d1bc896a3739191",
+      "status": 200,
+      "localSha256": "5a883e22cc3f05ace8668e8b5e4d6ba05e52fd41e69d1e2f5d1bc896a3739191",
+      "identical": true
+    },
+    {
+      "bytes": 2527,
+      "chars": 2257,
+      "encoding": "utf8",
+      "path": "src/data/exhibMaster.ts",
+      "sourceSha256": "0b211d5acb35412d2cbbbe065ebf3e169245c30d9d5b24ad67dd7c1ed7cc387d",
+      "status": 200,
+      "localSha256": "0b211d5acb35412d2cbbbe065ebf3e169245c30d9d5b24ad67dd7c1ed7cc387d",
+      "identical": true
+    },
+    {
+      "bytes": 8012,
+      "chars": 6468,
+      "encoding": "utf8",
+      "path": "src/data/programs.ts",
+      "sourceSha256": "0ad51af1279a1401664a3925e2ac9fd418ed665aa92c767d36e3c1eaf356c08a",
+      "status": 200,
+      "localSha256": "7cfd3c77e8263e212beb11cbbe79263557380bdc3885399098f9d2576b4c8886",
+      "identical": false,
+      "previousLocalSha256": "a2bb5ebce0d502fe7d9d794e0e357f785a97bd4b35e0e231099c0a9e94a0e374"
+    },
+    {
+      "bytes": 2015,
+      "chars": 1774,
+      "encoding": "utf8",
+      "path": "src/data/opsMaster.ts",
+      "sourceSha256": "d584a5c6f4f1d4082e98ed9400c5e43b99f1d82343631a2fa5ec94f0d89e81bf",
+      "status": 200,
+      "localSha256": "d584a5c6f4f1d4082e98ed9400c5e43b99f1d82343631a2fa5ec94f0d89e81bf",
+      "identical": true
+    },
+    {
+      "bytes": 2908,
+      "chars": 2368,
+      "encoding": "utf8",
+      "path": "src/data/special.ts",
+      "sourceSha256": "64bd8e045fa8081b6cbcebba5bc3d421b65b3bd8b093264ea9408645b8d56388",
+      "status": 200,
+      "localSha256": "3e697fdb53537ceae7bcd3b20011200669d4ef8a756ece201494666b8a3b6886",
+      "identical": false
+    },
+    {
+      "bytes": 565,
+      "chars": 565,
+      "encoding": "utf8",
+      "path": "src/hooks/use-mobile.tsx",
+      "sourceSha256": "ad0936f84f1df79d3697bfbff9c18f8ad58431c1cbaf2359c6a853b0fcc9f28b",
+      "status": 200,
+      "localSha256": "ad0936f84f1df79d3697bfbff9c18f8ad58431c1cbaf2359c6a853b0fcc9f28b",
+      "identical": true
+    },
+    {
+      "bytes": 10809,
+      "chars": 9459,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/direct-llm-error.ts",
+      "sourceSha256": "531576408e54dd717652905c7f0e2c874fdc03a159d566f06acb562d27fc29fc",
+      "status": 200,
+      "localSha256": "531576408e54dd717652905c7f0e2c874fdc03a159d566f06acb562d27fc29fc",
+      "identical": true
+    },
+    {
+      "bytes": 2931,
+      "chars": 2931,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/miso-auth.ts",
+      "sourceSha256": "0267d7be4f30e5b083e779c3e15de636045e542d7174c6ae34ad21a8a0478ce2",
+      "status": 200,
+      "localSha256": "0267d7be4f30e5b083e779c3e15de636045e542d7174c6ae34ad21a8a0478ce2",
+      "identical": true
+    },
+    {
+      "bytes": 7301,
+      "chars": 7083,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/miso-client.ts",
+      "sourceSha256": "6e3befb511c8d9ff4054009d6beb73b8bf93b7bfa0cee27b91c33149813ad8ed",
+      "status": 200,
+      "localSha256": "6e3befb511c8d9ff4054009d6beb73b8bf93b7bfa0cee27b91c33149813ad8ed",
+      "identical": true
+    },
+    {
+      "bytes": 12673,
+      "chars": 12673,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/miso-connectors.ts",
+      "sourceSha256": "67fd573eb525ae0a9af49cdcce35935c6d5fe0ee0288b4e63779a834826a77bc",
+      "status": 200,
+      "localSha256": "67fd573eb525ae0a9af49cdcce35935c6d5fe0ee0288b4e63779a834826a77bc",
+      "identical": true
+    },
+    {
+      "bytes": 13985,
+      "chars": 13985,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/miso-llm-tool-loop.ts",
+      "sourceSha256": "7ef228eaf0ff11ddf2be1af6b38b69383125491dd64227fee6f574a85947673d",
+      "status": 200,
+      "localSha256": "7ef228eaf0ff11ddf2be1af6b38b69383125491dd64227fee6f574a85947673d",
+      "identical": true
+    },
+    {
+      "bytes": 19820,
+      "chars": 19609,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/miso-llm.ts",
+      "sourceSha256": "2257d61a6737cf887a00fd6ad55ad3dc0274e86cce9bf978983b85e380c62e9d",
+      "status": 200,
+      "localSha256": "2257d61a6737cf887a00fd6ad55ad3dc0274e86cce9bf978983b85e380c62e9d",
+      "identical": true
+    },
+    {
+      "bytes": 36275,
+      "chars": 34853,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/miso-ai-sdk-transport.ts",
+      "sourceSha256": "fe9f76d370940e8bb73c87e609450f38819fab7c11429108c49fe5aeb76f91be",
+      "status": 200,
+      "localSha256": "fe9f76d370940e8bb73c87e609450f38819fab7c11429108c49fe5aeb76f91be",
+      "identical": true
+    },
+    {
+      "bytes": 20666,
+      "chars": 19775,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/miso-proxy-plugin.ts",
+      "sourceSha256": "bbdc3ad39e57aee477a7d13ea590b90f83cca949d75e219a40bf0825eb4b7878",
+      "status": 200,
+      "localSha256": "bbdc3ad39e57aee477a7d13ea590b90f83cca949d75e219a40bf0825eb4b7878",
+      "identical": true
+    },
+    {
+      "bytes": 35115,
+      "chars": 33795,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/miso-hooks.ts",
+      "sourceSha256": "95e018bd3e48dba371ba5a409d4977ad04edfffe2499471d2811bc82d2272205",
+      "status": 200,
+      "localSha256": "95e018bd3e48dba371ba5a409d4977ad04edfffe2499471d2811bc82d2272205",
+      "identical": true
+    },
+    {
+      "bytes": 3178,
+      "chars": 3086,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/site-client.ts",
+      "sourceSha256": "1a6398011bdb3a3b7faefcb09b466aaff0371862dc0d89f15f009b174b16a6d6",
+      "status": 200,
+      "localSha256": "1a6398011bdb3a3b7faefcb09b466aaff0371862dc0d89f15f009b174b16a6d6",
+      "identical": true
+    },
+    {
+      "bytes": 1230,
+      "chars": 1220,
+      "encoding": "utf8",
+      "path": "src/lib/miso-sdk/runtime-client.ts",
+      "sourceSha256": "bd79098d5d81e4bfafadea17c45be6108e66e369365e6427aff0a3bf39437aaa",
+      "status": 200,
+      "localSha256": "bd79098d5d81e4bfafadea17c45be6108e66e369365e6427aff0a3bf39437aaa",
+      "identical": true
+    },
+    {
+      "bytes": 5107,
+      "chars": 4737,
+      "encoding": "utf8",
+      "path": "src/lib/csv.ts",
+      "sourceSha256": "9741f6807000d0c485e1248124f55afc27dbd371af4e8b2c4006c053fd4a5b9b",
+      "status": 200,
+      "localSha256": "9741f6807000d0c485e1248124f55afc27dbd371af4e8b2c4006c053fd4a5b9b",
+      "identical": true
+    },
+    {
+      "bytes": 4746,
+      "chars": 4700,
+      "encoding": "utf8",
+      "path": "src/lib/date.ts",
+      "sourceSha256": "f168b72e8779486da1a9df000ea81b80c7d5f72f6ef79e9b3e26e930f64b9c7e",
+      "status": 200,
+      "localSha256": "f168b72e8779486da1a9df000ea81b80c7d5f72f6ef79e9b3e26e930f64b9c7e",
+      "identical": true
+    },
+    {
+      "bytes": 1110,
+      "chars": 999,
+      "encoding": "utf8",
+      "path": "src/lib/status.ts",
+      "sourceSha256": "fe1d8970709b089424044cfb56fa0c9fb45b03c14d681ab3124feebd0791a7d8",
+      "status": 200,
+      "localSha256": "fe1d8970709b089424044cfb56fa0c9fb45b03c14d681ab3124feebd0791a7d8",
+      "identical": true
+    },
+    {
+      "bytes": 169,
+      "chars": 169,
+      "encoding": "utf8",
+      "path": "src/lib/utils.ts",
+      "sourceSha256": "d1f1e0d62cb8d8d1e04c26e14de842d8a151f75812d81b046c65b5d1fe8e4b27",
+      "status": 200,
+      "localSha256": "d1f1e0d62cb8d8d1e04c26e14de842d8a151f75812d81b046c65b5d1fe8e4b27",
+      "identical": true
+    },
+    {
+      "bytes": 143327,
+      "chars": 126940,
+      "encoding": "utf8",
+      "path": "src/styles/yeulmaru.css",
+      "sourceSha256": "a26f908bde837ca047095f777e0dd4f2b734f2634a3428bd7bc3ec764aaa0880",
+      "status": 200,
+      "localSha256": "aa8bfd44bf864816ab3e55c88308d97d58284f67b3d85bfc9941faac2aebbd8a",
+      "identical": false
+    },
+    {
+      "bytes": 2215,
+      "chars": 2157,
+      "encoding": "utf8",
+      "path": "src/types/domain.ts",
+      "sourceSha256": "a339b3992ebb45700e8ce92283296e8ed3b11a637eddfaefbbd1c417614a9af4",
+      "status": 200,
+      "localSha256": "a339b3992ebb45700e8ce92283296e8ed3b11a637eddfaefbbd1c417614a9af4",
+      "identical": true
+    },
+    {
+      "bytes": 870,
+      "chars": 854,
+      "encoding": "utf8",
+      "path": "src/types/pb-types.ts",
+      "sourceSha256": "dc474b64bcc8ba6ccee72467b475a8fcff08b2fc0888fad68f0f83ac9a2fc22a",
+      "status": 200,
+      "localSha256": "dc474b64bcc8ba6ccee72467b475a8fcff08b2fc0888fad68f0f83ac9a2fc22a",
+      "identical": true
+    },
+    {
+      "bytes": 3617,
+      "chars": 3225,
+      "encoding": "utf8",
+      "path": "src/App.tsx",
+      "sourceSha256": "92f8a7cab0a5ea6443461d3c3af2a992f1bb09990458e6ff54ed7bfd9026d6fe",
+      "status": 200,
+      "localSha256": "f86561f20039cf8aff331f48696da9a6e01375f0b11597b000b4cbaecd426f48",
+      "identical": false
+    },
+    {
+      "bytes": 33830,
+      "chars": 31163,
+      "encoding": "utf8",
+      "path": "src/index.css",
+      "sourceSha256": "9745a692899bcb96d8402a94762b4d9f1bbe26d98fde5a1d3ff9f9f3b8361b7a",
+      "status": 200,
+      "localSha256": "9745a692899bcb96d8402a94762b4d9f1bbe26d98fde5a1d3ff9f9f3b8361b7a",
+      "identical": true
+    }
+  ],
+  "finalLocalCheckedAt": "2026-09-11T01:40:20.375Z",
+  "note": "Source hashes are the previous MISO capture, not a fresh source read. Local hashes below were refreshed after reviewed repairs."
+}

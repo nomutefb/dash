@@ -1,0 +1,1059 @@
+function _ypIsAdmin(){ return (typeof userRole!=='undefined'&&userRole==='admin'); }
+
+async function openBizAdmin(){
+  _ypMount(_ypShell('기획 사업 등록','연도별 기획 사업(공연·전시·교육)을 등록하고, 붙은 프로그램의 정산 합계를 봐요','yp-biz-body'));
+  try{ await _ypMeta(); await _ypLoadBiz(); _ypBizRender(); }catch(e){ _ypFail('yp-biz-body',e); }
+}
+
+function _ypBizRender(){
+  if(!document.getElementById('yp-biz-body'))return;
+  var rows=_yp.biz.filter(function(b){return _yp.field==='전체'||b.분야===_yp.field;}), cnt={'전체':_yp.biz.length};
+  _YP_FIELDS.forEach(function(f){cnt[f]=_yp.biz.filter(function(b){return b.분야===f;}).length;});
+  var h='<div style="display:flex;align-items:center;margin-bottom:10px;gap:8px;padding-bottom:14px;padding-right:48px;border-bottom:1px solid #eee"><h3 style="margin:0;flex:1;text-align:left">기획 사업 등록</h3>'+_ypYearSel('_ypBizSetYear(this.value)')+(_yp.env==='dev'?'<button class="adm-btn" onclick="_ymCheckDB()">DB 일치 검사</button>':'')+'<button onclick="openBizForm(null)" style="padding:7px 16px;background:var(--accent);color:#fff;border:0;border-radius:10px;cursor:pointer;font-weight:600;font-size:13px">등록</button></div>';
+  h+='<div class="fbar-seg" style="margin-bottom:12px"><span class="fbar-lbl">분야</span>'+['전체'].concat(_YP_FIELDS).map(function(f){return '<button class="'+(_yp.field===f?'on':'')+'" onclick="_ypBizSetField(\''+f+'\')">'+f+' <span style="opacity:.7;font-weight:600">'+cnt[f]+'</span></button>';}).join('')+'<span style="font-size:11px;color:var(--dim);margin-left:8px">실지출·수입·관객 = 사업비 원장 값(사업현황과 같음) · 프로그램을 정산하면 정산 합으로 바뀜</span></div>';
+  h+='<table class="adm-tbl"><thead><tr><th>사업코드</th><th>분야</th><th>사업명</th><th>회계</th><th>형태</th><th>수입</th><th>특이사항</th><th>담당</th><th style="text-align:right">계획 사업비</th><th style="text-align:right">실지출(전표)</th><th style="text-align:right">수입</th><th style="text-align:right">유료/무료</th><th>프로그램</th><th></th></tr></thead><tbody>';
+  if(!rows.length)h+='<tr><td colspan="14" style="text-align:center;color:var(--muted);padding:24px">'+_ypYear()+'년에 등록된 사업이 없어요</td></tr>';
+  rows.forEach(function(b){ var p=b.프로그램||[], c=escapeHtml(b.사업코드);
+    h+='<tr><td style="font-weight:600;white-space:nowrap">'+c+'</td><td style="white-space:nowrap">'+escapeHtml(b.분야||'')+'</td><td style="font-weight:600">'+escapeHtml(b.사업명||'')+'</td><td style="white-space:nowrap">'+escapeHtml(b.회계구분||'-')+'</td><td style="white-space:nowrap">'+escapeHtml(b.사업형태||'')+'</td><td>'+escapeHtml(b.공연수입||'')+'</td><td style="font-size:11px">'+escapeHtml(b.특이사항||'')+'</td><td style="font-size:11px;white-space:nowrap">'+escapeHtml(((b.담당부서||'')+' '+(b.담당자||'')).trim())+'</td>';
+    h+='<td style="text-align:right;white-space:nowrap">'+_ypFmt(b.예산)+'</td><td style="text-align:right;white-space:nowrap">'+_ypFmt(b.실지출)+'</td><td style="text-align:right;white-space:nowrap">'+_ypFmt(b.수입)+'</td><td style="text-align:right;white-space:nowrap;font-size:11px">'+_ypN(b.유료관객).toLocaleString('ko-KR')+' / '+_ypN(b.무료관객).toLocaleString('ko-KR')+'</td>';
+    h+='<td style="font-size:11px;white-space:nowrap" title="'+escapeHtml(p.map(function(x){return x.프로그램ID+' '+x.정본명+' ('+x.상태+(x.정산?'·정산':'')+')';}).join('\n'))+'">'+p.length+'개 · 정산 '+(b.정산수||0)+'</td>';
+    h+='<td style="text-align:right;white-space:nowrap"><button class="adm-btn" onclick="openBizForm(\''+c+'\')">변경</button><button class="adm-btn" onclick="_ypHistory(\''+c+'\')">이력</button>'+(_ypIsAdmin()?'<button class="adm-btn adm-btn-del" onclick="_ypBizDelete(\''+c+'\')">삭제</button>':'')+'</td></tr>'; });
+  h+='</tbody></table>';
+  _ypBody('yp-biz-body',h);
+}
+
+function openBizForm(code){
+  var b=code?_yp.biz.filter(function(x){return x.사업코드===code;})[0]:null; if(code&&!b){showToast('사업을 찾을 수 없어요: '+code,'error');return;}
+  _yp.editBiz=b?b.사업코드:'';
+  var m=_yp.meta||{}, admin=_ypIsAdmin(), now=new Date().getFullYear();
+  var v=b||{연도:String(_ypYear()),분야:(_YP_FIELDS.indexOf(_yp.field)>=0?_yp.field:'기획 공연'),사업명:'',회계구분:'',예산:'',사업형태:'미정',공연수입:'유료',공동기획_기관:'',공모사업_기관:'',협력사업_기관:'',담당부서:'',담당자:'',회계담당부서:'',회계담당자:'',비고:''};
+  var ys=[]; for(var i=now+1;i>=2012;i--)ys.push(String(i)); if(ys.indexOf(String(v.연도))<0)ys.push(String(v.연도));
+  var h='<div class="modal-bg show" style="z-index:9600" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeBizForm)"><div class="modal" style="width:96vw;max-width:540px;max-height:88vh;overflow:auto;--mpad-y:24px;--mpad-x:24px;position:relative"><button class="modal-x" onclick="closeBizForm()" title="닫기" aria-label="닫기">✕</button>'+_mhead(b?'기획 사업 변경':'기획 사업 등록',b?b.사업코드:'사업코드는 저장할 때 연도·분야 안에서 입력한 순서대로 자동 부여돼요');
+  h+='<form id="yp-biz-form" onsubmit="event.preventDefault();_ypBizSave()" style="display:flex;flex-direction:column;gap:14px">';
+  h+='<div style="display:flex;gap:10px"><div style="flex:0 0 100px"><label>연도<span class="req">*</span></label><select name="연도"'+(b?' disabled':'')+'>'+_ypOpt(ys,String(v.연도))+'</select></div><div style="flex:1"><label>분야<span class="req">*</span></label><select name="분야"'+(b?' disabled':'')+'>'+_ypOpt(_YP_FIELDS,v.분야)+'</select></div><div style="flex:0 0 96px"><label>사업코드</label><input type="text" value="'+escapeHtml(b?b.사업코드:'자동')+'" readonly style="'+_YP_RO+'"></div></div>';
+  h+='<div><label>사업명<span class="req">*</span></label><input name="사업명" type="text" value="'+escapeHtml(v.사업명)+'" required placeholder="예: 클래식 1 · 어린이 미술展 · 상반기 예술교육아카데미"></div>';
+  h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>회계구분<span class="req">*</span></label><select name="회계구분" required>'+_ypOpt(['공공성','사업성'],v.회계구분||'','선택')+'</select></div><div style="flex:1"><label>계획 사업비(예산)</label><input name="예산" type="number" min="0" step="1" value="'+escapeHtml(String(v.예산||''))+'" placeholder="원"></div></div>';
+  h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>사업형태 <span style="font-size:10px;color:var(--dim);font-weight:400">(안 고르면 미정)</span></label><select name="사업형태">'+_ypOpt([['미정','미정'],['단일','단일 프로그램'],['다수','다수 프로그램(시리즈)']],v.사업형태||'미정')+'</select></div><div style="flex:1"><label>공연 수입 <span style="font-size:10px;color:var(--dim);font-weight:400">(프로그램이 따라와요)</span></label><select name="공연수입">'+_ypOpt(['유료','무료'],v.공연수입||'유료')+'</select></div></div>';
+  var spec=v.공동기획_기관?'공동기획':(v.공모사업_기관?'공모사업':(v.협력사업_기관?'협력사업':'')), specOrg=spec?(v[spec+'_기관']||''):'';
+  h+='<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><label style="margin:0;flex:0 0 auto">특수 사업 <span style="font-size:10px;color:var(--dim);font-weight:400">(하나만 · 없어도 됨)</span></label>'+[['공동기획','공동 기획'],['공모사업','공모 사업'],['협력사업','협력 사업']].map(function(s){ return '<label style="display:inline-flex;align-items:center;gap:5px;margin:0;cursor:pointer;font-size:12px;flex:0 0 auto"><input type="checkbox" name="'+s[0]+'"'+(spec===s[0]?' checked':'')+' onchange="_ypSpecToggle(this)" style="width:16px;height:16px;accent-color:var(--accent);margin:0">'+s[1]+'</label>'; }).join('')+'<input id="yp-biz-spec-org" name="특수기관" type="text" value="'+escapeHtml(specOrg)+'" placeholder="어디와 함께? (예: 여수MBC)"'+(spec?' required':'')+' style="flex:1;min-width:150px;margin:0;'+(spec?'':'display:none')+'"></div>';
+  h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>사업 담당 부서</label><select name="담당부서" onchange="_ypMgrFilter(this.value,\'yp-biz-mgr\')">'+_ypOpt(m.부서||[],v.담당부서||'','선택')+'</select></div><div style="flex:1"><label>사업 담당자 <span style="font-size:10px;color:var(--dim);font-weight:400">(부서 먼저)</span></label><select name="담당자" id="yp-biz-mgr"'+(v.담당부서?'':' disabled style="'+_YP_RO+'"')+'>'+_ypMgrOpts(v.담당부서||'',v.담당자||'')+'</select></div></div>';
+  var acct=((m.회계담당||[])[0])||null; if(!b&&acct&&!v.회계담당부서){ v.회계담당부서=acct.담당부서; v.회계담당자=acct.담당자; }
+  h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>회계 담당 부서 <span style="font-size:10px;color:var(--dim);font-weight:400">(사용자 관리 「회계」 체크가 기본 · 관리자만 변경)</span></label><select name="회계담당부서"'+(admin?'':' disabled')+' onchange="_ypMgrFilter(this.value,\'yp-biz-acct\')">'+_ypOpt(m.부서||[],v.회계담당부서||'','선택')+'</select></div><div style="flex:1"><label>회계 담당자</label><select name="회계담당자" id="yp-biz-acct"'+((admin&&v.회계담당부서)?'':' disabled style="'+_YP_RO+'"')+'>'+_ypMgrOpts(v.회계담당부서||'',v.회계담당자||'')+'</select></div></div>';
+  h+='<div><label>비고</label><input name="비고" type="text" value="'+escapeHtml(v.비고||'')+'"></div>';
+  if(b){ h+=_ypBizSumBox(b); }
+  h+='<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;padding-top:14px;border-top:1px solid #eee"><button type="button" onclick="closeBizForm()" style="'+_YP_BTN_CANCEL+'">취소</button><button type="submit" style="'+_YP_BTN_OK+'">저장</button></div></form></div></div>';
+  _ypModal('yp-biz-form-modal',h);
+}
+
+async function _ypBizSave(){
+  var f=document.getElementById('yp-biz-form'); if(!f)return;
+  var body={}; (new FormData(f)).forEach(function(v,k){ body[k]=v; });
+  var specOrg=nzs(body.특수기관); delete body.특수기관; ['공동기획','공모사업','협력사업'].forEach(function(k){ var cb=f.querySelector('input[name="'+k+'"]'); body[k]=!!(cb&&cb.checked); body[k+'_기관']=body[k]?specOrg:''; });
+  if(_yp.editBiz)body.사업코드=_yp.editBiz;
+  var btn=f.querySelector('button[type=submit]'); btn.disabled=true;
+  try{
+    var r=await api('POST','/api/ym/plan/biz',body);
+    showToast((_yp.editBiz?'변경':'등록')+' 완료 · '+r.사업코드,'success');
+    var cb2=_yp.after; _yp.after=null; _ypClose('yp-biz-form-modal');
+    await _ypLoadBiz(); _ypBizRender();
+    if(cb2)cb2(r.사업코드);
+  }catch(e){ showToast('저장 실패: '+_ypErr(e),'error'); btn.disabled=false; }
+}
+
+function openPlanProgForm(id,presetBiz,draft){
+  var p=id?_yp.progs.filter(function(x){return x.프로그램ID===id;})[0]:null; if(id&&!p){showToast('프로그램을 찾을 수 없어요: '+id,'error');return;}
+  _yp.editProg=p?p.프로그램ID:'';
+  var m=_yp.meta||{}, places=m.장소||[], genres=m.장르||[], chans=m.판매처||[];
+  var v={사업코드:presetBiz||(p?p.사업코드:'')||_yp.bizSel||'',정본명:p?p.정본명:'',시작일:p?p.시작일:'',종료일:p?p.종료일:'',날짜미정:p?!!p.날짜미정:false,장소:p?p.장소:'',세부장르:p?p.세부장르:'',기획사:p?p.기획사:'',유통사:p?p.유통사:'',판매처:p?(p.판매처||[]):[],회차수:p?p.회차수:'',총오픈석:p?p.총오픈석:'',이층오픈:p?p.이층오픈:'N',회차시간:p?(p.회차시간||[]):[],판매시작일:p?p.판매시작일:'',판매종료일:p?p.판매종료일:'',정원:p?p.정원:'',강좌수:p?p.강좌수:'',참여작가수:p?p.참여작가수:'',진행상태:p?p.진행상태:'',비고:p?p.비고:''};
+  if(draft){ for(var k in draft)if(k!=='사업코드')v[k]=draft[k]; if(presetBiz)v.사업코드=presetBiz; }
+  var placeSel=v.장소&&places.indexOf(v.장소)<0?'기타':v.장소, placeEtc=(placeSel==='기타'&&v.장소!=='기타')?v.장소:'';
+  var bizOpts=_yp.biz.map(function(b){return [b.사업코드,b.사업코드+' · '+b.사업명+' ('+b.분야+' · '+b.사업형태+' · '+(b.프로그램수||0)+'개)'];});
+  if(v.사업코드&&!_ypBizOf(v.사업코드))bizOpts.unshift([v.사업코드,v.사업코드+' · (다른 연도 사업)']);
+  var h='<div class="modal-bg show" style="z-index:9500" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closePlanProgForm)"><div class="modal" style="width:96vw;max-width:600px;max-height:88vh;overflow:auto;--mpad-y:24px;--mpad-x:24px;position:relative"><button class="modal-x" onclick="closePlanProgForm()" title="닫기" aria-label="닫기">✕</button>'+_mhead(p?'프로그램 변경':'프로그램 등록',p?p.프로그램ID+' · '+p.상태:'프로그램ID는 시작일(yymmdd_순번)로 자동 부여돼요');
+  h+='<form id="yp-prog-form" onsubmit="event.preventDefault();_ypProgSave()" style="display:flex;flex-direction:column;gap:14px">';
+  h+='<div style="background:#F6F5FF;border:1px solid rgba(74,77,231,0.15);border-radius:10px;padding:10px 12px"><label style="margin-top:0">붙일 사업<span class="req">*</span> <span style="font-size:10px;color:var(--dim);font-weight:400">('+_ypYear()+'년 기획 사업 · 없으면 새로 등록)</span></label><div style="display:flex;gap:8px"><select name="사업코드" required onchange="_ypPfBizChange()" style="flex:1;margin:0">'+_ypOpt(bizOpts,v.사업코드,'선택')+'</select><button type="button" onclick="_ypPfNewBiz()" style="padding:7px 12px;background:var(--accent);color:#fff;border:0;border-radius:10px;cursor:pointer;font-weight:600;font-size:12px;white-space:nowrap">새 사업 등록</button></div><div id="yp-pf-inh" style="margin-top:8px;font-size:11.5px;line-height:1.7">'+_ypInhHtml(v.사업코드)+'</div></div>';
+  h+='<div><label>프로그램명<span class="req">*</span></label><input name="정본명" type="text" value="'+escapeHtml(v.정본명)+'" required placeholder="예: 뮤지컬 <킹키부츠>"></div>';
+  h+='<div style="display:flex;gap:10px;align-items:flex-end"><div style="flex:1"><label>시작일<span class="req">*</span></label><input name="시작일" type="date" value="'+escapeHtml(v.시작일)+'" required onchange="_ypPfSpan()"></div><div style="flex:1"><label>종료일</label><input name="종료일" type="date" value="'+escapeHtml(v.종료일)+'" onchange="_ypPfSpan()"></div><div style="flex:0 0 76px"><label>기간</label><input id="yp-pf-span" type="text" readonly value="-" style="'+_YP_RO+'"></div></div>';
+  h+='<label style="display:inline-flex;align-items:center;gap:6px;margin:-6px 0 0;cursor:pointer;font-size:12px"><input type="checkbox" name="날짜미정"'+(v.날짜미정?' checked':'')+' style="width:16px;height:16px;accent-color:var(--accent);margin:0">날짜 미정 <span style="font-size:10px;color:var(--dim);font-weight:400">(하반기 미정 등 — 예정 달 1일을 시작일로 넣고 체크. 확정되면 날짜만 고치면 돼요)</span></label>';
+  h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>장소<span class="req">*</span></label><select name="장소" required onchange="_ypPfPlace(this)">'+_ypOpt(places,placeSel,'선택')+'</select></div><div style="flex:1"><label>기타 장소 <span style="font-size:10px;color:var(--dim);font-weight:400">(기타일 때)</span></label><input id="yp-pf-place-etc" name="장소기타" type="text" value="'+escapeHtml(placeEtc)+'" placeholder="직접 입력" style="'+(placeSel==='기타'?'':'display:none')+'"></div></div>';
+  // 공연
+  h+='<div id="yp-pf-sec0" style="display:none;border:1px solid var(--border);border-radius:10px;padding:10px 12px"><div style="font-size:11.5px;font-weight:700">공연 정보</div>';
+  h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>장르</label><select name="세부장르">'+_ypOpt(genres,v.세부장르,'선택')+'</select></div><div style="flex:1"><label>회차</label><input name="회차수" type="number" min="1" max="999" step="1" value="'+escapeHtml(String(v.회차수||''))+'" placeholder="예: 2"></div><div style="flex:1"><label>오픈석</label><input name="총오픈석" type="number" min="0" step="1" value="'+escapeHtml(String(v.총오픈석||''))+'" placeholder="석"></div><div style="flex:1"><label>2층 오픈</label><select name="이층오픈">'+_ypOpt([['N','아니오'],['Y','예']],v.이층오픈==='Y'?'Y':'N')+'</select></div></div>';
+  h+='<label>회차별 진행 시간 <span style="font-size:10px;color:var(--dim);font-weight:400">(복제 = 같은 시각 다음 날) · </span><span id="yp-pf-timecnt" style="font-size:10px;color:var(--dim);font-weight:400">'+v.회차시간.length+'개</span></label><div id="yp-pf-times">'+v.회차시간.map(function(t){return _ypTimeRow(String(t).replace(' ','T'));}).join('')+'</div><div style="display:flex;gap:6px;margin-top:6px"><button type="button" class="adm-btn" onclick="_ypTimeAdd(null)">+ 회차 추가</button><button type="button" class="adm-btn" onclick="_ypTimeFill()">회차 수만큼 채우기</button></div></div>';
+  // 전시 · 교육
+  h+='<div id="yp-pf-sec1" style="display:none;border:1px solid var(--border);border-radius:10px;padding:10px 12px"><div style="font-size:11.5px;font-weight:700">전시 정보</div><div><label>참여 작가 수</label><input name="참여작가수" type="number" min="0" step="1" value="'+escapeHtml(String(v.참여작가수||''))+'" placeholder="명"></div></div>';
+  h+='<div id="yp-pf-sec2" style="display:none;border:1px solid var(--border);border-radius:10px;padding:10px 12px"><div style="font-size:11.5px;font-weight:700">교육 정보</div><div style="display:flex;gap:10px"><div style="flex:1"><label>정원</label><input name="정원" type="number" min="0" step="1" value="'+escapeHtml(String(v.정원||''))+'" placeholder="명"></div><div style="flex:1"><label>강좌 수</label><input name="강좌수" type="number" min="0" step="1" value="'+escapeHtml(String(v.강좌수||''))+'" placeholder="개"></div></div></div>';
+  h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>기획사</label><input name="기획사" type="text" value="'+escapeHtml(v.기획사||'')+'"></div><div style="flex:1"><label>유통사 <span style="font-size:10px;color:var(--dim);font-weight:400">(선택)</span></label><input name="유통사" type="text" value="'+escapeHtml(v.유통사||'')+'"></div></div>';
+  h+='<div><label>판매처</label><div style="display:flex;gap:16px">'+chans.map(function(c){return '<label style="display:inline-flex;align-items:center;gap:6px;margin:0;cursor:pointer;font-size:12px"><input type="checkbox" name="판매처" value="'+escapeHtml(c)+'"'+(v.판매처.indexOf(c)>=0?' checked':'')+' style="width:16px;height:16px;accent-color:var(--accent);margin:0">'+escapeHtml(c)+'</label>';}).join('')+'</div></div>';
+  h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>판매 시작일</label><input name="판매시작일" type="date" value="'+escapeHtml(v.판매시작일||'')+'"></div><div style="flex:1"><label>판매 종료일</label><input name="판매종료일" type="date" value="'+escapeHtml(v.판매종료일||'')+'"></div></div>';
+  h+='<div style="display:flex;gap:10px"><div style="flex:0 0 140px"><label>진행 상태 <span style="font-size:10px;color:var(--dim);font-weight:400">(취소·연기만)</span></label><select name="진행상태">'+_ypOpt([['','자동(날짜)'],['취소','취소'],['연기','연기']],v.진행상태||'')+'</select></div><div style="flex:1"><label>비고</label><input name="비고" type="text" value="'+escapeHtml(v.비고||'')+'"></div></div>';
+  if(p){ h+=_ypRoBox('실적·정산','— 관객은 대장 발권 → 일일 누계 순으로 자동, 실지출·수입·수수료는 정산 입력에서 · 읽기 전용',[['상태',escapeHtml(p.상태),1],['회계 담당(사업 참조)',escapeHtml(((p.회계담당부서||'')+' '+(p.회계담당자||'')).trim()||'-'),1],['실지출(전표)',p.실지출],['판매 수수료',p.판매수수료],['실 지출+수수료',p.실사업비],['수입',p.수입],['비용 출처',escapeHtml(p.비용출처||'-'),1],['관객 출처',escapeHtml(p.관객출처||'-'),1],['누적 관객',p.누적관객],['유료 관객',p.유료관객],['무료 관객',p.무료관객],['무료 중 문화나눔',p.문화나눔],['정산',escapeHtml(p.정산일?p.정산일+' · '+(p.정산자||''):'-'),1],['URL',(p.URL?'<a href="'+escapeHtml(p.URL)+'" target="_blank" rel="noopener" style="color:var(--accent)">열기</a>':'-'),1],['홍보 시작일',escapeHtml(p.홍보시작일||'-'),1],['홍보 종료일',escapeHtml(p.홍보종료일||'-'),1]],'<div style="display:flex;gap:6px;margin-top:8px"><button type="button" class="adm-btn" onclick="openSettleForm(\''+escapeHtml(p.프로그램ID)+'\')">정산 입력</button><button type="button" class="adm-btn" onclick="_ypHistory(\''+escapeHtml(p.프로그램ID)+'\')">수정 이력</button></div>'); }
+  h+='<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;padding-top:14px;border-top:1px solid #eee"><button type="button" onclick="closePlanProgForm()" style="'+_YP_BTN_CANCEL+'">취소</button><button type="submit" style="'+_YP_BTN_OK+'">저장</button></div></form></div></div>';
+  _ypModal('yp-prog-form-modal',h); _ypPfBizChange(); _ypPfSpan();
+}
+
+async function _ypProgSave(){
+  var f=document.getElementById('yp-prog-form'); if(!f)return; var body=_ypPfCollect(); if(!body)return;
+  if(_yp.editProg)body.프로그램ID=_yp.editProg;
+  var btn=f.querySelector('button[type=submit]'); btn.disabled=true;
+  try{ var r=await api('POST','/api/ym/plan/program',body); showToast((_yp.editProg?'변경':'등록')+' 완료 · '+r.프로그램ID,'success'); _ypClose('yp-prog-form-modal'); await _ypProgReload(); _ypBizRender(); }
+  catch(e){ showToast('저장 실패: '+_ypErr(e),'error'); btn.disabled=false; }
+}
+
+async function approvePromoFromBoard(rowIndex){
+  if(userRole!=='admin'){showToast('관리자만 접수할 수 있어요','error');return;}
+  const r=records.find(function(x){return x._rowIndex===rowIndex;});
+  if(!r){showToast('신청을 찾을 수 없어요','error');return;}
+  const _st=r['진행 상태']||'';
+  if(_st!=='신청 중'){showToast('신청 중 상태만 접수할 수 있어요','error');return;}
+  const _ca=canApprove(r,rowIndex);
+  if(!_ca.ok){showToast(_ca.reason,'error');return;}
+  const title=r['콘텐츠 제목']||'(제목 없음)';
+  const ok=await showConfirm('"'+title+'"\n\n이 신청을 접수(예정)할까요?');
+  if(!ok)return;
+  showOverlayLoad();
+  try{
+    // 예정 승인 시 재신청사유 소거 — 재신청 1회분이 소비됨(이후 다시 신청중→보류면 정상적으로 재신청 가능)
+    const row = buildRecordRow(r, {'진행 상태':'예정','재신청사유':''});
+    await api('PATCH','/api/records/'+rowIndex,{values: row});
+    // 메시지함 hook (일반: 신청중→예정)
+    try{
+      const _rs1 = (r['날짜']||'') + ' ' + (r['플랫폼 1']||'') + ' ' + (r['콘텐츠 제목']||'');
+      pushMessage({
+        recipient: r['신청자']||'',
+        type: '일반',
+        trigger: '신청중→예정',
+        before: '신청 중',
+        after: '예정',
+        reason: '',
+        refNo: r['No']||r['NO']||'',
+        refSummary: _rs1.trim()
+      });
+    }catch(_e){ console.error('[pushMessage approve]', _e); }
+    await syncReload(0);
+    renderPromoBoard();
+    showToast('접수됐어요 (예정)');
+  }catch(e){
+    showToast('접수 실패: '+(e.message||e),'error');
+  }finally{
+    hideOverlayLoad();
+  }
+}
+
+async function completePromoRequest(rowIndex){
+  const r=records.find(function(x){return x._rowIndex===rowIndex;});
+  if(!r){showToast('신청을 찾을 수 없어요','error');return;}
+  // 권한 체크
+  let myApplicant='';
+  try{myApplicant=sessionStorage.getItem('myApplicant')||'';}catch(e){}
+  const isMine=_isMineRec(r,myApplicant);
+  const isAdmin=userRole==='admin';
+  if(!isMine&&!isAdmin){showToast('본인 또는 관리자만 완료 처리할 수 있어요','error');return;}
+  const status=r['진행 상태']||'';
+  if(status!=='예정'){showToast('예정 상태의 신청만 완료 처리할 수 있어요','error');return;}
+  const title=r['콘텐츠 제목']||'(제목 없음)';
+  const ok=await showConfirm('"'+title+'"\n\n게시 완료 처리할까요?');
+  if(!ok)return;
+  showOverlayLoad();
+  try{
+    const row = buildRecordRow(r, {'진행 상태':'완료'});
+    await api('PATCH','/api/records/'+rowIndex,{values: row});
+    // 메시지함 hook (일반: 예정→완료)
+    try{
+      const _r3 = r;
+      if(_r3){
+        const _rs3 = (_r3['날짜']||'') + ' ' + (_r3['플랫폼 1']||'') + ' ' + (_r3['콘텐츠 제목']||'');
+        pushMessage({
+          recipient: _r3['신청자']||'',
+          type: '일반',
+          trigger: '예정→완료',
+          before: '예정',
+          after: '완료',
+          reason: '',
+          refNo: _r3['No']||_r3['NO']||'',
+          refSummary: _rs3.trim()
+        });
+      }
+    }catch(_e){ console.error('[pushMessage complete]', _e); }
+    await syncReload(0);
+    renderPromoBoard();
+    showToast('게시 완료 처리됐어요');
+  }catch(e){
+    showToast('완료 처리 실패: '+(e.message||e),'error');
+  }finally{
+    hideOverlayLoad();
+  }
+}
+
+async function cancelPromoRequest(rowIndex){
+  const r=records.find(function(x){return x._rowIndex===rowIndex;});
+  if(!r){showToast('신청을 찾을 수 없어요','error');return;}
+  // 권한 체크
+  let myApplicant='';
+  try{myApplicant=sessionStorage.getItem('myApplicant')||'';}catch(e){}
+  const isMine=_isMineRec(r,myApplicant);
+  const isAdmin=userRole==='admin';
+  if(!isMine&&!isAdmin){showToast('본인 신청만 취소할 수 있어요','error');return;}
+  // 상태 체크 — 완료/취소된 건 취소 불가
+  const status=r['진행 상태']||'';
+  if(status==='완료'){showToast('완료된 신청은 취소할 수 없어요','error');return;}
+  if(status==='취소'){showToast('이미 취소된 신청이에요','error');return;}
+  if(status==='예정'&&!isAdmin){showToast('예정(승인)된 신청은 취소할 수 없어요. 관리자에게 문의해 주세요','error');return;}
+  // 확인 — 관리자가 '타인 신청'을 취소하면 일괄 취소·재신청 취소·cancelWithReason과 동일하게
+  //   취소 사유를 입력받아 신청자에게 사유까지 전달. 본인 신청 취소는 사유 없이 간단 확인.
+  const title=r['콘텐츠 제목']||'(제목 없음)';
+  let reason='';
+  if(isMine){
+    const ok=await showConfirm('"'+title+'"\n\n이 홍보 신청을 취소할까요?');
+    if(!ok)return;
+  }else{
+    reason=await _renderCancelReasonModal(1);
+    if(!reason)return;
+  }
+  // PATCH — 진행 상태='취소' (+ 대행 취소 시 취소사유 기록), 다른 필드 유지
+  showOverlayLoad();
+  try{
+    const row = buildRecordRow(r, {'진행 상태':'취소','취소사유':reason});
+    await api('PATCH','/api/records/'+rowIndex,{values: row});
+    // 메시지함 hook — 관리자가 타인 신청을 취소한 경우 신청자에게 사유까지 알림
+    if(!isMine){
+      try{
+        pushMessage({recipient:r['신청자']||'',type:'중요',trigger:'취소',before:status||'예정',after:'취소',reason:reason,refNo:r['No']||r['NO']||'',refSummary:(getRecDateKey(r)+' '+(r['플랫폼 1']||'')+' '+(r['콘텐츠 제목']||'')).trim()});
+      }catch(_e){ console.error('[pushMessage cancel]', _e); }
+    }
+    await syncReload(0);
+    renderPromoBoard();
+    showToast('신청이 취소됐어요');
+  }catch(e){
+    showToast('취소 실패: '+(e.message||e),'error');
+  }finally{
+    hideOverlayLoad();
+  }
+}
+
+async function bulkApprovePending(){
+  if(!_pendingChecks.size){showToast('선택된 건이 없어요','error');return;}
+  const ids = Array.from(_pendingChecks);
+  const ok = await showConfirm('선택한 '+ids.length+'건을 접수하시겠어요?<br><br><span style="color:#888;font-size:12px">신청 중 → 예정으로 변경됩니다.</span>',{title:'일괄 접수',html:true});
+  if(!ok) return;
+  showOverlayLoad('일괄 접수 중 (0/'+ids.length+')');
+  let success = 0, failed = 0, skipped = 0, _failReason = '';
+  for(let i = 0; i < ids.length; i++){
+    const rowIndex = ids[i];
+    try{
+      const rec = records.find(function(r){return r._rowIndex === rowIndex;});
+      if(!rec){failed++;continue;}
+      // [버그수정] 단건 접수와 동일 가드 — 신청 중 상태만 + 카카오/문자 충돌 검증 (일괄 경로 우회 차단)
+      const _st=(rec['진행 상태']||'').toString().trim();
+      if(_st!=='신청 중'){skipped++;continue;}
+      const _ca=canApprove(rec,rowIndex);
+      if(!_ca.ok){failed++;if(!_failReason)_failReason=_ca.reason;continue;}
+      const row = buildRecordRow(rec, {'진행 상태': '예정', '재신청사유': ''});
+      await api('PATCH', '/api/records/'+rowIndex, {values: row});
+      success++;
+      // 메시지함 hook — 단건 접수와 동일하게 신청자에게 알림
+      try{
+        pushMessage({recipient:rec['신청자']||'',type:'일반',trigger:'신청중→예정',before:'신청 중',after:'예정',reason:'',refNo:rec['No']||rec['NO']||'',refSummary:(getRecDateKey(rec)+' '+(rec['플랫폼 1']||'')+' '+(rec['콘텐츠 제목']||'')).trim()});
+      }catch(_e){ console.error('[pushMessage bulkApprove]', _e); }
+      showOverlayLoad('일괄 접수 중 ('+(i+1)+'/'+ids.length+')');
+    }catch(e){ console.error(e); failed++; }
+  }
+  hideOverlayLoad();
+  showToast(success+'건 접수 완료'+(skipped?' / '+skipped+'건 대상 아님':'')+(failed?' / '+failed+'건 실패':'')+(_failReason?' — '+_failReason:''), failed?'error':'success');
+  _pendingChecks.clear();
+  await syncReload(0);
+  if(typeof renderPromoBoard==='function') renderPromoBoard();
+  render();
+}
+
+async function holdPromoFromBoard(rowIndex){
+  if(userRole!=='admin'){showToast('관리자만 보류 처리할 수 있어요','error');return;}
+  const rec=records.find(function(r){return r._rowIndex===rowIndex;});
+  if(!rec){showToast('신청을 찾을 수 없어요','error');return;}
+  const _reSon=(rec['재신청사유']||'').toString().trim();
+  if(_reSon){
+    const cR=await _renderCancelReasonModal(1,{title:'재신청 건 취소',subtitle:'이미 재신청된 건이에요. 보류 대신 취소 처리됩니다.',labelText:'취소 사유',placeholder:'예: 일정 확정 불가',buttonLabel:'취소 처리',buttonColor:'#EF4444'});
+    if(!cR)return;
+    showOverlayLoad('취소 처리 중');
+    try{
+      const row=buildRecordRow(rec,{'진행 상태':'취소','취소사유':cR});
+      await api('PATCH','/api/records/'+rowIndex,{values:row});
+      try{pushMessage({recipient:rec['신청자']||'',type:'중요',trigger:'재신청취소',before:'신청 중',after:'취소',reason:cR,refNo:rec['No']||'',refSummary:(getRecDateKey(rec)+' '+(rec['플랫폼 1']||'')+' '+(rec['콘텐츠 제목']||'')).trim()});}catch(_e){}
+      await syncReload(0);if(typeof renderPromoBoard==='function')renderPromoBoard();render();
+      showToast('재신청 건이 취소됐어요');
+    }catch(e){showToast('취소 실패: '+(e.message||e),'error');}finally{hideOverlayLoad();}
+    return;
+  }
+  const reason=await _renderCancelReasonModal(1,{title:'신청 보류',subtitle:'보류 사유를 입력해 주세요. 신청자가 확인 후 재신청할 수 있어요.',labelText:'보류 사유',placeholder:'예: 일정 충돌 - 다른 날짜로 재신청 부탁',buttonLabel:'보류 처리',buttonColor:'#F59E0B'});
+  if(!reason)return;
+  showOverlayLoad('보류 처리 중');
+  try{
+    const row=buildRecordRow(rec,{'진행 상태':'보류','보류사유':reason});
+    await api('PATCH','/api/records/'+rowIndex,{values:row});
+    try{pushMessage({recipient:rec['신청자']||'',type:'중요',trigger:'신청보류',before:'신청 중',after:'보류',reason:reason,refNo:rec['No']||'',refSummary:(getRecDateKey(rec)+' '+(rec['플랫폼 1']||'')+' '+(rec['콘텐츠 제목']||'')).trim()});}catch(_e){}
+    await syncReload(0);if(typeof renderPromoBoard==='function')renderPromoBoard();render();
+    showToast('보류 처리됐어요');
+  }catch(e){showToast('보류 실패: '+(e.message||e),'error');}finally{hideOverlayLoad();}
+}
+
+function renderPromoBoard(){
+  const body=document.getElementById('promo-board-body');
+  if(!body)return;
+  const isAdmin=userRole==='admin';
+  // user는 자기 신청만 (localStorage에 저장된 신청자 이름) — 위저드 제출 시 저장됨
+  let myApplicant='';
+  try{myApplicant=sessionStorage.getItem('myApplicant')||'';}catch(e){}
+  // 데이터 소스 — specialMode에 따라
+  let rows;
+  const _spMode=_promoFilter.specialMode||'hide';
+  if(_spMode==='only'){
+    rows=(PROMO_SPECIAL||[]).map(_spToRecord);
+  }else if(_spMode==='mix'){
+    rows=records.slice().concat((PROMO_SPECIAL||[]).map(_spToRecord));
+  }else{
+    rows=records.slice();
+  }
+  // 임시저장('임시')은 관리/보드 목록에서 제외 — 캘린더에서만 본인에게 노출
+  rows=rows.filter(function(r){return (r['진행 상태']||'').toString().trim()!=='임시';});
+  // viewMode 'mine' — 본인 신청만 (admin은 본인 개념 없으니 적용 안 함)
+  if(!isAdmin&&_promoFilter.viewMode==='mine'){
+    if(myApplicant){
+      rows=rows.filter(function(r){return _isMineRec(r,myApplicant);});
+    }else{
+      rows=[];  // 신청 한 적 없음 — 빈 상태에서 "전체 보기" 버튼 강조
+    }
+  }else if(isAdmin&&_promoFilter.applicant){
+    rows=rows.filter(function(r){return(r['게시 담당자']||'')===_promoFilter.applicant;});
+  }
+  // 지난 일정 감추기
+  if(_promoFilter.hidePast){
+    const todayKey=getTodayKey();
+    rows=rows.filter(function(r){return getRecDateKey(r)>=todayKey;});
+  }
+  // 상태 필터 (특수일정은 status='all'일 때만 포함, 대기/예정/완료 탭에선 제외)
+  // 1차 그룹 매핑: 보류 → 신청 중에 흡수, 취소는 showCancelled ON + 직전 상태 그룹에 분류
+  if(_promoFilter.status!=='all'){
+    rows=rows.filter(function(r){return!r._isSpecial;});
+    if(_promoFilter.status==='pending'){
+      rows=rows.filter(function(r){
+        const s=(r['진행 상태']||'').toString().trim();
+        if(s==='신청 중')return true;  // 보류는 '신청 중' 아님(별개 상태) → 요약 카운트와 일치, 전체 탭에서만 노출
+        if(_promoFilter.showCancelled && s==='취소' && getCancelOrigGroup(r)==='신청 중')return true;
+        return false;
+      });
+    } else if(_promoFilter.status==='approved'){
+      rows=rows.filter(function(r){
+        const s=(r['진행 상태']||'').toString().trim();
+        if(s==='예정')return true;
+        if(_promoFilter.showCancelled && s==='취소' && getCancelOrigGroup(r)==='예정')return true;
+        return false;
+      });
+    } else if(_promoFilter.status==='done'){
+      rows=rows.filter(function(r){
+        const s=(r['진행 상태']||'').toString().trim();
+        if(s==='완료')return true;
+        if(_promoFilter.showCancelled && s==='취소' && getCancelOrigGroup(r)==='완료')return true;
+        return false;
+      });
+    }
+  } else if(!_promoFilter.showCancelled){
+    rows=rows.filter(function(r){return (r['진행 상태']||'').toString().trim()!=='취소';});
+  }
+  if(_promoFilter.q){
+    const q=_promoFilter.q.toLowerCase();
+    rows=rows.filter(function(r){
+      if(r._isSpecial){
+        return (r['콘텐츠 제목']||'').toLowerCase().includes(q)||(r['게시 담당자']||'').toLowerCase().includes(q)||(r['플랫폼 1']||'').toLowerCase().includes(q);
+      }
+      return(r['콘텐츠 제목']||'').toLowerCase().includes(q)||(r['게시 담당자']||'').toLowerCase().includes(q)||(r['프로그램']||'').toLowerCase().includes(q);
+    });
+  }
+  // === 컬럼 필터 (엑셀식 다중선택) ===
+  if(_promoFilter.colFilters){
+    Object.keys(_promoFilter.colFilters).forEach(function(col){
+      var allowed=_promoFilter.colFilters[col];
+      if(allowed&&allowed.length){rows=rows.filter(function(r){return r._isSpecial||allowed.indexOf(_promoColVal(col,r))>=0;});}
+    });
+  }
+  // === 정렬 ===
+  const todayKey=getTodayKey();
+  // 시간 추출 헬퍼
+  function rowTimeStr(r){
+    const ts=r['입력시간(KST)'];
+    if(typeof ts==='string'&&ts.indexOf(' ')>-1)return ts.split(' ')[1].substr(0,5);
+    if(typeof ts==='number'){const tm=Math.round((ts%1)*1440),hh=Math.floor(tm/60),mm=tm%60;return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');}
+    return '';
+  }
+  // 날짜+시간 tiebreaker 키
+  function rowDtKey(r){return getRecDateKey(r)+' '+rowTimeStr(r);}
+  if(_promoFilter.sortBy){
+    // 컬럼 헤더 클릭 정렬 — tiebreaker는 날짜+시간 오름차순
+    const col=_promoFilter.sortBy,dir=_promoFilter.sortDir;
+    rows.sort(function(a,b){
+      let av='',bv='';
+      if(col==='no'){av=Number(a['#'])||a._rowIndex;bv=Number(b['#'])||b._rowIndex;}
+      else if(col==='status'){av=a['진행 상태']||'';bv=b['진행 상태']||'';}
+      else if(col==='date'){av=getRecDateKey(a);bv=getRecDateKey(b);}
+      else if(col==='time'){av=rowTimeStr(a);bv=rowTimeStr(b);}
+      else if(col==='platform'){av=(a['플랫폼 1']||'')+'·'+(a['플랫폼 2']||'');bv=(b['플랫폼 1']||'')+'·'+(b['플랫폼 2']||'');}
+      else if(col==='category'){av=a['콘텐츠 구분']||'';bv=b['콘텐츠 구분']||'';}
+      else if(col==='content'){av=a['콘텐츠 제목']||'';bv=b['콘텐츠 제목']||'';}
+      else if(col==='applicant'){av=a['게시 담당자']||'';bv=b['게시 담당자']||'';}
+      let cmp=0;
+      if(typeof av==='number'&&typeof bv==='number')cmp=av-bv;
+      else cmp=String(av).localeCompare(String(bv),'ko');
+      if(cmp!==0)return dir==='desc'?-cmp:cmp;
+      // tiebreaker: 날짜-시간 오름차순
+      return rowDtKey(a).localeCompare(rowDtKey(b));
+    });
+  }else{
+    // 기본 정렬: 신청 중 우선 → 오늘 → 미래(가까운) → 과거(최근)
+    function rowBucket(r){
+      const dk=getRecDateKey(r);
+      if(dk===todayKey)return 0;
+      if(dk>todayKey)return 1;
+      return 2;
+    }
+    if(isAdmin){
+      // === admin: 전체 행을 최신 날짜·시간순으로 정렬 ===
+      rows.sort(function(a,b){
+        const ad=getRecDateKey(a),bd=getRecDateKey(b);
+        if(ad!==bd)return bd.localeCompare(ad);
+        return rowTimeStr(b).localeCompare(rowTimeStr(a));
+      });
+    }else{
+      rows.sort(function(a,b){
+        // 1차: 본인 우선
+        const am=_isMineRec(a,myApplicant)?0:1;
+        const bm=_isMineRec(b,myApplicant)?0:1;
+        if(am!==bm)return am-bm;
+        // 2차: 신청 중 우선
+        const ap=a['진행 상태']==='신청 중'?0:1;
+        const bp=b['진행 상태']==='신청 중'?0:1;
+        if(ap!==bp)return ap-bp;
+        // 3차: 오늘 → 미래(가까운) → 과거(최근)
+        const ab=rowBucket(a),bb=rowBucket(b);
+        if(ab!==bb)return ab-bb;
+        const ad=getRecDateKey(a),bd=getRecDateKey(b);
+        if(ab===2){if(ad!==bd)return ad.localeCompare(bd);}  // 과거: 오래된 먼저 (시간 흐름순)
+        else{if(ad!==bd)return ad.localeCompare(bd);}
+        return rowTimeStr(a).localeCompare(rowTimeStr(b));
+      });
+    }
+  }
+  // === 요약 카운트 (myApplicant 기준 또는 admin은 전체) ===
+  function recIsMine(r){return _isMineRec(r,myApplicant);}
+  const myRows=isAdmin?records.filter(recIsMine):records.filter(recIsMine);
+  const summaryBase=isAdmin?records:myRows;
+  // 신청 중 카운트 = raw '신청 중'만 (보류 제외). 보류는 '사실상 반려'(신청자 재신청 대기 / 2회째 보류 시 자동 취소)라
+  // 신청 중이 아님 → 요약·🔔배지·신청대기 섹션 전부 raw 기준으로 일치.
+  const myPending=summaryBase.filter(function(r){return (r['진행 상태']||'')==='신청 중';}).length;
+  const myToday=summaryBase.filter(function(r){return getRecDateKey(r)===todayKey&&r['진행 상태']!=='완료'&&r['진행 상태']!=='취소'&&r['진행 상태']!=='임시';}).length;
+  const myUpcoming=summaryBase.filter(function(r){const dk=getRecDateKey(r);return dk>todayKey&&dk<=addDaysKey(todayKey,7)&&r['진행 상태']!=='완료'&&r['진행 상태']!=='취소'&&r['진행 상태']!=='임시';}).length;
+  const pendingCnt=records.filter(function(r){return (r['진행 상태']||'')==='신청 중';}).length;
+  // 오늘 건수 (완료/취소 제외)
+  const todayActiveCnt=records.filter(function(r){return getRecDateKey(r)===todayKey&&r['진행 상태']!=='완료'&&r['진행 상태']!=='취소'&&r['진행 상태']!=='임시';}).length;
+  // === 헤더 ===
+  let html='<div style="display:flex;align-items:center;margin-bottom:10px;gap:8px;padding-bottom:14px;padding-right:48px;border-bottom:1px solid #eee">';
+  html+='<h3 style="margin:0;flex:1;text-align:left">일정 확인 및 관리';
+  if(!isAdmin){
+    let _meDept='';
+    try{_meDept=sessionStorage.getItem('myUserDept')||'';}catch(e){}
+    const _meName=myApplicant||'0000';
+    const _meDeptShow=_meDept||'0000';
+    html+='<span style="font-size:12px;color:var(--accent);font-weight:600;margin-left:10px;vertical-align:middle">'+escapeHtml(_meDeptShow)+', '+escapeHtml(_meName)+' 님</span>';
+  }
+  html+='</h3>';
+  if(!isAdmin)html+='<button class="m-btn save" onclick="openPromoWizardFromBoard()" style="padding:7px 14px">+ 새 신청</button>';
+  // === admin 새 신청 알림 배지 ===
+  if(isAdmin){
+    const _applyPendingCnt=(records||[]).filter(function(r){return (r['진행 상태']||'')==='신청 중';}).length;
+    if(_applyPendingCnt>0){
+      const _onIcon=_showApplyList?'▾':'▸';
+      const _bgColor=_showApplyList?'var(--peach)':'var(--peach-light)';
+      const _txtColor=_showApplyList?'#fff':'var(--peach-text)';
+      html+='<button onclick="_showApplyList=!_showApplyList;renderPromoBoard()" title="'+(_showApplyList?'닫기':'펼치기')+'" style="padding:7px 14px;border-radius:10px;border:1.5px solid var(--peach);background:'+_bgColor+';color:'+_txtColor+';font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;margin-right:8px;transition:all .15s">'+_onIcon+' 🔔 새 신청 '+_applyPendingCnt+'건</button>';
+    }
+  }
+  html+='</div>';
+  // === 오늘 요약 한 줄 박스 ===
+  const todayAllCnt=records.filter(function(r){return getRecDateKey(r)===todayKey&&r['진행 상태']!=='취소'&&r['진행 상태']!=='임시';}).length;
+  const todayDoneCnt=records.filter(function(r){return getRecDateKey(r)===todayKey&&r['진행 상태']==='완료';}).length;
+  // 한 줄 요약 박스
+  html+='<div style="display:flex;align-items:center;gap:14px;padding:10px 16px;background:#fafafa;border:1px solid #f0f0f0;border-radius:10px;font-size:12px;margin-bottom:14px;flex-wrap:wrap;text-align:left">';
+  html+='<span><span style="color:#888">'+(isAdmin?'전체':'내')+' 신청 중:</span> <span style="color:var(--peach-text);font-weight:700;margin-left:3px">'+myPending+'건</span></span>';
+  html+='<span style="color:#ddd;font-weight:300">|</span>';
+  html+='<span><span style="color:#888">오늘 일정:</span> <span style="color:var(--accent);font-weight:700;margin-left:3px">'+todayDoneCnt+' / '+todayAllCnt+'건</span></span>';
+  html+='<span style="color:#ddd;font-weight:300">|</span>';
+  html+='<span><span style="color:#888">다가오는 7일:</span> <span style="color:#0F8B4C;font-weight:700;margin-left:3px">'+myUpcoming+'건</span></span>';
+  // 담당자 일정 카운트 — user는 본인이 담당자인 특수일정만, admin은 전체
+  const spCount=isAdmin
+    ? (PROMO_SPECIAL||[]).length
+    : (myApplicant?(PROMO_SPECIAL||[]).filter(function(s){return s.person===myApplicant;}).length:0);
+  html+='<span style="color:#ddd;font-weight:300">|</span>';
+  html+='<span><span style="color:#888">담당자 일정:</span> <span style="color:#aaa;font-weight:700;margin-left:3px">'+spCount+'건</span></span>';
+  html+='</div>';
+  // === 필터 탭 ===
+  html+='<div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center">';
+  // UX #4: 상태 탭을 공용 .fbar-seg 세그먼트로(선택=accent 채움). status·specialMode 핸들러 불변.
+  const tabs=[{k:'all',l:'전체'},{k:'pending',l:'신청 중'},{k:'approved',l:'예정'},{k:'done',l:'완료'}];
+  html+='<div class="fbar-seg">';
+  tabs.forEach(function(t){
+    const on=_promoFilter.status===t.k;
+    html+='<button class="'+(on?'on':'')+'" onclick="_promoFilter.status=\''+t.k+'\';_promoFilter.specialMode=\'mix\';renderPromoBoard()">'+t.l+'</button>';
+  });
+  html+='</div>';
+  // (전체/콘텐츠만/담당자만 토글 제거됨 — 컬럼 필터로 대체. specialMode는 'mix' 유지)
+  // 토글성 pill 컨트롤(내 신청만 등) 공용 스타일 — 검색/체크박스 입력은 별도(Caution 준수).
+  const ctrlStyle='display:inline-flex;align-items:center;padding:6px 14px;height:32px;box-sizing:border-box;border-radius:16px;font-size:12px;line-height:1;cursor:pointer;font-family:inherit';
+  // === [일정 변경] 다중선택 모드 토글 (admin·user 공통 — 본인 것만 체크 가능) ===
+  html+='<span style="width:1px;height:18px;background:rgba(0,0,0,0.13);margin:0 4px"></span>';
+  html+='<button onclick="_toggleEditMode()" title="여러 신청을 체크해서 한 번에 일정 이동/취소" style="'+ctrlStyle+';border:1.5px solid '+(_editMode?'var(--accent)':'rgba(0,0,0,0.13)')+';background:'+(_editMode?'var(--accent)':'var(--surface-solid)')+';color:'+(_editMode?'var(--surface-solid)':'var(--text)')+';font-weight:600">'+(_editMode?'✓ 변경 모드':'✎ 일정 변경')+'</button>';
+  // === 본인/전체 토글 (admin은 본인 개념 없어서 숨김) ===
+  if(!isAdmin&&myApplicant){
+    html+='<span style="width:1px;height:18px;background:#ddd;margin:0 4px"></span>';
+    const mineOn=_promoFilter.viewMode==='mine';
+    const cbStyle='display:inline-block;width:14px;height:14px;border-radius:3px;border:1.5px solid '+(mineOn?'var(--accent)':'#bbb')+';background:'+(mineOn?'var(--accent)':'#fff')+';color:#fff;text-align:center;line-height:11px;font-size:10px;font-weight:700;margin-right:6px;vertical-align:middle;transition:all .12s';
+    html+='<button onclick="_promoFilter.viewMode=\''+(mineOn?'all':'mine')+'\';renderPromoBoard()" style="'+ctrlStyle+';border:1.5px solid var(--glass-bd);background:var(--glass-surface);backdrop-filter:blur(8px);box-shadow:var(--glass-shadow);color:var(--text);font-weight:500" title="'+(mineOn?'클릭하면 다른 사람 신청도 보기':'클릭하면 내 신청만 보기')+'"><span style="'+cbStyle+'">'+(mineOn?'✓':'')+'</span>👥 내 신청만</button>';
+  }
+  if(isAdmin){
+    html+='<span style="width:1px;height:18px;background:#ddd;margin:0 4px"></span>';
+    html+='<select onchange="_promoFilter.applicant=this.value;renderPromoBoard()" style="padding:6px 10px;height:32px;width:140px;box-sizing:border-box;border-radius:8px;border:1.5px solid #eee;font-size:12px;outline:none;background:#fff;font-family:inherit;line-height:1"><option value="">전체 신청자</option>';
+    // 신청 record 엮인 신청자만 추출 + 가나다순
+    const _applicants = new Set();
+    (records||[]).forEach(function(r){const _n=(r['게시 담당자']||'').trim();if(_n)_applicants.add(_n);});
+    Array.from(_applicants).sort(function(a,b){return a.localeCompare(b,'ko');}).forEach(function(n){html+='<option value="'+escapeHtml(n)+'"'+(_promoFilter.applicant===n?' selected':'')+'>'+escapeHtml(n)+'</option>';});
+    html+='</select>';
+  }
+  // 지난 일정 감추기 — 검색 바로 앞 (끝쪽)
+  html+='<span style="width:1px;height:18px;background:#ddd;margin:0 4px"></span>';
+  html+='<label style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;box-sizing:border-box;font-size:12px;line-height:1;color:#666;cursor:pointer;user-select:none;font-family:inherit;transform:translateY(-5px)"><input type="checkbox"'+(_promoFilter.hidePast?' checked':'')+' onchange="_promoFilter.hidePast=this.checked;renderPromoBoard()" style="width:14px;height:14px;margin:0;padding:0;cursor:pointer;accent-color:var(--accent);flex-shrink:0">지난 일정 감추기</label>';
+  html+='<label style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 6px;box-sizing:border-box;font-size:12px;line-height:1;color:#666;cursor:pointer;user-select:none;font-family:inherit;transform:translateY(-5px)"><input type="checkbox"'+(_promoFilter.showCancelled?' checked':'')+' onchange="_promoFilter.showCancelled=this.checked;renderPromoBoard()" style="width:14px;height:14px;margin:0;padding:0;cursor:pointer;accent-color:var(--accent);flex-shrink:0">취소 일정 보기</label>';
+  html+='<input type="text" placeholder="검색..." value="'+escapeHtml(_promoFilter.q)+'" oninput="onPromoSearch(this.value)" style="margin-left:auto;padding:6px 12px;height:32px;box-sizing:border-box;border-radius:8px;border:1.5px solid #eee;font-size:12px;outline:none;width:140px;flex-shrink:1;min-width:90px;text-align:left;line-height:1;font-family:inherit">';
+  html+='</div>';
+  // === 빈 상태 처리 ===
+  // 본인 신청 한 적 없는 user (admin은 본인 개념 없어서 표시 안 함)
+  if(!isAdmin&&!myApplicant){
+    html+='<div style="background:#FFF4DC;color:#C97A11;padding:10px 14px;border-radius:10px;font-size:12px;margin-bottom:10px;text-align:left">아직 본인 신청 내역이 없어요. 새 신청을 작성하면 이후 본인 신청만 표시돼요.</div>';
+  }
+  // === 리스트 ===
+  if(rows.length===0){
+    // 결과를 좁히는 필터(검색·컬럼·지난감추기·신청자·상태)가 걸려 0건인지 구분 (브리프 #6)
+    const _flt=!!((_promoFilter.q&&_promoFilter.q.trim())||(Object.keys(_promoFilter.colFilters||{}).length)||_promoFilter.hidePast||_promoFilter.applicant||(_promoFilter.status&&_promoFilter.status!=='all'));
+    // 본인 신청 보기 모드에서 0건이면 전체 보기 버튼 강조 (admin 제외)
+    const canShowAll=!isAdmin&&myApplicant&&_promoFilter.viewMode==='mine';
+    if(_flt){
+      html+='<div class="u-empty"><div class="ico">🔍</div><div class="msg">조건에 맞는 일정이 없어요</div><button class="btn btn--neutral btn--sm" onclick="_promoResetFilters()">필터 초기화</button></div>';
+    }else if(canShowAll){
+      html+='<div class="u-empty"><div class="ico">📭</div><div class="msg">아직 본인 신청한 일정이 없어요</div><button class="btn btn--ghost btn--sm" onclick="_promoFilter.viewMode=\'all\';renderPromoBoard()">👥 다른 사람 신청 보기</button></div>';
+    }else{
+      html+='<div class="u-empty"><div class="ico">📭</div><div class="msg">신청 내역이 없습니다</div></div>';
+    }
+  }else{
+    // 정렬 가능 헤더 빌더 (액션 컬럼 제외 모두 정렬 가능) — 비활성에도 ▾ 옅게 표시 (필터 가능 안내)
+    function _sh(col,label,width){
+      const filterable=PROMO_FILTERABLE.indexOf(col)>=0;
+      const hasFilter=filterable&&_promoFilter.colFilters&&_promoFilter.colFilters[col]&&_promoFilter.colFilters[col].length;
+      const isOn=_promoFilter.sortBy===col;
+      let arrow,arrowColor,arrowSize;
+      if(isOn){
+        arrow=_promoFilter.sortDir==='asc'?'▲':'▼';arrowColor='#fff';arrowSize='10px';
+      }else{
+        arrow='▾';arrowColor=filterable?'rgba(255,255,255,0.6)':'rgba(255,255,255,0.42)';arrowSize='9px';
+      }
+      const savedW=_colWidths&&_colWidths[col];
+      const useW=savedW||width;
+      const widthStyle=useW?'width:'+useW+'px;':'';
+      const activeStyle=(isOn||hasFilter)?'background:rgba(255,255,255,0.12);font-weight:800;':'';
+      const clickAttr=filterable?'onclick="openColFilter(\''+col+'\',event)"':'onclick="setPromoSort(\''+col+'\')"';
+      const ttl=filterable?'클릭: 필터·정렬 선택':'클릭: 정렬 / 다시: 역순 / 한 번 더: 해제';
+      const dot=hasFilter?'<span style="margin-left:3px;font-size:8px;color:#ffd24a;vertical-align:middle">●</span>':'';
+      return '<th data-col="'+col+'" '+clickAttr+' style="padding:10px 12px;text-align:left;'+widthStyle+'cursor:pointer;user-select:none;color:#fff;'+activeStyle+'" title="'+ttl+'">'+label+'<span style="margin-left:5px;font-size:'+arrowSize+';color:'+arrowColor+'">'+arrow+'</span>'+dot+'<span class="col-resize-handle" onmousedown="_onColResizeStart(event,this.parentElement)" onclick="event.stopPropagation()"></span></th>';
+    }
+    // 모서리 둥근 wrapper + 살짝 투명도 헤더 (#8 thead 고정: overflow:hidden 제거 → sticky 가능, 둥근 모서리는 th 코너 radius로 대체)
+    html+='<div style="border-radius:12px;border:1px solid #f0f0f0;margin-bottom:10px"><table class="promo-board-table" style="width:100%;border-collapse:collapse;font-size:13px;text-align:left;table-layout:fixed"><thead><tr style="background:rgba(74,77,231,0.95);color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:0.5px">';
+    html+=_sh('no','NO',60);
+    html+=_sh('status','상태',80);
+    html+=_sh('progress','진행',70);
+    html+=_sh('date','날짜',90);
+    html+=_sh('time','시간',110);
+    html+=_sh('platform','플랫폼',125);
+    html+=_sh('category','구분',70);
+    html+=_sh('content','콘텐츠',null);
+    html+=_sh('manager','담당자',90);
+    html+=_sh('applicant','신청자',90);
+    const actW=(_colWidths&&_colWidths.action)||90;
+    html+='<th data-col="action" style="padding:10px 4px;text-align:center;width:'+actW+'px;color:#fff">변경</th>';
+    html+='</tr></thead><tbody>';
+    let _adminLastSection=-1;
+    let _cancelSectionPrinted=false;
+    // 검색·필터가 걸려 있으면 접힌 섹션도 펼쳐서 결과를 숨기지 않음(검색했는데 안 보이는 함정 방지)
+    const _anyFilter=!!((_promoFilter.q&&_promoFilter.q.trim())||(_promoFilter.colFilters&&Object.keys(_promoFilter.colFilters).length));
+    const _effCollapsed=_anyFilter?new Set():_collapsedSecs;
+    const _adminSectionLabels={0:'🔔 신청 대기 중',1:'🎯 오늘 일정',2:'📅 예정된 일정',3:'🗂️ 지난 일정',4:'🚫 취소된 일정'};
+    const _adminSectionDescs={0:'체크하면 일괄 처리 가능',1:'오늘 진행할 홍보',2:'다가오는 홍보',3:'과거 기록',4:'취소된 신청'};
+    // 사용자 모드: 취소 row를 표 뒤로 이동 (admin은 _getAdminSection이 처리)
+    if(!isAdmin){
+      const _activeRs=rows.filter(function(rr){return (rr['진행 상태']||'').toString().trim()!=='취소';});
+      const _cancelRs=rows.filter(function(rr){return (rr['진행 상태']||'').toString().trim()==='취소';});
+      rows=_activeRs.concat(_cancelRs);
+    }
+    rows.forEach(function(r,idx){
+      const _animDelay=Math.min(idx*25,600)+'ms';
+      // === admin 섹션 헤더 row + 신청 대기 숨김 처리 ===
+      if(isAdmin){
+        const _sec=_getAdminSection(r,todayKey);
+        // 신청 대기 영역: 알림 배지 클릭 후에만 펼침
+        if(_sec===0 && !_showApplyList) return;
+        if(_sec!==_adminLastSection){
+          const _sCount=rows.filter(function(rr){return _getAdminSection(rr,todayKey)===_sec;}).length;
+          const _sBg=_sec===0?'rgba(216,132,85,0.08)':_sec===1?'rgba(74,77,231,0.06)':_sec===2?'#fafafa':'#f5f5f5';
+          const _sBorder=_sec===0?'border-top:2px solid var(--peach);border-bottom:1px solid rgba(216,132,85,0.2)':_sec===1?'border-top:2px solid var(--accent);border-bottom:1px solid rgba(74,77,231,0.15)':'border-top:1px solid #eee;border-bottom:1px solid #eee';
+           const _collapsible=(_sec===4);
+          const _isCol=_effCollapsed.has(_sec);
+          const _secAttr=_collapsible?' onclick="_togglePastSec('+_sec+')" title="'+(_isCol?'펼치기':'접기')+'" style="background:'+_sBg+';'+_sBorder+';cursor:pointer"':' style="background:'+_sBg+';'+_sBorder+'"';
+          let _sectionRowHtml='<tr'+_secAttr+'><td colspan="11" style="padding:10px 14px">';
+          _sectionRowHtml+='<div style="display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;color:var(--ink);letter-spacing:0.3px">';
+          // 신청 대기 헤더 — 전체 선택 체크박스
+          if(_sec===0){
+            _sectionRowHtml+='<label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer" onclick="event.stopPropagation()"><input type="checkbox" id="apply-select-all" onchange="toggleAllPending(this)" style="width:14px;height:14px;accent-color:var(--peach);cursor:pointer"><span>'+_adminSectionLabels[_sec]+'</span></label>';
+          } else {
+            _sectionRowHtml+=(_collapsible?'<span style="margin-right:2px;color:#999;font-size:10px">'+(_isCol?'▸':'▾')+'</span>':'')+_adminSectionLabels[_sec];
+          }
+          _sectionRowHtml+=' <span style="color:#888;font-size:11px;font-weight:500">('+_sCount+'건)</span><span style="color:#aaa;font-size:11px;font-weight:400;margin-left:6px">'+_adminSectionDescs[_sec]+'</span>';
+          // 신청 대기 헤더 — 우측 일괄 액션 버튼 (체크 후 노출)
+          if(_sec===0){
+            _sectionRowHtml+='<div id="apply-bulk-actions" style="display:none;margin-left:auto;gap:6px;align-items:center">';
+            _sectionRowHtml+='<button id="apply-bulk-approve-btn" onclick="event.stopPropagation();bulkApprovePending()" style="padding:5px 12px;border-radius:8px;border:1.5px solid #0F8B4C;background:#0F8B4C;color:#fff;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .12s" onmouseover="this.style.background=\'#0a6e3c\'" onmouseout="this.style.background=\'#0F8B4C\'">✓ 선택한 건 접수</button>';
+            _sectionRowHtml+='<button id="apply-bulk-cancel-btn" onclick="event.stopPropagation();bulkCancelPending()" style="padding:5px 12px;border-radius:8px;border:1.5px solid var(--danger-btn);background:#fff;color:var(--danger-btn);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .12s;margin-left:6px" onmouseover="this.style.background=\'var(--danger-btn)\';this.style.color=\'#fff\'" onmouseout="this.style.background=\'#fff\';this.style.color=\'var(--danger-btn)\'">✕ 선택한 건 취소</button>';
+            _sectionRowHtml+='</div>';
+          }
+          _sectionRowHtml+='</div></td></tr>';
+          html+=_sectionRowHtml;
+          _adminLastSection=_sec;
+        }
+        // 접힌 섹션(취소): 헤더만 노출하고 행은 숨김. 지난 일정은 항상 표시.
+        if(_effCollapsed.has(_sec)) return;
+      }
+      // === 사용자 모드: 취소 row 첫 만남 시 섹션 헤더 출력 ===
+      if(!isAdmin && !r._isSpecial){
+        const _isCancelRow=(r['진행 상태']||'').toString().trim()==='취소';
+        if(_isCancelRow && !_cancelSectionPrinted){
+          _cancelSectionPrinted=true;
+          const _cCount=rows.filter(function(rr){return (rr['진행 상태']||'').toString().trim()==='취소';}).length;
+          html+='<tr style="background:#fafafa;border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0"><td colspan="11" style="padding:10px 14px;font-size:12px;font-weight:600;color:#888"><span style="margin-right:4px">🚫</span>취소된 일정<span style="color:#aaa;font-weight:500;font-size:11px;margin-left:6px">('+_cCount+'건) 취소된 신청</span></td></tr>';
+        }
+      }
+      // === 특수일정 row ===
+      if(r._isSpecial){
+        const it=r._spItem;
+        const parsed=r._spParsed;
+        const typeStr=r._spTypeStr;
+        const m2=String(r['월']).padStart(2,'0'),d2=String(r['일']).padStart(2,'0');
+        const dateKey=getRecDateKey(r);
+        const isToday=dateKey===todayKey;
+        const isPast=dateKey<todayKey;
+        const rangeStr=(it.end&&it.end!==it.start)?(m2+'/'+d2+' ~ '+(String(it.start).slice(0,7)===String(it.end).slice(0,7)?it.end.slice(8):it.end.slice(5).replace('-','/'))):(m2+'/'+d2);
+        // 행 배경 — 살구 톤 (시각 구분)
+        const trBg='background:rgba(240,196,184,0.10)';
+        const trBorder='border-left:3px solid var(--peach)';
+        const hoverBg='rgba(240,196,184,0.22)';
+        const baseBg='rgba(240,196,184,0.10)';
+        // 시간 표시
+        const timeStr=parsed.s||'';
+        const endStr=parsed.e?'~'+parsed.e:'';
+        // 콘텐츠 칸: 라벨
+        const labelStr=it.label||typeStr;
+        const rawNo=(r['#']!==''&&r['#']!==null&&r['#']!==undefined)?r['#']:(r._rowIndex-1);
+        const noShort='S'+String((parseInt(rawNo,10)||0)%100).padStart(2,'0');
+        const noTitle='고유번호: '+rawNo;
+        const todayBadge=isToday?'<span style="display:inline-block;padding:2px 7px;border-radius:6px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;letter-spacing:0.5px;margin-left:5px">오늘</span>':'';
+        const clickAttr=userRole==='admin'?' onclick="_schedReturnFlag=true;closePromoBoard();openSpecialEntry(null,'+r._rowIndex+')"':'';
+        html+='<tr class="promo-row"'+clickAttr+' style="border-bottom:1px solid #f0f0f0;cursor:'+(userRole==='admin'?'pointer':'default')+';'+trBg+';'+trBorder+';animation-delay:'+_animDelay+'" onmouseover="this.style.background=\''+hoverBg+'\'" onmouseout="this.style.background=\''+baseBg+'\'">';
+        html+='<td title="'+escapeHtml(noTitle)+'" style="padding:10px 12px;text-align:left;color:#aaa;font-variant-numeric:tabular-nums;font-size:11px;font-weight:600;cursor:help">'+escapeHtml(noShort)+'</td>';
+        // 상태: 예정/완료 — 수동 완료(비고) 또는 종료시각 경과 시 완료 (색상은 콘텐츠 row와 동일 팔레트)
+        const spSt=_spStatus(it);
+        html+='<td style="padding:10px 12px;text-align:left"><span style="display:inline-block;padding:3px 10px;border-radius:10px;background:'+(spSt==='완료'?'#DBEAFE':'#E8F5EC')+';color:'+(spSt==='완료'?'#2563EB':'#0F8B4C')+';font-size:11px;font-weight:600;white-space:nowrap">'+spSt+'</span></td>';
+        html+='<td style="padding:10px 12px;text-align:left;color:#bbb;font-size:11px">-</td>';
+        html+='<td style="padding:10px 12px;text-align:left;color:'+(isPast?'#aaa':'var(--ink)')+';white-space:nowrap"><span style="font-variant-numeric:tabular-nums">'+rangeStr+'</span>'+todayBadge+'</td>';
+        html+='<td style="padding:10px 12px;text-align:left;color:'+(isPast?'#aaa':'var(--ink)')+';font-variant-numeric:tabular-nums;white-space:nowrap">'+escapeHtml(timeStr)+(endStr?'<span style="color:#aaa;margin-left:3px">'+escapeHtml(endStr)+'</span>':'')+'</td>';
+        // 플랫폼 (유형): 일반 색
+        html+='<td style="padding:10px 12px;text-align:left;color:#555;font-size:12px;white-space:nowrap">'+escapeHtml(typeStr)+'</td>';
+        // 구분: 홍보
+        html+='<td style="padding:10px 12px;text-align:left;color:#666;font-size:11px;white-space:nowrap">홍보</td>';
+        html+='<td style="padding:10px 12px;text-align:left;color:#222;font-weight:500;overflow:hidden" title="'+escapeHtml(labelStr)+'"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+escapeHtml(labelStr)+'</div></td>';
+        html+='<td style="padding:10px 12px;text-align:left;color:#555;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+escapeHtml(it.person||'-')+'">'+escapeHtml(it.person||'-')+'</td>';
+        // 신청자 컬럼 — S 시리즈는 신청 개념 없음 (담당자 일정). 빈 칸으로 컬럼 정렬만 맞춤.
+        html+='<td style="padding:10px 12px;text-align:left;color:#bbb;font-size:12px;white-space:nowrap">—</td>';
+        // 액션 — admin만 삭제
+        html+='<td style="padding:10px 4px;text-align:center;white-space:nowrap">';
+        if(userRole==='admin'){
+          // 특수 일정 우측 액션: 클릭 → 완료/변경 선택 메뉴. 삭제는 우클릭 메뉴로.
+          html+='<button onclick="_spRowMenu(event,'+r._rowIndex+')" title="완료 처리 / 변경" style="padding:5px 10px;border-radius:8px;border:none;background:transparent;color:#ccc;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;min-width:50px;transition:all .12s" onmouseover="this.innerHTML=\'변경\';this.style.color=\'var(--accent)\';this.style.background=\'rgba(74,77,231,0.08)\';this.style.fontSize=\'12px\'" onmouseout="this.innerHTML=\'—\';this.style.color=\'#ccc\';this.style.background=\'transparent\';this.style.fontSize=\'14px\'">—</button>';
+        }
+        html+='</td>';
+        html+='</tr>';
+        return;
+      }
+      // === 콘텐츠 row (기존) ===
+      const status=r['진행 상태']||'-';
+      const uiStatus=getUiStatusLabel(status, r['직전 상태']);
+      const uiProgress=getUiProgressLabel(status, r['직전 상태']);
+      const _pColor=uiProgress==='재신청 대기'?'#C97A11':(uiProgress==='-'?'#ccc':'#999');
+      const _pWeight=uiProgress==='-'?'400':'600';
+      const isApplying=status==='신청 중';
+      const isWaiting=status==='신청 중';
+      const isPendingLike=isApplying||isWaiting;
+      // 상태별 색상: 신청 중=살구, 예정=초록, 완료=파랑, 취소=회색
+      const sColor=uiStatus==='완료'?'#2563EB':uiStatus==='취소'?'#888':uiStatus==='예정'?'#0F8B4C':uiStatus==='신청 중'?'var(--peach-text)':uiStatus==='보류'?'#C97A11':'#888';
+      const sBg=uiStatus==='완료'?'#DBEAFE':uiStatus==='취소'?'#f0f0f0':uiStatus==='예정'?'#E8F5EC':uiStatus==='신청 중'?'var(--peach-light)':uiStatus==='보류'?'#FFF4DC':'#f5f5f5';
+      const m2=String(r['월']||'').padStart(2,'0'),d2=String(r['일']||'').padStart(2,'0');
+      let timeStr='';
+      const ts=r['입력시간(KST)'];
+      if(typeof ts==='string'&&ts.indexOf(' ')>-1)timeStr=ts.split(' ')[1].substr(0,5);
+      else if(typeof ts==='number'){const tm=Math.round((ts%1)*1440),hh=Math.floor(tm/60),mm=tm%60;timeStr=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');}
+      const plat1=r['플랫폼 1']||'';
+      const plat2=r['플랫폼 2']&&r['플랫폼 2']!=='-'?r['플랫폼 2']:'';
+      const cat=r['콘텐츠 구분']||'';
+      const y=r['연도'],dateKey=y+'-'+m2+'-'+d2;
+      const isMine=_isMineRec(r,myApplicant);
+      const isToday=dateKey===todayKey;
+      const isFuture=dateKey>todayKey;
+      const isPast=dateKey<todayKey;
+      const isPending=isPendingLike;
+      // 행 배경: zebra만 유지 (isMine 강조 제거 — 모든 row 동일하게)
+      let trBg='',trBorder='border-left:3px solid transparent';
+      if(idx%2===0){
+        trBg='background:#fafafa';
+      }
+      const hoverBg='#f0f0f0';
+      const baseBg=trBg.replace('background:','')||'transparent';
+      // 오늘 배지 (강조색1)
+      const todayBadge=isToday?'<span style="display:inline-block;padding:2px 7px;border-radius:6px;background:var(--accent);color:#fff;font-size:9px;font-weight:700;letter-spacing:0.5px;margin-left:5px">오늘</span>':'';
+      // NO: r['#'] 값 우선, 빈 값이면 _rowIndex 기반 fallback
+      const rawNo=(r['#']!==''&&r['#']!==null&&r['#']!==undefined)?r['#']:(r._rowIndex-1);
+      const noShort='H'+String((parseInt(rawNo,10)||0)%100).padStart(2,'0');
+      const noTitle='고유번호: '+rawNo;
+      // 콘텐츠 (제목 + 프로그램)
+      const title=r['콘텐츠 제목']||'';
+      const prog=r['프로그램']||'-';
+      // 플랫폼 (P1 › P2)
+      const platHtml=escapeHtml(plat1||'-')+(plat2?'<span style="color:#bbb;margin:0 4px">›</span>'+escapeHtml(plat2):'');
+      html+='<tr class="promo-row" onclick="openPromoBoardRow(\''+dateKey+'\','+r._rowIndex+',true)" oncontextmenu="onEvContextMenu(event,'+r._rowIndex+',\''+dateKey+'\');return false;" style="border-bottom:1px solid #f0f0f0;cursor:pointer;'+trBg+';'+trBorder+';animation-delay:'+_animDelay+'" onmouseover="this.style.background=\''+hoverBg+'\'" onmouseout="this.style.background=\''+baseBg+'\'">';
+      // === NO 셀 — 편집모드: 일괄변경 체크박스 / admin 신청대기: 접수 체크박스 / 그 외: 일반 ===
+      if(_editMode && _editableRec(r)){
+        const _ec=_editChecks.has(r._rowIndex)?'checked':'';
+        html+='<td style="padding:10px 8px;text-align:left;white-space:nowrap" onclick="event.stopPropagation()"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" data-edit-row="'+r._rowIndex+'" '+_ec+' onchange="_toggleEditCheck('+r._rowIndex+', this)" onclick="event.stopPropagation()" style="width:14px;height:14px;accent-color:var(--accent);cursor:pointer"><span title="'+escapeHtml(noTitle)+'" style="color:var(--past-text);font-variant-numeric:tabular-nums;font-size:11px;font-weight:600">'+escapeHtml(noShort)+'</span></label></td>';
+      } else if(_editMode){
+        html+='<td title="변경 권한이 없거나 종결된 일정이에요" style="padding:10px 12px;text-align:left;color:var(--muted);font-variant-numeric:tabular-nums;font-size:11px;font-weight:600;cursor:not-allowed">'+escapeHtml(noShort)+'</td>';
+      } else if(isAdmin && (r['진행 상태']||'')==='신청 중'){
+        const _chkAttr = _pendingChecks.has(r._rowIndex) ? 'checked' : '';
+        html+='<td style="padding:10px 8px;text-align:left;white-space:nowrap" onclick="event.stopPropagation()"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" data-pending-row="'+r._rowIndex+'" '+_chkAttr+' onchange="togglePendingCheck('+r._rowIndex+', this)" onclick="event.stopPropagation()" style="width:14px;height:14px;accent-color:var(--peach);cursor:pointer"><span title="'+escapeHtml(noTitle)+'" style="color:#aaa;font-variant-numeric:tabular-nums;font-size:11px;font-weight:600">'+escapeHtml(noShort)+'</span></label></td>';
+      } else {
+        html+='<td title="'+escapeHtml(noTitle)+'" style="padding:10px 12px;text-align:left;color:#aaa;font-variant-numeric:tabular-nums;font-size:11px;font-weight:600;cursor:help">'+escapeHtml(noShort)+'</td>';
+      }
+      html+='<td style="padding:10px 12px;text-align:left"><span style="display:inline-block;padding:3px 10px;border-radius:10px;background:'+sBg+';color:'+sColor+';font-size:11px;font-weight:600;white-space:nowrap">'+escapeHtml(uiStatus)+'</span></td>';
+      html+='<td style="padding:10px 12px;text-align:left;color:'+_pColor+';font-size:11px;font-weight:'+_pWeight+';white-space:nowrap">'+escapeHtml(uiProgress)+'</td>';
+      html+='<td style="padding:10px 12px;text-align:left;color:'+(isPast?'#aaa':'var(--ink)')+';white-space:nowrap"><span style="font-variant-numeric:tabular-nums">'+m2+'/'+d2+'</span>'+todayBadge+'</td>';
+      html+='<td style="padding:10px 12px;text-align:left;color:'+(isPast?'#aaa':'var(--ink)')+';font-variant-numeric:tabular-nums;white-space:nowrap">'+timeStr+'</td>';
+      html+='<td style="padding:10px 12px;text-align:left;color:#555;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+escapeHtml(platHtml.replace(/<[^>]+>/g,''))+'">'+platHtml+'</td>';
+      html+='<td style="padding:10px 12px;text-align:left;color:#666;font-size:11px;white-space:nowrap">'+escapeHtml(cat||'-')+'</td>';
+      html+='<td style="padding:10px 12px;text-align:left;color:#222;font-weight:500;overflow:hidden" title="'+escapeHtml(title)+(prog?' / '+escapeHtml(prog):'')+'"><div style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.35;word-break:break-word">'+escapeHtml(title)+'</div><div style="font-size:11px;color:#888;font-weight:400;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+escapeHtml(prog)+'</div></td>';
+      // 담당자 컬럼 — 게시 담당자 (홍보 담당자 1명 또는 'Rowan Bennett 22951')
+      html+='<td style="padding:10px 12px;text-align:left;color:#555;font-weight:500;white-space:nowrap">'+escapeHtml(r['게시 담당자']||'상관 없음')+'</td>';
+      // 신청자 컬럼 — 추후 사용자 시스템 도입 후 본인 이름. 지금은 'Rowan Bennett 22951' 디폴트
+      html+='<td style="padding:10px 12px;text-align:left;color:#888;font-size:12px;white-space:nowrap">'+escapeHtml(r['신청자']||'상관 없음')+'</td>';
+      // 액션 — 모든 행 단일 [변경] 메뉴 버튼으로 통일 (클릭→onEvContextMenu, 우클릭과 동일 분기). A-1
+      // 노출: admin은 항상 / user는 본인 '신청 중'·'보류'만 (예정·완료·취소·남의것 = 액션 없음). A-2
+      const dKey=getRecDateKey(r);
+      const _hasRowAction = isAdmin || (isMine && (status==='신청 중' || status==='보류'));
+      html+='<td style="padding:10px 4px;text-align:center;white-space:nowrap">';
+      if(_hasRowAction){
+        html+='<button onclick="event.stopPropagation();onEvContextMenu(event,'+r._rowIndex+',\''+dKey+'\')" title="메뉴 열기" style="padding:5px 14px;border-radius:8px;border:1px solid rgba(74,77,231,0.18);background:rgba(74,77,231,0.07);color:var(--accent);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;min-width:50px;transition:all .12s" onmouseover="this.style.background=\'rgba(74,77,231,0.16)\'" onmouseout="this.style.background=\'rgba(74,77,231,0.07)\'">변경</button>';
+      }
+      html+='</td>';
+      html+='</tr>';
+    });
+    html+='</tbody></table></div>';
+  }
+  body.innerHTML=html;
+  // 재렌더 후 일괄 액션 UI 복원
+  if(isAdmin && _pendingChecks.size > 0){
+    setTimeout(updateBulkActionsUI, 50);
+  }
+  // 일괄 변경 모드 하단 바 상태 동기화
+  setTimeout(_updateEditBar, 50);
+}
+
+async function submitPromoEdit(){
+  if(!_pwEditTarget||!_pwOriginalRec){showToast('변경 대상 없음','error');return;}
+  const orig=_pwOriginalRec;
+  const patch={};
+  // Step 1 — 프로그램 (콘텐츠 구분 자동 매핑)
+  if(_pwSelectedSteps.includes(1)){
+    patch['프로그램']=_pwData.program;
+    const typeMap={'c':'공연','e':'전시','a':'예술교육','r':'대관'};
+    patch['콘텐츠 구분']=typeMap[_pwData.programType]||orig['콘텐츠 구분'];
+  }
+  // Step 2 — 콘텐츠 제목
+  if(_pwSelectedSteps.includes(2)){
+    patch['콘텐츠 제목']=_pwData.title;
+  }
+  // Step 3 — 일자·시간
+  if(_pwSelectedSteps.includes(3)){
+    const[y,m,d]=_pwData.date.split('-').map(Number);
+    const ts=_pwData.date+' '+_pwData.time+':00';
+    const serial=Math.floor(Date.UTC(y,m-1,d)/86400000)+25569;
+    const DAYS=['일','월','화','수','목','금','토'];
+    patch['연도']=y;
+    patch['월']=m;
+    patch['일']=d;
+    patch['요일']=DAYS[new Date(y,m-1,d).getDay()]+'요일';
+    patch['입력시간(KST)']=ts;
+    patch['날짜']=serial;
+  }
+  // Step 4 — 플랫폼·형식·내용·게시담당자
+  if(_pwSelectedSteps.includes(4)){
+    patch['플랫폼 1']=_pwData.plat1;
+    patch['플랫폼 2']=_pwData.plat2||'-';
+    if(typeof resolvePwFormat==='function')patch['콘텐츠 형식']=resolvePwFormat();
+    if(typeof buildPwContentText==='function')patch['콘텐츠 내용']=buildPwContentText();
+    patch['게시 담당자']=_pwData.applicant;
+  }
+  // Step 6 — 비고
+  if(_pwSelectedSteps.includes(6)){
+    patch['비고']=_pwData.memo;
+  }
+  // Step 7 — 진행 상태 (admin only)
+  if(_pwSelectedSteps.includes(7)&&userRole==='admin'){
+    patch['진행 상태']=_pwData.status;
+  }
+  // Step 8 — 신청자 (admin only) — 대행 신청 건의 실제 신청자로 재지정
+  if(_pwSelectedSteps.includes(8)&&userRole==='admin'&&_pwData.s_applicant){
+    patch['신청자']=_pwData.s_applicant;
+  }
+  // admin이 신청 중 항목을 1건 이상 변경하면 자동으로 「예정」으로 승인 (Step 7로 직접 지정한 경우는 admin 선택 우선)
+  if(userRole==='admin' && (orig['진행 상태']||'')==='신청 중' && !patch['진행 상태'] && Object.keys(patch).length>0){
+    patch['진행 상태']='예정';
+    if((orig['재신청사유']||'').toString().trim())patch['재신청사유']='';  // 재신청 1회분 소비
+  }
+  if(!Object.keys(patch).length){showToast('변경된 항목이 없어요','error');return;}
+  // [버그수정] 일정 관련 항목(일자·시간/프로그램/플랫폼)이 바뀔 때만 해당 제약 재검증 — 제목·메모만 수정은 미차단
+  {
+    var _dtCh=_pwSelectedSteps.includes(3), _progCh=_pwSelectedSteps.includes(1), _platCh=_pwSelectedSteps.includes(4);
+    if(_dtCh||_progCh||_platCh){
+      var _st=String(orig['진행 상태']||'').trim();
+      // [260812 운영자 2차 「완료돼도 본인이면 내용은 수정」] 완료 건은 **일정 축만** 계속 잠근다 — 내용(step 4)·제목·비고는 통과.
+      //   취소 건은 종전대로 전면 차단(종결 = 되살리는 경로가 따로 있다).
+      if(_st==='취소'){showToast('취소된 일정은 변경할 수 없어요','error');return;}
+      if(_st==='완료'&&(_dtCh||_progCh)){showToast('완료된 일정은 일자·프로그램을 바꿀 수 없어요 — 내용만 수정할 수 있어요','error');return;}
+      var _effDate=_dtCh?_pwData.date:_recDate(orig);
+      var _effTime=_dtCh?_pwData.time:_recTime(orig);
+      var _effPlat=_platCh?_pwData.plat1:(orig['플랫폼 1']||'');
+      var _effProg=_progCh?_pwData.program:(orig['프로그램']||'');
+      var _effAppl=_platCh?_pwData.applicant:(orig['게시 담당자']||'');
+      var _dateChanged=_dtCh&&(_pwData.date!==_recDate(orig));  // 날짜 자체가 바뀌었는가 (시간만 변경 구분)
+      // 날짜/시간 변경 시: 접수·홍보시간대·제외·담당자 검증
+      if(_dtCh){ var _c=canApplyOnDateTime(_effDate,_effTime); if(!_c.ok){showToast('변경 불가: '+_c.reason,'error');return;} }
+      // 날짜 or 프로그램 변경 시: 홍보기간 검증 (홍보시작일~판매종료일, 미설정 시 공연종료일)
+      // [260812] 완료 건은 「홍보 기간 창」 판정 대상이 아니다 — 이미 나간 홍보다. 창이 닫혔다는 이유로
+      //   오탈자·문구 수정이 막히면 운영자 지시(완료 건 내용 수정 허용)가 이 검사 하나에 무효화된다.
+      var _perf=(_st==='완료')?null:_findPerfByName(_effProg);
+      if(_perf){ if(_progCh && !_promoOn(_perf) && PERFS.some(function(x){return _promoOn(x);})){showToast('변경 불가: 이 프로그램은 홍보가 꺼져 있어요 (홍보 대상 아님)','error');return;} var _ppe=_perf.se||_perf.e; if(_perf.ps&&_effDate<_perf.ps){showToast('변경 불가: 홍보 시작('+_perf.ps+') 전이라 홍보할 수 없어요','error');return;} if(_ppe&&_effDate>_ppe){showToast('변경 불가: 홍보 종료('+_ppe+') 후라 홍보할 수 없어요','error');return;} }
+      // 카카오/문자 2일연속·중복은 날짜 기반 — 날짜가 바뀌거나 플랫폼이 바뀔 때만 검증(시간/제목만 변경은 제외). 자기 자신 제외
+      // 완료 건은 **플랫폼 값이 실제로 바뀐 경우에만** 충돌 검사 — 값이 그대로면 「연일 회피」가 과거 실적의 문구 수정을 막는다(자기 자신은 이미 제외돼도 인접일 건에 걸린다).
+      var _platValCh=_platCh&&((_pwData.plat1||'')!==(orig['플랫폼 1']||''));
+      if(_dateChanged||(_st==='완료'?_platValCh:_platCh)){ var _kc=_kakaoSmsConflict(_effPlat,_effDate,_effAppl,_pwEditTarget); if(_kc){showToast('변경 불가: '+_kc,'error');return;} }
+    }
+  }
+  // [버그수정] 상태를 예정/신청 중으로 되돌리는 변경(자동 승인 포함)도 카카오/문자 충돌 재검증
+  // — 일자·플랫폼을 안 바꾸고 상태만 승인하면 위 블록을 건너뛰어 충돌 검사가 누락되던 우회 차단
+  {
+    var _newSt=patch['진행 상태'];
+    if(_newSt&&_newSt!==(orig['진행 상태']||'')&&(_newSt==='예정'||_newSt==='신청 중')){
+      var _vDate=_pwSelectedSteps.includes(3)?_pwData.date:_recDate(orig);
+      var _vPlat=_pwSelectedSteps.includes(4)?_pwData.plat1:(orig['플랫폼 1']||'');
+      var _vAppl=_pwSelectedSteps.includes(4)?_pwData.applicant:(orig['게시 담당자']||'');
+      var _kc2=_kakaoSmsConflict(_vPlat,_vDate,_vAppl,_pwEditTarget);
+      if(_kc2){showToast('변경 불가: '+_kc2,'error');return;}
+    }
+  }
+  // [취소 사유 통일] 관리자가 상태를 '취소'로 바꾸면 단건 취소(cancelWithReason)·일괄 취소·재신청 취소와
+  //   동일하게 취소 사유를 입력받아 신청자에게 사유까지 전달. 본인(신청자=관리자) 건은 사유 없이 진행.
+  var _cxReason='';
+  if(patch['진행 상태']==='취소' && (orig['진행 상태']||'')!=='취소'){
+    var _cxMe='';try{_cxMe=sessionStorage.getItem('myApplicant')||'';}catch(_ce){}
+    var _cxMine=!!_cxMe && (orig['신청자']||'').toString().trim()===_cxMe;
+    if(!_cxMine){
+      _cxReason=await _renderCancelReasonModal(1);
+      if(!_cxReason)return;   // 사유 미입력/모달 닫힘 → 저장 중단
+      patch['취소사유']=_cxReason;
+    }
+  }
+  showOverlayLoad('변경 사항 저장 중');
+  try{
+    if(patch['프로그램']!==undefined)patch['공연ID']=_recPerfId(patch['프로그램']);  // [정규화] 프로그램 변경 → ID 동기화
+    const row = buildRecordRow(orig, patch);
+    await api('PATCH','/api/records/'+_pwEditTarget,{values: row});
+    // 메시지함 hook — admin이 타인 신청을 변경·승인·상태변경하면 신청자에게 알림
+    try{
+      if(userRole==='admin'){
+        var _ntAppl=(orig['신청자']||'').toString().trim();
+        var _ntMe='';try{_ntMe=sessionStorage.getItem('myApplicant')||'';}catch(_e3){}
+        if(_ntAppl&&_ntAppl!==_ntMe){
+          var _ntBeg=orig['진행 상태']||'';
+          var _ntEnd=patch['진행 상태']||_ntBeg;
+          var _ntCh=_ntEnd!==_ntBeg;
+          pushMessage({recipient:_ntAppl,type:(_ntCh&&(_ntEnd==='취소'||_ntEnd==='보류'))?'중요':'일반',
+            trigger:_ntCh?(_ntBeg+'→'+_ntEnd):'변경',
+            before:_ntBeg,after:_ntEnd,
+            reason:(_ntEnd==='취소'&&_cxReason)?_cxReason:(_ntCh?'관리자가 처리했어요':'관리자가 신청 내용을 변경했어요'),
+            refNo:orig['No']||orig['NO']||'',refSummary:(getRecDateKey(orig)+' '+(orig['플랫폼 1']||'')+' '+(orig['콘텐츠 제목']||'')).trim()});
+        }
+      }
+    }catch(_e){ console.error('[pushMessage edit]', _e); }
+    // 메시지함 hook — [260812 운영자] 신청자 본인이 **확정 이후(예정·완료)** 건의 내용을 고치면 관리자 전원에게 알림.
+    //   수신자 산출·본인 제외·필드 표기는 재신청 알림(C-2)의 자구를 그대로 계승한다(새 알림 문법 창작 0).
+    //   신청 중 건은 대상이 아니다 — 아직 관리자 손에 안 들어간 초안이라 승인 때 어차피 통째로 본다.
+    try{
+      if(userRole!=='admin'&&_cwIsPostFix(orig)){
+        var _ueSt=(orig['진행 상태']||'').toString().trim();
+        var _ueWho='';try{_ueWho=sessionStorage.getItem('myApplicant')||'';}catch(_e5){}
+        var _ueFields=(_pwSelectedSteps||[]).map(function(s){return _CW_STEP_LABEL[s]||('항목'+s);}).filter(Boolean).join('·');
+        var _ueSummary=(getRecDateKey(orig)+' '+(orig['플랫폼 1']||'')+' '+(orig['콘텐츠 제목']||'')).trim();
+        (MANAGERS||[]).forEach(function(a){
+          if(!isFlagOn(a['관리자여부']))return;
+          var _an=(a['담당자']||'').toString().trim();
+          if(!_an||_an===_ueWho)return;   // 고친 본인이 관리자면 자기 알림 제외(재신청 알림과 동일 규칙)
+          pushMessage({recipient:_an,type:'일반',trigger:'내용 수정',before:_ueSt,after:_ueSt,
+            reason:(_ueWho||'신청자')+' 님이 '+_ueSt+' 건을 수정했어요 — '+(_ueFields||'내용'),
+            refNo:orig['No']||orig['NO']||'',refSummary:_ueSummary});
+        });
+      }
+    }catch(_e){ console.error('[pushMessage user post-fix edit]', _e); }
+    showToast('변경 사항이 저장됐어요','success');
+    closePromoWizard(true);
+    await syncReload(0);
+    render();
+    if(typeof renderPromoBoard==='function')renderPromoBoard();
+  }catch(e){
+    console.error(e);
+    showToast('저장 실패: '+e.message,'error');
+  }finally{
+    if(typeof hideOverlayLoad==='function')hideOverlayLoad();
+  }
+}
+
+function canApprove(rec,excludeRowIdx){
+  const y=rec['연도'],m=String(rec['월']||'').padStart(2,'0'),d=String(rec['일']||'').padStart(2,'0');
+  const dateKey=y+'-'+m+'-'+d;
+  if(!y)return{ok:true};
+  const p1=rec['플랫폼 1']||'',p2=rec['플랫폼 2']||'';
+  // (260611) 카카오 2일 연속·문자 중복 제한 전면 폐지 — 사용자 지시
+  return{ok:true};
+}
+
+async function approvePromo(){
+  if(!editing?.existing)return;
+  if(userRole!=='admin'){showToast('관리자만 할 수 있어요','error');return;}
+  const ok=await showConfirm('이 홍보 신청을 승인할까요?');if(!ok)return;
+  showOverlayLoad();
+  try{
+    // 진행 상태 = "예정"으로 변경 + 시간/날짜 등은 modal 폼에서 현재 값으로
+    const _apRec=editing.existing;
+    // 현재 모달 폼의 값으로 갱신 (관리자가 시간/날짜 조정 가능)
+    document.getElementById('f-status').value='예정';
+    const _saved=await saveEntry();  // 기존 row in-place PATCH
+    if(_saved){
+      // 메시지함 hook — 접수(승인) 알림 (다른 승인 경로와 동일)
+      try{
+        pushMessage({recipient:_apRec['신청자']||'',type:'일반',trigger:'신청중→예정',before:_apRec['진행 상태']||'신청 중',after:'예정',reason:'',refNo:_apRec['No']||_apRec['NO']||'',refSummary:(getRecDateKey(_apRec)+' '+(_apRec['플랫폼 1']||'')+' '+(_apRec['콘텐츠 제목']||'')).trim()});
+      }catch(_e){ console.error('[pushMessage approvePromo]', _e); }
+      showToast('승인됐어요');
+    }
+  }catch(e){showToast('승인 실패: '+e.message,'error');}
+  finally{hideOverlayLoad();}
+}
+
+async function rejectPromo(){
+  if(!editing?.existing)return;
+  if(userRole!=='admin'){showToast('관리자만 할 수 있어요','error');return;}
+  // 사유 입력 (반려는 record 삭제 → 신청자 메시지에 사유 전달 필수)
+  const reason=await _renderCancelReasonModal(1,{
+    title:'신청 반려',
+    subtitle:'반려 사유를 입력해 주세요. 신청자에게 전달되며 기록이 삭제됩니다.',
+    labelText:'반려 사유',
+    placeholder:'예: 동일 일정 중복 / 정책 부적합 / 자료 불충분 등',
+    buttonLabel:'반려 (삭제)',
+    buttonColor:'var(--danger-btn)'
+  });
+  if(!reason)return;
+  // DELETE 전 record 정보 캐시 (메시지 푸시용)
+  const _rec = editing.existing;
+  const _refNo = _rec['No']||_rec['NO']||'';
+  const _refApplicant = _rec['신청자']||'';
+  const _refSum = (_rec['날짜']||'') + ' ' + (_rec['플랫폼 1']||'') + ' ' + (_rec['콘텐츠 제목']||'');
+  showOverlayLoad();
+  try{
+    const ri=_rec._rowIndex;
+    await api('POST','/api/records-delete',{rowIndex:ri});
+    // 메시지함 hook (중요: 신청→반려, 신청자에게 사유 전달)
+    try{
+      if(_refApplicant){
+        pushMessage({
+          recipient: _refApplicant,
+          type: '중요',
+          trigger: '신청→반려',
+          before: _rec['진행 상태']||'신청 중',
+          after: '반려 (삭제)',
+          reason: reason,
+          refNo: _refNo,
+          refSummary: _refSum.trim()
+        });
+      }
+    }catch(_e){ console.error('[pushMessage reject]', _e); }
+    closeModal();
+    await syncReload(-1);
+    closePanel();
+    showToast('반려 처리됐어요 (사유 전달됨)');
+  }catch(e){showToast('반려 실패: '+e.message,'error');}
+  finally{hideOverlayLoad();}
+}
+
+async function submitPromoRequest(){
+  // ===== 신청 직전 재검증 (통합 게이트: 접수/홍보시간대/제외/담당자/판매기간/카카오문자) =====
+  const _v=_validateScheduleChange(null,_pwData.date,_pwData.time,{action:'submit',plat1:_pwData.plat1,plat2:_pwData.plat2,applicant:_pwData.applicant,program:_pwData.program});
+  if(!_v.ok){showToast('신청 불가: '+_v.reason,'error');return;}
+  showOverlayLoad();
+  try{
+    // 임시저장 이어쓰기 제출이면 그 행을 PATCH해 전환 (No 보존 · 중복 행 방지)
+    const _draftRec=_pwData._draftRow?records.find(function(r){return r._rowIndex===_pwData._draftRow;}):null;
+    var _batchOff=(_pwBatchQueue!=null)?Math.max(0,_pwBatchTotal-_pwBatchQueue.length-1):0;  // 배치 순차: syncReload 전이라 records 미갱신 → No 오프셋(중복 방지)
+    const _subNo=_draftRec?(_draftRec['No']||_draftRec['NO']||records.length+1):(records.length+1+_batchOff);
+    // 29컬럼 row = 공용 빌더(단건/임시저장/배치 단일 진실원). 진행상태 admin='예정'/user='신청 중'
+    const row=_buildRecRow(_pwData, (userRole==='admin'?'예정':'신청 중'), _subNo, false);
+    if(_pwData._draftRow){
+      await api('PATCH','/api/records/'+_pwData._draftRow,{values:row});
+    }else{
+      await api('POST','/api/records',{values:row});
+    }
+    // ⚠️ myApplicant는 절대 _pwData.applicant(게시 담당자, P열)로 덮어쓰지 않음.
+    // 로그인 시 line 1400에서 본인 이름으로 이미 저장됨. 위저드에서 갱신 불필요.
+    // 이전 코드 (if userRole!=='admin' setItem _pwData.applicant)는
+    // user의 myApplicant를 게시 담당자 값으로 오염시키는 버그였음.
+    // 예: Cameron Lane 09790이 게시 담당자=Avery Reed 08336으로 신청 → localStorage가 'Avery Reed 08336'으로 덮어씌워짐
+    // → UI가 "Avery Reed 08336 님"으로 바뀌고 "내 신청만" 필터 작동 안 함.
+    if(_pwBatchQueue!=null){ hideOverlayLoad(); _pwRunNextJob(); return; }  // [배치 순차] syncReload·완료화면은 큐 끝에서 1회
+    await syncReload();
+    _pwStep=99;
+    renderPwStep();
+    setTimeout(function(){
+      const acts=document.getElementById('pw-acts');
+      if(acts)acts.innerHTML='<button class="m-btn save" onclick="closePromoWizard(true);openPromoBoard()" style="margin-left:auto">신청 내역 보기</button>';
+    },50);
+  }catch(e){
+    showToast('신청 실패: '+e.message,'error');
+  }finally{
+    hideOverlayLoad();
+  }
+}

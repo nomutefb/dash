@@ -1,0 +1,363 @@
+10016:    같은 연도 안에서 같은 사업코드를 2건 이상 공유하는 행(브런치 4회·결과발표전 5인 등)은 부모 행 1개로 접고,
+10017:    부모를 누르면 자식이 펼쳐진다. 부모 지표 = ov 면: 사업비 시트 그 코드 행(없으면 자식 합) · sales 면: 자식 관객·오픈석 합.
+10018:    두 면이 같은 함수·같은 키(`grp:코드|연도`)를 쓰므로 덱 전환 시 스크롤 복원(_progRailScrollSet)도 그대로 맞물린다.
+10019:    끄기: window._PROG_RAIL_GRP=false. 펼침 상태: _progRailGrpOpen[코드|연도]. */
+10020: var _progRailGrpOpen={};
+10021: function _progRailGrpToggle(k){ _progRailGrpOpen[k]=!_progRailGrpOpen[k]; try{ if(typeof _bizDeck!=='undefined'&&_bizDeck==='ov'){ _bizOVReRender(); } else { _bizSalesDetailRefresh(); } }catch(_e){} }
+10022: function _prGrpCode(r){ return (r&&r.pm)?String(r.pm.사업코드||'').trim():''; }
+10023: function _prGroupRows(sorted){
+10024:   if(window._PROG_RAIL_GRP===false)return sorted.map(function(r){return {row:r};});
+10025:   var cnt={}; sorted.forEach(function(r){ var c=_prGrpCode(r); if(c)cnt[c]=(cnt[c]||0)+1; });
+10026:   var out=[],done={};
+10027:   sorted.forEach(function(r){ var c=_prGrpCode(r); if(!c||cnt[c]<2){ out.push({row:r}); return; } if(done[c])return; done[c]=1; out.push({grp:{code:c,rows:sorted.filter(function(x){return _prGrpCode(x)===c;})}}); });
+10028:   return out;
+10029: }
+10030: function _prGrpName(code,y,rows){
+10031:   var f=null; try{ f=_finRowByNo(code,y); }catch(_e){}
+10032:   if(f&&f.name)return String(f.name);
+10033:   var names=rows.map(function(r){return String(r.name||'');});
+10034:   var pre=names[0]||'';
+10035:   names.forEach(function(n){ var i=0; while(i<pre.length&&i<n.length&&pre.charAt(i)===n.charAt(i))i++; pre=pre.slice(0,i); });
+10036:   pre=pre.replace(/[\s<〈(\[_:·-]+$/,'').trim();
+10037:   return (pre.length>=4)?pre:(names[0]+' 외 '+(names.length-1));
+10038: }
+10039: function _prGrpStatus(rows){
+10040:   var st=rows.map(function(r){return r._st||'';});
+10041:   if(st.indexOf('판매 중')>=0)return '판매 중';
+10042:   if(st.indexOf('진행 중')>=0||st.indexOf('홍보 중')>=0)return '진행 중';
+10043:   if(st.length&&st.every(function(s){return s==='완료';}))return '완료';
+10044:   return st.indexOf('계획')>=0?'계획':(st[0]||'계획');
+10045: }
+10046: function _prGroupParentHtml(mode,grp,y,i){
+10047:   var rows=grp.rows, code=grp.code, gk=code+'|'+y, open=!!_progRailGrpOpen[gk];
+10048:   rows.forEach(function(r){ if(!r._st)_prSharedCells(r); });   /* 자식 상태 확정(접혀 있어도 부모 상태 집계에 필요) */
+10049:   var _nameHdPad=_BIZ_HALL_BADGE_L+_BIZ_HALL_BADGE_W+_BIZ_HALL_BADGE_GAP, _colGap=22;
+10050:   var s=Math.min.apply(null,rows.map(function(r){return Number(r.pm._s)||99999999;})), e=Math.max.apply(null,rows.map(function(r){return Number(r.pm._e)||0;}));
+10051:   function d8(v){ v=String(v||''); return v.length>=8?v.slice(4,6)+'.'+v.slice(6,8):''; }
+10052:   var sch=(d8(e)&&d8(e)!==d8(s))?(d8(s)+'~'+d8(e)):d8(s);
+10053:   var dateTxt=(sch?_pmScheduleText(sch):'')||'—';
+10054:   var gu=rows[0].gu, bun=rows[0].bun, guColor=(gu==='기획')?'var(--accent)':'var(--neutral-text)';
+10055:   var name=_prGrpName(code,y,rows), st=_prGrpStatus(rows);
+10056:   var shared='<td style="padding:7px '+_BIZ_LIST_TEXT_PAD+'px;padding-left:14px;color:var(--neutral-text);white-space:nowrap;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis">'+escapeHtml(dateTxt)+'</td>'
+10057:     +'<td style="padding:7px '+_BIZ_LIST_TEXT_PAD+'px;color:'+guColor+';white-space:nowrap">'+escapeHtml(gu)+'</td>'
+10058:     +'<td style="padding:7px '+_BIZ_LIST_TEXT_PAD+'px;color:var(--neutral-text);white-space:nowrap">'+escapeHtml(bun==='교육'?'예술교육':bun)+'</td>'
+10059:     +'<td style="padding:7px '+_BIZ_LIST_TEXT_PAD+'px 7px '+_nameHdPad+'px;position:relative;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;color:var(--text)" title="'+escapeHtml(name+' · '+code+' · '+rows.length+'건')+'"><span class="pr-grp-caret" style="display:inline-block;width:12px;color:var(--dim)">'+(open?'∨':'›')+'</span>'+escapeHtml(name)+' <span class="rail-yrm-gc">'+rows.length+'</span></td>'
+10060:     +_progStatusCell(st);
+10061:   var metric='';
+10062:   if(mode==='ov'){
+10063:     var dash='<span style="color:var(--dim)">—</span>';
+10064:     var finMil1=function(v){if(v==null||!isFinite(v))return '—';return (Number(v)/1e6).toLocaleString(undefined,{minimumFractionDigits:1,maximumFractionDigits:1});};
+10065:     var f=null; try{ f=_finRowByNo(code,(y==='미정'?null:y)); }catch(_e){}
+10066:     var c=null,v=null;
+10067:     if(f){ c=_finCalc(f).cost; v=Number(f.rev)||0; }
+10068:     else { c=0; v=0; var any=false; rows.forEach(function(r){ var p=r.pm; if(p&&p.사업비!=null&&isFinite(Number(p.사업비))){c+=Number(p.사업비);any=true;} if(p&&p.수입!=null&&isFinite(Number(p.수입))){v+=Number(p.수입);any=true;} }); if(!any){c=null;v=null;} }
+10069:     var m=(c!=null&&isFinite(c)&&c>0&&v>0)?Math.round(v/c*100)+'%':'—';
+10070:     metric='<td style="padding:7px 10px 7px '+_colGap+'px;text-align:right;color:var(--peach-text);font-weight:700;font-variant-numeric:tabular-nums">'+(c==null?dash:finMil1(c))+'</td>'
+10071:       +'<td style="padding:7px 10px 7px '+_colGap+'px;text-align:right;color:var(--green);font-weight:700;font-variant-numeric:tabular-nums">'+(v==null?dash:finMil1(v))+'</td>'
+10072:       +'<td style="padding:7px 10px 7px '+_colGap+'px;text-align:right;color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums">'+m+'</td>'
+10073:       +'<td style="padding:7px 14px 7px '+_colGap+'px;text-align:right;color:var(--neutral-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11.5px">'+escapeHtml(code)+(f?'':' <span style="color:var(--dim)">합</span>')+'</td>';
+10074:   } else {
+10075:     var mute='<span style="color:var(--muted);font-weight:500">—</span>';
+10076:     var paid=0,open_=0,cnt=0,anyG=false,genre='-',isEx=false;
+10077:     rows.forEach(function(r){ var g=r.g; if(!g)return; anyG=true; if(genre==='-'&&g.genre)genre=g.genre; if(g.genre==='전시')isEx=true; if(g._st==='planned'||g._dbOnly)return; var p=(g._sold!=null&&g._sold>0)?g._sold:(g.paid||0); paid+=p; open_+=(g.open||0); cnt+=(g.cnt||0); });
+10078:     var paidTxt=!anyG?mute:(paid>0?Math.round(paid).toLocaleString():mute);
+10079:     var openTxt=(!anyG||isEx)?mute:((open_>0?Math.round(open_).toLocaleString():mute)+'('+cnt+')');
+10080:     var avgTxt=(!anyG||isEx||!(open_>0))?'—':(paid/open_*100).toFixed(1);
+10081:     metric='<td style="padding:7px 12px 7px '+_colGap+'px;text-align:right;color:var(--neutral-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+escapeHtml(genre)+'</td>'
+10082:       +'<td style="padding:7px 12px 7px '+_colGap+'px;text-align:right;color:var(--peach-text);font-weight:700;font-variant-numeric:tabular-nums">'+paidTxt+'</td>'
+10083:       +'<td style="padding:7px 12px 7px '+_colGap+'px;text-align:right;color:var(--neutral-text);white-space:nowrap;font-variant-numeric:tabular-nums">'+openTxt+'</td>'
+10084:       +'<td style="padding:7px 12px 7px '+_colGap+'px;text-align:right;color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums">'+avgTxt+'</td>';
+10085:   }
+10086:   return '<tr class="pr-grp" data-pkey="grp:'+escapeHtml(gk)+'" data-pgrp="'+escapeHtml(gk)+'" onclick="_progRailGrpToggle(\''+escapeHtml(gk)+'\')" title="'+escapeHtml(name+' · 사업 '+code+' — 눌러서 '+(open?'접기':'펼치기'))+'" style="border-bottom:1px solid var(--border);cursor:pointer;background:var(--past-bg)">'+shared+metric+'</tr>';
+10087: }
+10088: (function(){ if(document.getElementById('pr-grp-css'))return; var st=document.createElement('style'); st.id='pr-grp-css'; st.textContent='tr.pr-child td:nth-child(4)::before{content:"└ ";color:var(--dim);font-weight:400}'; document.head.appendChild(st); })();
+10089: 
+10090: function _progRailTableHtml(mode,opt){
+10091:   mode=(mode==='ov')?'ov':'sales';
+10092:   var years=[],cat,rent,st;
+10093:   if(mode==='ov'){ var ys=_bizOvDataYears(),pick=_bizOvYearPick(); years=(pick==='all'?ys:[pick]).filter(function(y){return ys.indexOf(y)>=0;}); cat=_bizOvAnnualCat==='교육'?'예술교육':(_bizOvAnnualCat==='전시'?'전시':'공연'); rent=!!window._bizOVRentOn; st=_bizOV; years=years.slice().sort(function(a,b){return st.yearDesc?b-a:a-b;}); }
+10094:   else { var sel=(opt&&opt.yearSel!==undefined)?opt.yearSel:_ryYearSel(); var on=(typeof _programTypesOn==='function')?_programTypesOn():[_programTypeFilter||'공연']; cat=on[0]||'공연'; var cats=on.slice(); rent=!!window._progRentOn; st=_bizLT; var S0=_prSalesIndex(cats,rent); var ySet={}; S0.rows.forEach(function(g){ var yy=_prYearOf(g); if(yy)ySet[yy]=1; }); ((typeof _PM!=='undefined'&&_PM)||[]).forEach(function(p){ if(Number(p.연도))ySet[Number(p.연도)]=1; }); var all=Object.keys(ySet).map(function(k){return k==='미정'?k:Number(k);}); years=(sel===_RY_YEAR_ALL?all:all.filter(function(y){return String(y)===String(sel);})); years=years.slice().sort(function(a,b){ if(a==='미정')return 1; if(b==='미정')return -1; return st.yearDesc?b-a:a-b; }); }
+10095:   try{ _finWarm(); }catch(_e){}
+10096:   var groups=_prModel({years:years,cats:(mode==='ov')?[cat]:cats,rent:rent});
+10097:   var heads=(mode==='ov')?[['일자',''],['구분',''],['분야',''],['제목',''],['상태',''],['사업비','백만원'],['수입','백만원'],['수익률','%'],['비고','']]
+10098:                          :[['일자',''],['구분',''],['분야',''],['제목',''],['상태',''],['장르',''],['관객수','명'],['오픈석','명, 회'],['점유율','%']];
+10099:   var h='<table data-prog-rail="'+mode+'" style="width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px">'+_prColgroup()+'<thead><tr style="color:var(--dim);font-size:12px;text-align:left">'+heads.map(function(c,i){return _prHeadCell(c[0],c[1],i,mode);}).join('')+'</tr></thead><tbody>';
+10100:   var tok=(cat==='전시'?'--peach-text':cat==='예술교육'?'--green':'--accent');
+10101:   groups.forEach(function(grp){
+10102:     var y=grp.y, rows=grp.rows, n=rows.length, folded=!!_progRailFold[y];
+10103:     var sorted=rows;
+10104:     if(!folded&&st.key){
+10105:       var f=(mode==='ov')?function(r){ var p=r.pm; var v=!p?null:(st.key==='cost'?p.사업비:(st.key==='rev'?p.수입:p.수익률)); var nn=Number(v); return (v!=null&&v!==''&&isFinite(nn))?nn:-1; }
+10106:                           :function(r){ var g=r.g; if(!g)return -1; return st.key==='paid'?((g._sold!=null&&g._sold>0)?g._sold:(g.paid||0)):(st.key==='open'?(g.open||0):((g.avg!=null&&isFinite(g.avg))?g.avg:-1)); };
+10107:       sorted=rows.slice().sort(function(a,b){ return (f(a)-f(b))*st.dir; });
+10108:     }
+10109:     h+='<tr data-y="'+y+'" onclick="_progRailFoldToggle(\''+y+'\')" style="cursor:pointer"><td colspan="9" style="padding:0;position:sticky;top:44px;z-index:2;background:var(--surface-solid)"><div class="ry-grp-hd" style="--gtok:var('+tok+')">'+(folded?'› ':'')+(y==='미정'?'연도 미상':y+'년')+' <span class="rail-yrm-gc">'+n+'</span></div></td></tr>';
+10110:     if(folded)return;
+10111:     /* [260903 M-3] 사업코드 그룹 — 같은 코드 2건 이상이면 부모 행 + (펼침 시) 자식 행. 끄기 window._PROG_RAIL_GRP=false */
+10112:     var _rowHtml=function(r,i,cls){
+10113:       var shared=_prSharedCells(r);
+10114:       var metric=(mode==='ov')?_prOvCells(r):_prSalesCells(r);
+10115:       var title=(mode==='ov')?'':(function(){ var _fy=r.y, _fn=null; try{_fn=_finOf(r.name,_fy);}catch(_e){} return _fn?(' title="'+escapeHtml('사업비 '+_fn.no+' — 전표실적 '+(_fn.vou||0).toLocaleString()+'원 · 판매수수료 '+(_fn.fee||0).toLocaleString()+'원 · 정산서매출 '+(_fn.rev||0).toLocaleString()+'원 (눌러서 보기)')+'"'):''; })();
+10116:       var _cy=(r.g&&r.g.end&&r.g.end.getFullYear)?r.g.end.getFullYear():r.y;
+10117:       h+='<tr'+cls+' data-pkey="'+escapeHtml(r.key)+'" data-pname="'+escapeHtml(r.name)+'" data-pyear="'+_cy+'" data-pst="'+escapeHtml(r._st||'')+'" onclick="_progRailRowClick(this)"'+title+' style="border-bottom:1px solid var(--border);cursor:pointer;'+(i%2?'background:var(--past-bg);':'')+'">'+shared+metric+'</tr>';
+10118:     };
+10119:     var _items=_prGroupRows(sorted), _ri=-1;
+10120:     _items.forEach(function(it){
+10121:       if(it.grp){ _ri++; h+=_prGroupParentHtml(mode,it.grp,y,_ri); if(!_progRailGrpOpen[it.grp.code+'|'+y])return; it.grp.rows.forEach(function(r){ _ri++; _rowHtml(r,_ri,' class="pr-child"'); }); return; }
+10122:       _ri++; _rowHtml(it.row,_ri,'');
+10123:     });
+10124:   });
+10125:   h+='</tbody></table>';
+10126:   return h;
+10127: }
+10128: function _progRailFoldToggle(y){ _progRailFold[y]=!_progRailFold[y]; try{ if(typeof _bizDeck!=='undefined'&&_bizDeck==='ov'){ _bizOVReRender(); } else { _bizSalesDetailRefresh(); } }catch(_e){} }
+10129: function _progRailRowClick(tr){
+10130:   var name=tr.getAttribute('data-pname'), y=Number(tr.getAttribute('data-pyear')), st=tr.getAttribute('data-pst');
+10131:   if(typeof _bizDeck!=='undefined'&&_bizDeck==='ov'){ try{ _finOpen(name,y); }catch(_e){} return; }
+10132:   if(st==='판매 중'){ try{ _bizSalesRowPick(name); }catch(_e){} } else { try{ _pastAudOpen(name,y); }catch(_e){} }
+10133: }
+10134: /* ov 면 레일 — 기존 틀(머리줄·카드·#bizov-year-list·#rail-yrm-uha)은 그대로, 표만 공용 */
+10135: function _progRailRender(el){
+10136:   window._bizOVEl=el;
+10137:   _bizOvDetailLoad();
+10138:   _pmLoad().then(function(){ if((typeof _PM!=='undefined')&&_PM&&_PM.length>1600&&el&&el.isConnected&&el.getAttribute('data-v46')!=='1'){ _bizOvYearRail(el); } }).catch(function(){});
+10139:   var h='<div style="position:relative">'+_bizmHead('','프로그램',' ')+_BIZM_BOX
+10140:     +'<div data-bizmfill data-bizmcap style="min-height:0;border:1px solid var(--border);border-radius:12px;background:var(--surface-solid);display:flex;flex-direction:column;overflow:hidden"><div id="bizov-year-list" class="ry-grp-bd" style="min-height:0;overflow-x:auto;overflow-y:auto">'   /* [260902 좌측 틀 통일] 판매현황 면 래퍼와 동일 마크업(둥글기·테두리·상한 고정·페이드) */
+10141:     +_progRailTableHtml('ov')
+10142:     +'</div></div><div id="rail-yrm-uha"></div></div></div>';
+10143:   el.innerHTML=h;
+10144:   _bizOvUhaPark();
+10145:   el.setAttribute('data-v46',(((typeof _PM!=='undefined')&&_PM&&_PM.length>1600)?'1':'0'));
+10146:   setTimeout(function(){try{_srailAlignTop();}catch(_e){}},0);
+10147: }
+10148: /* 덱 전환 — 같은 행 목록이면 스크롤 위치를 넘겨받는다 */
+10149: function _progRailScrollGet(){ try{ var t=document.querySelector('#rail-yrm table[data-prog-rail]'); var sc=t&&t.closest?t.closest('.ry-grp-bd'):null; if(!sc)return null; var keys=Array.prototype.map.call(sc.querySelectorAll('tr[data-pkey]'),function(t){return t.getAttribute('data-pkey');}); return {top:sc.scrollTop,keys:keys}; }catch(_e){ return null; } }
+10150: function _progRailScrollSet(saved){ try{ if(!saved)return; var t=document.querySelector('#rail-yrm table[data-prog-rail]'); var sc=t&&t.closest?t.closest('.ry-grp-bd'):null; if(!sc)return; var keys=Array.prototype.map.call(sc.querySelectorAll('tr[data-pkey]'),function(t){return t.getAttribute('data-pkey');}); if(keys.length!==saved.keys.length)return; for(var i=0;i<keys.length;i+=Math.max(1,Math.floor(keys.length/20))){ if(keys[i]!==saved.keys[i])return; } sc.scrollTop=saved.top; }catch(_e){} }
+10151: 
+10152: function _bizOvYearRail(el){ if(window._PROG_RAIL_ON&&typeof _progRailRender==='function'){ return _progRailRender(el); }   /* [260902 프로그램 레일 통합] */
+10153:   window._bizOVEl=el;
+10154:   _bizOvDetailLoad();
+10155:    _pmLoad().then(function(){if((typeof _PM!=='undefined')&&_PM&&_PM.length>1600&&el&&el.isConnected&&el.getAttribute('data-v46')!=='1'){_bizOvYearRail(el);}}).catch(function(){}); /* [WA33-v1] 로드 완료 시 1회 재렌더 */
+10156:   var years=_bizOvDataYears(),pick=_bizOvYearPick();
+10157:   var shown=(pick==='all'?years:[pick]).filter(function(y){return years.indexOf(y)>=0;});
+10158:   var cat=_bizOvAnnualCat==='교육'?'예술교육':(_bizOvAnnualCat==='전시'?'전시':'공연');
+10159:   var h='<div style="position:relative">'+_bizmHead('','프로그램',' ')+_BIZM_BOX;
+10160:   var _nameHdPad=_BIZ_HALL_BADGE_L+_BIZ_HALL_BADGE_W+_BIZ_HALL_BADGE_GAP, _colGap=22;
+10161:   var finMil1=function(v){if(v==null||!isFinite(v))return '—';return (Number(v)/1e6).toLocaleString(undefined,{minimumFractionDigits:1,maximumFractionDigits:1});};
+10162:    var hrow=function(label,unit,i){var _sk=(i>=4&&i<=6);return '<td'+(i===0?' onclick="_bizOVDate()"':(_sk?' onclick="_bizOVHead('+i+')"':''))+' style="padding:8px 12px;position:sticky;top:0;z-index:1;background:var(--surface-solid);box-shadow:inset 0 -2px 0 var(--border);vertical-align:middle;'+((i===0||_sk)?'cursor:pointer;':'')+(i>=4?'text-align:right;padding-left:'+_colGap+'px;':'')+(i===0?'padding-left:20px;':'')+(i===3?'padding-left:8px;':'')+(i===7?'padding-right:14px;':'')+'white-space:nowrap">'+label+(i===0?(_bizOV.yearDesc?' ∨':' ∧'):'')+(_sk&&_bizOV.key===(i===4?'cost':(i===5?'rev':'margin'))?(_bizOV.dir>0?' ∧':' ∨'):'')+(unit?'<div style="font-size:10.5px;font-weight:400;margin-top:2px">(단위: '+unit+')</div>':'')+'</td>';}; /* [WA36-v1] */
+10163:      h+='<div class="bizm-card" data-bizmfill style="display:flex;flex-direction:column;margin-bottom:0"><div id="bizov-year-list" class="ry-grp-bd" style="min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 0 4px"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead><tr style="color:var(--dim);font-size:12px;text-align:left">'+[['일자',''],['구분',''],['분야',''],['제목',''],['사업비','백만원'],['수입','백만원'],['수익률','%'],['비고','']].map(function(c,i){return hrow(c[0],c[1],i)+(i===3?'<td style="padding:8px 12px;position:sticky;top:0;z-index:1;background:var(--surface-solid);box-shadow:inset 0 -2px 0 var(--border);vertical-align:middle;white-space:nowrap">상태</td>':'');}).join('')+'</tr></thead><tbody>';
+10164:   shown.slice().sort(function(a,b){return _bizOV.yearDesc?b-a:a-b;}).forEach(function(y){
+10165:     var rows=[];
+10166:  var _v46=(typeof _PM!=='undefined')&&_PM&&_PM.length>1600;
+10167:  if(_v46){
+10168:    var wantBun=(cat==='예술교육')?['교육']:((cat==='전시')?['전시']:['공연','기타']);
+10169:    var ORD={'공연':0,'전시':1,'교육':2,'기타':3};
+10170:    rows=_PM.filter(function(p){return Number(p.연도)===y&&wantBun.indexOf(p.분야)>=0;}).map(function(p){return {'사업명':p.명칭,'사업비':p.사업비,'수입':p.수입,'수익률':p.수익률,'부문':(cat==='예술교육'?'교육':cat),'비고':(p.비고||null),'구분2':p.구분2,'분야':p.분야,'__pm':p};}).sort(function(a,b){return (a.__pm._s-b.__pm._s)||(ORD[a.분야]-ORD[b.분야]);}); /* [WA36-v1] */
+10171:  }else 
+10172:      if(y>=2024)rows=_finRows(y).filter(function(r){return (r.cat==='교육'?'예술교육':r.cat)===cat;}).sort(function(a,b){var ad=_bizOvDateSortKey(_bizOvProgramDate(y,a.name)),bd=_bizOvDateSortKey(_bizOvProgramDate(y,b.name));if(ad!==bd)return ad-bd;return String(a.no).localeCompare(String(b.no),'en',{numeric:true});});
+10173:     else rows=_bizOvDetailRows().filter(function(r){var part=String(r['부문']||'');return Number(r['연도'])===y&&(cat==='예술교육'?(part==='교육'||part==='예술교육'):part===cat||(!part&&cat==='공연'));});
+10174:       if(!rows.length)return; /* [WA36-v1] 빈 연도 불릿 숨김 */
+10175:        rows=rows.filter(function(r){var _g=(String(r['구분2']||'')==='대관');return window._bizOVRentOn?_g:!_g;});   /* [WA73-v2] 기획⇄대관 배타 */if(!rows.length)return;var _ovCnt=rows.length;
+10176:       if(_bizOV.fold[y]){rows=[];}else if(_bizOV.key){var _ovf=function(r){var v=(_bizOV.key==='cost')?r['사업비']:((_bizOV.key==='rev')?r['수입']:r['수익률']);var n=Number(v);return (v!=null&&v!==''&&isFinite(n))?n:-1;};rows=rows.slice().sort(function(a,b){return (_ovf(a)-_ovf(b))*_bizOV.dir;});}
+10177:       h+='<tr data-y="'+y+'" onclick="_bizOVFold(this)" style="cursor:pointer"><td colspan="9" style="padding:0;position:sticky;top:36px;z-index:2;background:var(--surface-solid)"><div class="ry-grp-hd" style="--gtok:var('+(cat==='전시'?'--peach-text':cat==='예술교육'?'--green':'--accent')+')">'+(_bizOV.fold[y]?'› ':'')+y+'년 <span class="rail-yrm-gc">'+_ovCnt+'</span></div></td></tr>';
+10178:      rows.forEach(function(r,i){
+10179:     var isPast=(y<2024)||!!r.__pm,name=isPast?String(r['사업명']||''):String(r.name||''),cost=isPast?(r['사업비']==null?null:(isFinite(Number(r['사업비']))?Number(r['사업비']):String(r['사업비']))):_finCalc(r).cost,rev=isPast?(r['수입']==null?null:Number(r['수입'])):(Number(r.rev)||0),margin=(isPast&&r['수익률']!=null)?(isFinite(Number(r['수익률']))?Number(r['수익률']):String(r['수익률'])):(isPast?null:_finCalc(r).margin),date=isPast?null:_bizOvProgramDate(y,name),pmDate='—';
+10180:    if(isPast&&!r.__pm&&_BPL_BY_KEY){var pmIds=_BPL_BY_KEY[String(y)+'|'+String(r['부문'])+'|'+String(r['사업명'])]||[];pmDate=pmIds.map(function(id){return _PM_BY_ID[id];}).filter(function(p){return p&&p['일정']!=null&&String(p['일정'])!=='';}).map(function(p){return _pmScheduleText(p['일정']);}).join(' · ')||'—';}
+10181:    if(r.__pm&&r.__pm['일정']!=null&&String(r.__pm['일정'])!==''){pmDate=_pmScheduleText(r.__pm['일정'])||'—';}
+10182:     var gu=r.구분2||'—',bun=r.분야||(cat==='예술교육'?'교육':cat),isRent=(gu==='대관');
+10183:     var guColor=(gu==='기획')?'var(--accent)':((gu==='대관')?'var(--dim)':'var(--neutral-text)');
+10184:    var dash='<span style="color:var(--dim)">—</span>';
+10185:     var _pstv=(r.__pm)?_progStatus({s:r.__pm._s,e:r.__pm._e,ps:r.__pm._ps,hs:r.__pm._hs,wg:r.__pm._wg,st:r.__pm._st,acct:/^(망마_|장도_)/.test(String(r['사업명']||''))}):_progStatusOf(r['사업명']||name,y,null,null,false); var _pst=_progStatusCell(_pstv); var _lrev=0; if(gu==='기획'&&Number(rev)===0&&(_pstv==='판매 중'||_pstv==='진행 중'||_pstv==='홍보 중')){try{var _si96=_bizSalesIdx(y); if(!_si96&&!window.__wa96r){window.__wa96r=1; setTimeout(function(){try{if(window._bizOVEl)_bizOvYearRail(window._bizOVEl)}catch(_e){}},4000);} var _sp96=_si96&&_si96[_uName(String(r['사업명']||name))]; _lrev=_sp96?(Number(_sp96.money)||0):0}catch(_e){}} var _mrg=null; var _c98=Number(cost), _v98=(Number(rev)>0?Number(rev):_lrev); if(isFinite(_c98)&&_c98>0&&_v98>0)_mrg=_v98/_c98*100;   /* [WA77b-v1] */
+10186:     h+='<tr data-bizov-program="1" data-bizov-name="'+escapeHtml(name)+'" data-bizov-year="'+y+'" style="border-bottom:1px solid var(--border);cursor:pointer;'+(i%2?'background:var(--past-bg);':'')+'">'
+10187:       +'<td style="padding:7px '+_BIZ_LIST_TEXT_PAD+'px;padding-left:20px;color:var(--neutral-text);white-space:nowrap">'+(isPast?escapeHtml(pmDate):_bizOvDateText(date))+'</td>'
+10188:       +'<td style="padding:7px '+_BIZ_LIST_TEXT_PAD+'px;color:'+guColor+';white-space:nowrap">'+escapeHtml(gu)+'</td>'
+10189:       +'<td style="padding:7px '+_BIZ_LIST_TEXT_PAD+'px;color:var(--neutral-text);white-space:nowrap">'+escapeHtml(bun)+'</td>'
+10190:        +'<td style="padding:7px '+_BIZ_LIST_TEXT_PAD+'px 7px '+_nameHdPad+'px;max-width:0;width:100%;position:relative;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600;color:var(--text)" title="'+escapeHtml(name)+'">'+_bizHallBadge(_bizHallOf({name:name,end:(date&&date.end)||date||new Date(y,11,31)}))+escapeHtml(name)+'</td>'+_pst
+10191:       +'<td style="padding:7px 10px 7px '+_colGap+'px;text-align:right;color:var(--peach-text);font-weight:600;font-variant-numeric:tabular-nums">'+(isRent?dash:(typeof cost==='string'?cost:((r.__pm&&r.__pm.사업비분할)?finMil1(cost*r.__pm.사업비분할)+'<span style="font-weight:400;color:var(--neutral-text);display:inline-block;width:0;white-space:nowrap">/'+r.__pm.사업비분할+'</span>':finMil1(cost))))+'</td>'
+10192:        +'<td style="padding:7px 10px 7px '+_colGap+'px;text-align:right;color:var(--green);font-weight:600;font-variant-numeric:tabular-nums">'+((r.__pm&&Number(r.__pm.무료여부)===1)?'무료':((gu==='기획'&&Number(rev)===0)?((_pstv==='완료')?'무료':((_pstv==='취소'||_pstv==='—')?'—':finMil1(_lrev))):((r.__pm&&r.__pm.수입분할)?finMil1(rev*r.__pm.수입분할)+'<span style="font-weight:400;color:var(--neutral-text);display:inline-block;width:0;white-space:nowrap">/'+r.__pm.수입분할+'</span>':finMil1(rev))))+'</td>'
+10193:       +'<td style="padding:7px 10px 7px '+_colGap+'px;text-align:right;color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums">'+(isRent?dash:(typeof margin==='string'?margin:(_mrg==null?'—':Math.round(_mrg)+'%')))+'</td>'
+10194:      +'<td style="padding:7px 14px 7px '+_colGap+'px;text-align:right;color:var(--neutral-text);white-space:nowrap;font-size:11.5px">'+(r['비고']?escapeHtml(String(r['비고']).slice(0,20)):'&nbsp;')+'</td>'
+10195:    +'</tr>';
+10196:  });
+10197:   });
+10198:    h+='</tbody></table></div></div><div id="rail-yrm-uha"></div></div></div>';
+10199:     el.innerHTML=h;
+10200:     var _bizOvYearList=document.getElementById('bizov-year-list');
+10201:     if(_bizOvYearList){
+10202:       _bizOvYearList.addEventListener('click',function(e){
+10203:         var row=e.target&&e.target.closest?e.target.closest('tr[data-bizov-program]'):null;
+10204:         if(!row||!_bizOvYearList.contains(row))return;
+10205:         _finOpen(row.getAttribute('data-bizov-name'),Number(row.getAttribute('data-bizov-year')));
+10206:       });
+10207:     }
+10208:     _bizOvUhaPark();
+10209:    el.setAttribute('data-v46',(((typeof _PM!=='undefined')&&_PM&&_PM.length>1600)?'1':'0')); /* [WA33-v1] */
+10210:    setTimeout(function(){try{_srailAlignTop();}catch(_e){}},0);   /* [WA8B-v1] 재렌더 직후 캡 재계산 */
+10211: }
+10212: // [260812 6차 운영자 「우측 아래 5시 방향 블러 창 없애줘」] 공연 상세(#srail-uha)를 제자리에 돌려놓고 재운다.
+10213: //   무슨 일이 있었나: `#srail-uha`는 **자기 유리 패널**을 CSS로 들고 있고(L2406 배경·blur·테두리·그림자),
+10214: //   그걸 지우는 규칙은 `#app.biz-mode #sales-rail #rail-yrm #srail-uha` = **슬롯 안에 있을 때만** 걸린다.
+10215: //   그런데 좁은 화면 판매 실적 면이 그 노드를 `#sales-rail` 바로 밑으로 옮겨 놓고(`_bizInlineRender` page===2),
+10216: //   사업 개요로 돌아와도 아무도 안 돌려놨다 → 슬롯 밖이라 규칙이 풀려 **빈 유리 창이 5시 방향에 되살아났다**.
+10217: //   지우지 않고 **제자리+숨김**으로 두는 이유 = 판매 현황 덱이 그 노드를 그대로 다시 쓴다(지우면 상세가 갈 곳을 잃는다).
+10218: function _bizOvUhaPark(){
+10219:   try{
+10220:     var u=document.getElementById('srail-uha'), slot=document.getElementById('rail-yrm-uha');
+11175:   return out;
+11176: }
+11177: // 파생값 한 곳 — 원본 엑셀 수식과 같은 식. 저장하지 않고 매번 센다.
+11178: //   수익율 = 매출 ÷ (전표실적 + 판매수수료) × 100  (원본 25공연 P열 `=J/(G+I)*100` · 25전시 M열 동일 ·
+11179: //   25교육 각주 「수익률은 판매수수료를 지출에 포함한 계산값」 = 세 분야가 같은 식으로 수렴한다)
+11180: function _finCalc(r){
+11181:   var cost=(r.vou||0)+(r.fee||0);
+11182:   return {cost:cost,diff:(r.rev||0)-(r.vou||0),margin:cost>0?((r.rev||0)/cost*100):null,
+11183:           ppl:(r.paid||0)+(r.inv||0),exec:(r.bud>0)?((r.vou||0)/r.bud*100):null};
+11184: }
+11185: function _finWon(v){ return (v==null||!isFinite(v))?'—':Number(v).toLocaleString(undefined,{maximumFractionDigits:1})+'원'; }
+11186: // [260812 9차 운영자 「수익률에 단위 % 들어가있으니까 여기에 % 직접적으로 안써줘도됌」]
+11187: //   `bare=true`면 값만 — 열 머리가 이미 「(단위: %)」라고 말하는 자리에서 쓴다(KPI 등 다른 자리는 종전대로 %가 붙는다).
+11188: function _finPct(v,bare){ return (v==null||!isFinite(v))?'—':(v.toFixed(1)+(bare?'':'%')); }
+11189: // ── [260813 운영자] 사업 개요 표기 자 = **두 층**(KPI = 억 · 표 = 백만원) ──────────────────────
+11190: //   지시: 「사업비는 **0.0억**으로 표기했으면 좋겠고 · 수익도 0.0억 · 수익률은 정상」
+11191: //        「각 분야별 사업별 … 그 부분에 **예산을 백만원 단위로 하고 반올림**할게 그니까 1,470,284,757 이면 **1,470 백만 원**」
+11192: //   왜 한 자로 안 통일하나 = 두 자리가 요구하는 해상도가 다르다. KPI는 **전체 규모 한 눈**(19.2억)이라 억이 맞고,
+11193: //     표는 **사업끼리 비교**라 억으로 줄이면 차이가 뭉갠다(1,470,284,757 ↔ 1,455,038,020 = 둘 다 14.7억으로 같아진다).
+11194: //   ⚠ 파생값 미저장 계약과 무관 — 이 둘은 **표기 함수**다(값을 만들지 않고 있는 값을 읽는 자만 바꾼다).
+11195: //   ⚠ -0 방지: Math.round(-400000/1e6) = -0 → toLocaleString()이 「-0」을 뱉는다(반올림해 0이 된 적자가 마이너스로 보인다).
+11196: function _finEok(v){ if(v==null||!isFinite(v))return '—'; var n=Math.round(v/1e7)/10; return (n===0?0:n).toFixed(1); }
+11197: function _finMil(v){ if(v==null||!isFinite(v))return '—'; var n=Math.round(v/1e6); return (n===0?0:n).toLocaleString(); }
+11198: // 회계 담당자 — 담당자 시트 `회계여부`(맨 끝 append 열). 관리자는 상위 권한이라 포함한다.
+11199: function _isAcct(){ try{ if(typeof userRole!=='undefined'&&userRole==='admin')return true; return sessionStorage.getItem('isAcct')==='1'; }catch(_e){ return false; } }
+11200: // 시트 적재 — 시트가 아직 없으면 `/api/ops`가 `note:'시트 없음 (미동기화)'` + 빈 rows로 답한다(에러 아님)
+11201: //   = 첫 사용자는 **씨앗만으로** 정상 렌더된다. 시트 신설은 첫 저장(`opsWriteSheet`→`ensureSheet`)이 한다.
+11202: function _finLoad(force){
+11203:   if(_finState.rows&&!force)return Promise.resolve(_finState.rows);
+11204:   if(_finState.busy&&_finState._p&&!force)return _finState._p;
+11205:   _finState.busy=1;
+11206:   _finState._p=api('GET','/api/ops?sheet='+encodeURIComponent(_FIN_SHEET)+(force?'&fresh=1':''))
+11207:     .then(function(d){ _finState.rows=(d&&d.rows)?d.rows:[]; _finState.note=(d&&d.note)||null; _finState.err=null; })
+11208:     .catch(function(e){ _finState.rows=[]; _finState.note=null; _finState.err=e; console.warn('[사업비]',e); })
+11209:     .then(function(){ _finState.busy=0; _finIdxClear(); return _finState.rows; });
+11210:   return _finState._p;
+11211: }
+11212: // 선적재 — 사업 목록이 그려질 때 **한 번만** 시트를 부른다(`_finState.rows`가 차면 이 함수는 무발화).
+11213: //   씨앗만으로도 표는 이미 옳게 그려지므로 이건 「시트 값으로 갱신」 축이다 → 도착했고 시트에 행이 있을 때만 다시 그린다.
+11214: //   ⚠ 재그리기는 **화면에 있는 것**만 — 없는 DOM을 부르면 다른 면을 억지로 띄우게 된다.
+11215: function _finWarm(){
+11216:   if(_finState.rows||_finState.busy)return;
+11217:   _finLoad().then(function(rows){
+11218:     if(!rows||!rows.length)return;
+11219:     try{ if(document.getElementById('biz-body'))_bizRender(); }catch(_e){}
+11220:     try{ if(document.getElementById('biz-main')&&typeof _bizInlineRender==='function')_bizInlineRender(); }catch(_e){}   // 이 함수는 스스로 `_mainView!=='biz'`면 즉시 돌아간다 = 다른 화면 오폭 0
+11221:     try{ if(_bizPerfModal&&_bizPerfModal.body)_bizPerfModalRender(); }catch(_e2){}
+11222:   });
+11223: }
+11224: // ── 사업비 모달 = **정본 한 벌**(`_finModal`) ─────────────────────────────────────────────
+11225: //   진입은 둘인데 창은 하나다: ⓐ 사업 결과 목록의 그 행(`_finOpen` — 「거기에 매달아야함」)
+11226: //   ⓑ 사업비 보드의 그 줄(`openFinanceBoard`). 둘이 같은 함수를 부르므로 표기·편집이 갈릴 수가 없다
+11227: //   (`_bizListBuild`/`_bizListTable` 쌍둥이 사고에서 배운 규율 — `tools/check_biz_list.py`와 같은 축).
+11228: //   골격 = `_srailRoundsOpen`(운영_회차상세 편집 모달) 100% 계승 — 셸·머리줄·버튼·유실 방지 가드 전부.
+11229: var _finEdit={no:null,year:null,on:false,busy:false,baseSig:null,baseTotal:0,back:null};
+11230: function _finClose(){ var el=document.getElementById('fin-modal'); if(el)el.remove(); _finEdit={no:null,year:null,on:false,busy:false,baseSig:null,baseTotal:0,back:null}; }
+11231: // 이 행 시그니처 — 저장 직전 「내가 연 뒤 남이 고쳤나」 감지용(숫자 표현 차이는 정규화로 흡수)
+11232: function _finSig(r){ if(!r)return ''; return ['bud','vou','fee','rev','paid','inv'].map(function(k){return _finNum(r[k]!==undefined?r[k]:'');}).join('|')+'|'+String(r.lnk||r['연결키']||''); }
+11233: function _finRowByNo(no,year){ var ix=_finIdx(year); return ix.byNo[no]||null; }
+11234: // 사업 결과 목록 행 → 사업비. 못 찾으면 「연결 안 됨」 창을 열어 회계가 그 자리에서 연결키를 매달 수 있게 한다.
+11235: // ===== [PA1-v1] 종료 공연 예매자 정보 모달 (운영자 260828 「판매현황에서 지나간 공연 누르면 예매자 성향만 모달로」) =====
+11236: // 데이터 = data/예매집단분석_과거_260828.json (통합장부 2015~2026 × 회원명부 전화 정확일치 · 서버측 생성)
+11237: // 렌더 = 기존 _anaAudienceHtml 재사용(잠깐 _audSeg를 바꿔치기 후 원복 — 판매중 화면 영향 0)
+11238: var _pastAud=null,_pastAudP=null;
+11239: function _pastAudLoad(){ if(_pastAud)return Promise.resolve(_pastAud); if(_pastAudP)return _pastAudP;
+11240:   _pastAudP=fetch('data/예매집단분석_과거_260828.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(d){_pastAud=(d&&Array.isArray(d['공연']))?d:{'공연':[]};return _pastAud;}).catch(function(){_pastAud={'공연':[]};return _pastAud;});
+11241:   return _pastAudP; }
+11242: function _pastAudNorm(s){return String(s||'').normalize('NFKC').replace(/^20\d\d(년)?\s*/,'').replace(/\s*[-–]\s*여수\s*$/,'').replace(/[\s<>＜＞〈〉「」『』'"“”‘’:：_\-–,.!?？~·&＆×xX()（）\[\]\/]/g,'').toLowerCase();}
+11243: function _pastAudClose(){var m=document.getElementById('pastaud-modal');if(m)m.remove();}
+11244: /*[PA2-v1] 화면 공연명 → 장부 공연명 대응표(연도|정규화명 → 정규화된 장부명). 260828 운영자 지시: 첨부 4건만. 기존 매칭 흐름은 불변 */
+11245: var _pastAudAlias={'2026|신년음악회':'gs칼텍스예울마루신년음악회','2026|브런치콘서트i클래식과함께하는미술관여행i':'gs칼텍스예울마루브런치콘서트','2026|브런치콘서트ii클래식과함께하는미술관여행ii':'gs칼텍스예울마루브런치콘서트클래식과함께하는미술관여행ii','2026|실내악페스티벌실내악그이상의세계':'gs칼텍스예울마루실내악페스티벌'};
+11246: function _pastAudOpen(name,year){
+11247:   _pastAudLoad().then(function(d){
+11248:     var n=_pastAudNorm(name),list=(d&&d['공연'])||[];n=_pastAudAlias[String(year)+'|'+n]||n;
+11249:     var cand=list.filter(function(x){return !year||!x['연도']||String(x['연도'])===String(year);});
+11250:     var hit=cand.find(function(x){return _pastAudNorm(x['공연'])===n;})
+11251:       ||cand.find(function(x){var m=_pastAudNorm(x['공연']);return n.length>=6&&(m.indexOf(n)>=0||n.indexOf(m)>=0);})
+11252:       ||list.find(function(x){var m=_pastAudNorm(x['공연']);return n.length>=6&&(m.indexOf(n)>=0||n.indexOf(m)>=0);});
+11253:     _pastAudClose();
+11254:     var head='<div style="font-size:15px;font-weight:800;margin:2px 30px 2px 2px">'+escapeHtml(name)+' <span style="font-weight:400;color:var(--dim);font-size:12px">'+((hit&&hit['연도'])?hit['연도']+'년 · ':'')+'예매자 정보</span></div>';
+11255:     var inner;
+11256:     if(hit){ var keep=_audSeg; _audSeg={'공연':[hit]}; try{ inner=_anaAudienceHtml({name:hit['공연']})||''; }catch(_e){ inner=''; } _audSeg=keep;
+11257:       if(!inner)inner='<div style="padding:24px 6px;color:var(--dim);font-size:13px">표시할 예매자 정보가 없어요.</div>';
+11258:     } else { inner='<div style="padding:20px 6px;color:var(--dim);font-size:13px">이 공연의 예매자 데이터가 장부에 없어요. (기획공연 예매이력 밖 — 대관·전시·교육 등)</div>'; }
+11259:     var wrap=document.createElement('div');wrap.id='pastaud-modal';
+11260:     wrap.innerHTML='<div class="modal-bg show" onclick="if(event.target===this)_pastAudClose()"><div class="modal" style="width:880px;max-width:96vw;text-align:left;max-height:88vh;overflow:auto">'
+11261:       +'<button class="modal-x" onclick="_pastAudClose()" title="닫기" aria-label="닫기">✕</button>'
+11262:       +head+'<div id="pastaud-body">'+inner+'</div></div></div>';
+11263:     document.body.appendChild(wrap);
+11264:   });
+11265: }
+11266: function _finOpen(name,year){
+11267:   year=Number(year)||(new Date()).getFullYear();
+11268:   _finLoad().then(function(){
+11269:     var r=_finOf(name,year);
+11270:     _finModal(r?r.no:null,year,name);
+11271:   });
+11272: }
+11273: function _finModal(no,year,srcName){
+11274:   _finClose();
+11275:   _finEdit.no=no; _finEdit.year=year; _finEdit.on=false;
+11276:   var wrap=document.createElement('div'); wrap.id='fin-modal';
+11277:   wrap.innerHTML='<div class="modal-bg show" onclick="if(event.target===this)_finClose()"><div class="modal" style="width:520px;max-width:94vw;text-align:left">'
+11278:     +'<button class="modal-x" onclick="_finClose()" title="닫기" aria-label="닫기">✕</button>'
+11279:     +'<span data-mhead hidden></span><div id="fin-body"></div></div></div>';   // 자리표 = `_mheadSet`이 여기에 머리줄을 **직계 자식**으로 박는다
+11280:   document.body.appendChild(wrap);
+11281:   _finPaint(srcName);
+11282: }
+11283: function _finPaint(srcName){
+11284:   var bd=document.getElementById('fin-body');
+11285:   if(!bd)return;
+11286:   var year=_finEdit.year,r=_finEdit.no?_finRowByNo(_finEdit.no,year):null;
+11287:   if(!r){
+11288:     // 「이 공연에 사업비를 매단다」 = 여기서 고르면 그 사업비 행의 `연결키`에 이 공연 키가 **기록**된다.
+11289:     //   자동 매칭이 못 잡는 표기 차이(「협력사업2(아파나도르)」 ↔ 「아파나도르」 같은 축을 벗어난 개명)를
+11290:     //   사람이 한 번 이어주면, 그 뒤로는 DB가 그 관계를 기억한다.
+11291:     _mheadSet('fin-modal',_mhead('사업비 — 아직 안 매달림',(srcName||'')+' · '+year+'년'));
+11292:     var free=_finRows(year);
+11293:     bd.innerHTML='<div style="font-size:12.5px;color:var(--neutral-text);line-height:1.75">이 공연에 매달린 사업비가 없어요. 사업비의 <b>사업명</b>과 운영대장의 <b>공연명</b> 표기가 다르면 이렇게 됩니다.'
+11294:       +(_isAcct()?'<br>아래에서 이 공연의 사업비를 고르면 <b>연결키</b>로 기록돼서 다음부터 자동으로 붙어요.':' 회계 담당자에게 연결을 요청해 주세요.')+'</div>'
+11295:       +(_isAcct()?('<div style="margin-top:14px"><label style="display:block;margin:0 0 4px;font-size:11px;color:var(--dim);font-weight:600;text-transform:none;letter-spacing:0">'+year+'년 사업비 '+free.length+'건</label>'
+11296:         +'<select id="fin-bind" class="inl-input" style="border:1px solid var(--border2);background:var(--surface-solid)">'
+11297:         +'<option value="">— 매달 사업비를 고르세요 —</option>'
+11298:         +free.map(function(x){return '<option value="'+escapeHtml(x.no)+'">'+escapeHtml(x.no+' · '+x.cat+(x.acct?' · '+x.acct:'')+' · '+x.name)+'</option>';}).join('')
+11299:         +'</select></div>'):'')
+11300:       +'<div style="display:flex;gap:8px;margin-top:16px;justify-content:flex-end">'
+11301:       +(_isAcct()?'<button class="ana-chip" onclick="_finClose();openFinanceBoard('+year+')">사업비 보드 열기</button>'
+11302:         +'<button class="m-btn save" onclick="_finBind(\''+_anaEsc(srcName||'')+'\')">이 공연에 매달기</button>':'')
+11303:       +'<button class="m-btn cancel" onclick="_finClose()">닫기</button></div>';
+11304:     return;
+11305:   }
+11306:   var c=_finCalc(r),ed=_finEdit.on;
+11307:   _mheadSet('fin-modal',_mhead(r.name,[year+'년',r.cat].filter(Boolean).join(' · ')));
+11308:   var line=function(lab,val,tok,strong){
+11309:     return '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--border)">'
+11310:       +'<span style="font-size:12px;color:var(--neutral-text)">'+lab+'</span>'
+11311:       +'<span style="font-size:'+(strong?'15px':'13.5px')+';font-weight:'+(strong?800:600)+';color:var('+(tok||'--text')+');font-variant-numeric:tabular-nums">'+val+'</span></div>';
+11312:   };
+11313:   var inp=function(k,lab,ph){
+11314:     return '<label style="display:block;margin:0 0 2px;font-size:11px;color:var(--dim);font-weight:600;text-transform:none;letter-spacing:0">'+lab+'</label>'
+11315:       +'<input class="inl-input" id="fin-i-'+k+'" inputmode="numeric" value="'+escapeHtml(String(r[k]==null?'':r[k]))+'" placeholder="'+(ph||'0')+'" style="border:1px solid var(--border2);background:var(--surface-solid);text-align:right;font-variant-numeric:tabular-nums">';
+11316:   };
+11317:   var h='';
+11318:   if(!ed){
+11319:     h+='<div style="margin-bottom:2px">'
+11320:       +line('예산',_finWon(r.bud))
+11321:       +line('전표실적 (a)',_finWon(r.vou))
+11322:       +line('판매수수료',_finWon(r.fee))
+11323:       +line('사업비 계 (a+수수료)',_finWon(c.cost),'--peach-text')
+11324:       +line('정산서 매출 (b)',_finWon(r.rev),'--green')
+11325:       +line('차액 (b−a)',_finWon(c.diff),c.diff<0?'--danger':'--green')
+11326:       +line('수익율',_finPct(c.margin),'--accent',true)
+11327:       
+11328:       +line('인원 (유료+초대)',(r.paid||0).toLocaleString()+' + '+(r.inv||0).toLocaleString()+' = '+c.ppl.toLocaleString()+'명')
+11329:       +((r.mon||r.cnt)?line('진행',[r.mon,(r.cnt?r.cnt+'회':'')].filter(Boolean).join(' · ')):'')
+11330:       +(r.memo?line('비고',escapeHtml(r.memo)):'')
+11331:       +'</div>';
+11332:     

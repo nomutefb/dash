@@ -1,0 +1,74 @@
+api/ym-db.pb.js L1644-1717
+function postConfig(e) {
+  var __env = require(__hooks + "/ym-env-lib.js").envOf(e), __col = function (n) { return require(__hooks + "/ym-env-lib.js").col($app, n, __env); };   // [260904 발행관리] dev 요청은 *_dev 컬렉션
+  var body = {};
+  try { var info = e.requestInfo(); body = info && info.body ? info.body : {}; if (typeof body === "string") body = JSON.parse(body); } catch (bodyErr) { body = {}; }
+  var col = __col("ymmeta");
+  var found = $app.findRecordsByFilter(col, "sheet = '_config'", "", 1, 0);
+  var rec = found.length ? found[0] : null;
+  var h;
+  if (rec) {
+    var raw = rec.get("headers") || {};
+    // PocketBase may return the legacy empty JSON array as a Go slice. Copy only
+    // object-shaped values so new named settings can be persisted safely.
+    h = raw;
+    try { if (h && typeof h.string === "function") h = JSON.parse(h.string()); } catch (normalizeErr0) { h = {}; }
+    if (Array.isArray(h)) h = {};
+  } else {
+    h = {};
+  }
+  if (body.pets_visible !== undefined) h.pets_visible = !!body.pets_visible;
+  if (body.lock_minutes !== undefined) h.lock_minutes = parseInt(body.lock_minutes, 10) || 0;
+  if (body.auth_required !== undefined) h.auth_required = !!body.auth_required;
+  if (rec) {
+    rec.set("headers", h);
+    $app.save(rec);
+  } else {
+    var nr = new Record(col, { sheet: "_config", headers: h, source: "", rowCount: 0, nextRowIndex: 1 });
+    $app.save(nr);
+  }
+  return e.json(200, { ok: true });
+}
+
+function postMemo(e) {
+  var __env = require(__hooks + "/ym-env-lib.js").envOf(e), __col = function (n) { return require(__hooks + "/ym-env-lib.js").col($app, n, __env); };   // [260904 발행관리] dev 요청은 *_dev 컬렉션
+  var body = {};
+  try { var info = e.requestInfo(); body = info && info.body ? info.body : {}; if (typeof body === "string") body = JSON.parse(body); } catch (bodyErr) { body = {}; }
+  var user = body.user;
+  if (!user) return e.json(400, { error: "user required" });
+  var col = __col("ymmeta");
+  var found = $app.findRecordsByFilter(col, "sheet = '_memo'", "", 1, 0);
+  var rec = found.length ? found[0] : null;
+  var h;
+  if (rec) {
+    h = rec.get("headers") || {};
+  } else {
+    h = {};
+  }
+  h[user] = body.text || "";
+  if (rec) {
+    rec.set("headers", h);
+    $app.save(rec);
+  } else {
+    var nr = new Record(col, { sheet: "_memo", headers: h, source: "", rowCount: 0, nextRowIndex: 1 });
+    $app.save(nr);
+  }
+  return e.json(200, { ok: true });
+}
+
+function postPresence(e) {
+  var __env = require(__hooks + "/ym-env-lib.js").envOf(e), __col = function (n) { return require(__hooks + "/ym-env-lib.js").col($app, n, __env); };   // [260904 발행관리] dev 요청은 *_dev 컬렉션
+  // 2-3: presence writes only need {ok:true}
+  return e.json(200, { ok: true });
+}
+
+function managerByEmail(email) {
+  var col = __col("ymdata");
+  var rows = $app.findRecordsByFilter(col, "sheet = 'managers'", "rowIndex", 50000, 0);
+  var target = String(email || "").trim().toLowerCase();
+  for (var i = 0; i < rows.length; i++) {
+    var data = rows[i].get("data") || {};
+    if (String(data["이메일"] || "").trim().toLowerCase() === target) return { record: rows[i], data: data };
+  }
+  return null;
+}

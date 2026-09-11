@@ -1,0 +1,430 @@
+{
+  "checkedAt": "2026-09-11T01:35:17.440Z",
+  "baseline": "b26d227",
+  "dataChangesByField": {
+    "15": 21,
+    "게시 담당자": 58,
+    "주소1": 150,
+    "담당자": 24
+  },
+  "unexpected": [],
+  "code": [
+    {
+      "path": "api/migrations/063_addr_hardening.js",
+      "counts": {
+        "string": 2
+      },
+      "samples": [
+        {
+          "kind": "string",
+          "trail": ".program.body[0].expression.right.properties[2].value.body.body[7].body.body[12].test.right.value",
+          "type": "StringLiteral",
+          "local": "불분명"
+        },
+        {
+          "kind": "string",
+          "trail": ".program.body[0].expression.right.properties[2].value.body.body[7].body.body[13].test.left.right.right.value",
+          "type": "StringLiteral",
+          "local": "불분명"
+        }
+      ],
+      "structurePreserved": true
+    },
+    {
+      "path": "api/ym-addr-lib.js",
+      "counts": {
+        "string": 1
+      },
+      "samples": [
+        {
+          "kind": "string",
+          "trail": ".program.body[21].declarations[0].init.value",
+          "type": "StringLiteral",
+          "local": "불분명"
+        }
+      ],
+      "structurePreserved": true
+    },
+    {
+      "path": "api/ym-cron-lib.js",
+      "counts": {
+        "string": 2
+      },
+      "samples": [
+        {
+          "kind": "string",
+          "trail": ".program.body[12].body.body[2].block.body[0].consequent.body[0].declarations[0].init.arguments[0].properties[0].value.left.right.arguments[0].value",
+          "type": "StringLiteral",
+          "local": "예울마루"
+        },
+        {
+          "kind": "string",
+          "trail": ".program.body[17].body.body[1].body.body[4].expression.right.consequent.value",
+          "type": "StringLiteral",
+          "local": "예울마루"
+        }
+      ],
+      "structurePreserved": true
+    },
+    {
+      "path": "api/ym-member-summary-lib.js",
+      "counts": {
+        "string": 1
+      },
+      "samples": [
+        {
+          "kind": "string",
+          "trail": ".program.body[7].body.body[9].body.body[4].test.right.right.value",
+          "type": "StringLiteral",
+          "local": "불분명"
+        }
+      ],
+      "structurePreserved": true
+    },
+    {
+      "path": "src/data/programs.ts",
+      "counts": {
+        "string": 1
+      },
+      "samples": [
+        {
+          "kind": "string",
+          "trail": ".program.body[3].declarations[0].init.elements[6].elements[3].value",
+          "type": "StringLiteral",
+          "local": "김영욱"
+        }
+      ],
+      "structurePreserved": true
+    }
+  ],
+  "html": {
+    "styleCount": {
+      "source": 2,
+      "local": 2
+    },
+    "stylesIdentical": true,
+    "shellIdentical": false,
+    "scriptCount": {
+      "source": 28,
+      "local": 28
+    },
+    "scripts": [
+      {
+        "index": 0,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 1,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 2,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 3,
+        "attributesIdentical": true,
+        "identical": false
+      },
+      {
+        "index": 4,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 5,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 6,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 7,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 8,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 9,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 10,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 11,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 12,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 13,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 14,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 15,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 16,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 17,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 18,
+        "attributesIdentical": true,
+        "identical": false,
+        "counts": {
+          "string": 26
+        },
+        "samples": [
+          {
+            "kind": "string",
+            "trail": ".program.body[134].body.body[2].block.body[4].expression.arguments[1].value",
+            "type": "StringLiteral",
+            "local": "예울마루"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[148].expression.callee.body.body[4].block.body[0].test.right.right.value",
+            "type": "StringLiteral",
+            "local": "예울마루"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[189].declarations[0].init.properties[7].value.elements[1].value",
+            "type": "StringLiteral",
+            "local": "이슬비"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1269].declarations[0].init.properties[0].value.properties[0].value.value",
+            "type": "StringLiteral",
+            "local": "예울마루"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1478].body.body[0].consequent.argument.callee.object.callee.object.right.value",
+            "type": "StringLiteral",
+            "local": "상관 없음"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1478].body.body[1].consequent.argument.callee.object.callee.object.right.value",
+            "type": "StringLiteral",
+            "local": "상관 없음"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1601].body.body[2].consequent.body[12].expression.right.value",
+            "type": "StringLiteral",
+            "local": "상관 없음"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1664].body.body[3].declarations[0].init.consequent.elements[0].value",
+            "type": "StringLiteral",
+            "local": "이미지"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1665].body.body[4].consequent.body[0].expression.right.value",
+            "type": "StringLiteral",
+            "local": "이미지"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1665].body.body[6].test.left.right.value",
+            "type": "StringLiteral",
+            "local": "이미지"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1696].body.body[3].test.right.right.value",
+            "type": "StringLiteral",
+            "local": "상관 없음"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1696].body.body[5].consequent.body[0].alternate.body[0].expression.right.value",
+            "type": "StringLiteral",
+            "local": "상관 없음"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1696].body.body[7].expression.right.value",
+            "type": "StringLiteral",
+            "local": "<div class=\"pw-hint\">게시자를 지정하지 않아도 됩니다. 담당자가 정해지지 않았다면 \"상관 없음\"을 그대로 두세요.</div>"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1696].body.body[10].expression.right.left.left.value",
+            "type": "StringLiteral",
+            "local": "<option value=\"상관 없음\""
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1699].body.body[1].alternate.alternate.consequent.body[1].alternate.alternate.test.left.right.value",
+            "type": "StringLiteral",
+            "local": "이미지"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1705].body.body[1].consequent.argument.value",
+            "type": "StringLiteral",
+            "local": "이미지"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1751].body.body[0].test.right.right.value",
+            "type": "StringLiteral",
+            "local": "상관 없음"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1752].body.body[0].test.right.right.value",
+            "type": "StringLiteral",
+            "local": "상관 없음"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[2311].body.body[8].consequent.expression.arguments[0].body.body[1].test.right.right.value",
+            "type": "StringLiteral",
+            "local": "불분명"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[2472].declarations[0].init.properties[1].key.value",
+            "type": "StringLiteral",
+            "local": "대학로"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[2495].body.body[24].consequent.expression.arguments[0].properties[1].value.value",
+            "type": "StringLiteral",
+            "local": "유보석"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[2531].body.body[6].declarations[0].init.right.left.value",
+            "type": "StringLiteral",
+            "local": "이미지"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[2533].body.body[1].block.body[5].expression.arguments[0].properties[0].value.right.value",
+            "type": "StringLiteral",
+            "local": "이미지"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[2533].body.body[1].block.body[9].consequent.expression.arguments[0].left.right.right.value",
+            "type": "StringLiteral",
+            "local": "이미지"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[2533].body.body[1].block.body[9].alternate.expression.arguments[0].left.right.value",
+            "type": "StringLiteral",
+            "local": "이미지"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[2863].body.body[2].block.body[4].expression.right.left.left.left.right.value",
+            "type": "StringLiteral",
+            "local": "예울마루"
+          }
+        ],
+        "structurePreserved": true
+      },
+      {
+        "index": 19,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 20,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 21,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 22,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 23,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 24,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 25,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 26,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 27,
+        "attributesIdentical": true,
+        "identical": true
+      }
+    ]
+  },
+  "manifestMismatches": [
+    "public/data/ops/홍보기록.csv",
+    "src/data/yeulmaru.json",
+    "api/migrations/063_addr_hardening.js",
+    "api/ym-addr-lib.js",
+    "api/ym-cron-lib.js",
+    "api/ym-member-summary-lib.js",
+    "public/manifest.webmanifest",
+    "public/standalone.html",
+    "src/data/programs.ts",
+    ".gitignore",
+    "data/database/ymdata_dev.jsonl",
+    "data/database/ymdata.jsonl"
+  ]
+}

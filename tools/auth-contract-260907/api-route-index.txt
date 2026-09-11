@@ -1,0 +1,96 @@
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/status',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'status');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/group-save',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'group-save');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/prepare',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'prepare');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/login-state',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'login-state');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/request',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'request');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/heartbeat',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'heartbeat');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/claim',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'claim');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/apply',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'apply');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/failure',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'failure');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/reconcile',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'reconcile');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/mappings',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'mappings');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/settings',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'settings');});
+ym-ticketlink.pb.js: routerAdd('POST','/api/ym/ticketlink/worker-settings',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'worker-settings');});
+ym-member-sync.pb.js: routerAdd('POST','/api/ym/ticketlink/member-status',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'status');});
+ym-member-sync.pb.js: routerAdd('POST','/api/ym/ticketlink/member-prepare',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'prepare');});
+ym-member-sync.pb.js: routerAdd('POST','/api/ym/ticketlink/member-heartbeat',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'heartbeat');});
+ym-member-sync.pb.js: routerAdd('POST','/api/ym/ticketlink/member-login-state',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'login-state');});
+ym-member-sync.pb.js: routerAdd('POST','/api/ym/ticketlink/member-begin',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'begin');});
+ym-member-sync.pb.js: routerAdd('POST','/api/ym/ticketlink/member-chunk',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'chunk');});
+ym-member-sync.pb.js: routerAdd('POST','/api/ym/ticketlink/member-commit',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'commit');});
+ym-member-sync.pb.js: routerAdd('POST','/api/ym/ticketlink/member-failure',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'failure');});
+ym-member-sync.pb.js: routerAdd('POST','/api/ym/ticketlink/member-rows',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'rows');});
+ym-auth.pb.js: routerAdd('POST','/api/ym/auth/{action}',function(e){return require(__hooks+'/ym-auth-lib.js').handle(e,$app,e.request.pathValue('action'));});
+ym-db.pb.js: routerAdd("GET", "/api/records", getRecords);
+ym-db.pb.js: routerAdd("GET", "/api/programs", getPrograms);
+ym-db.pb.js: routerAdd("GET", "/api/sheet/{slug}", getSheet);
+ym-db.pb.js: routerAdd("GET", "/api/ops", getOps);
+ym-db.pb.js: routerAdd("GET", "/api/ym/program", getProgramJoin);   // [260905 통합⑰]
+ym-db.pb.js: routerAdd("GET", "/api/ym/calendar", getCalendarJoin);   // [260905 통합⑲]
+ym-db.pb.js: routerAdd("POST", "/api/ym/codes/reindex", postCodesReindex);
+ym-db.pb.js: routerAdd("GET", "/api/holidays", getHolidays);
+ym-db.pb.js: routerAdd("GET", "/api/config", getConfig);
+ym-db.pb.js: routerAdd("GET", "/api/messages", getMessages);
+ym-db.pb.js: routerAdd("GET", "/api/lastmod", getLastmod);
+ym-db.pb.js: routerAdd("GET", "/api/ym/holidays", getHolidays);
+ym-db.pb.js: routerAdd("GET", "/api/ym/config", getConfig);
+ym-db.pb.js: routerAdd("GET", "/api/ym/messages", getMessages);
+ym-db.pb.js: routerAdd("GET", "/api/ym/lastmod", getLastmod);
+ym-db.pb.js: routerAdd("GET", "/api/presence", getPresence);
+ym-db.pb.js: routerAdd("GET", "/api/gcal", getGcal);
+ym-db.pb.js: routerAdd("GET", "/api/monitor/feed", getMonitorFeed);
+ym-db.pb.js: routerAdd("GET", "/api/visitors", getVisitors);
+ym-db.pb.js: routerAdd("GET", "/api/memo", getMemo);
+ym-db.pb.js: routerAdd("GET", "/api/chatbot/faq", getChatbotFaq);
+ym-db.pb.js: routerAdd("GET", "/api/chatbot/rules", getChatbotRules);
+ym-db.pb.js: routerAdd("GET", "/api/qa", getQa);
+ym-db.pb.js: routerAdd("GET", "/api/diagrams", getDiagrams);
+ym-db.pb.js: routerAdd("POST", "/api/records", postRecords);
+ym-db.pb.js: routerAdd("PATCH", "/api/records/{rowIndex}", patchRecords);
+ym-db.pb.js: routerAdd("DELETE", "/api/records/{rowIndex}", deleteRecords);
+ym-db.pb.js: routerAdd("DELETE", "/api/records", deleteRecords);
+ym-db.pb.js: routerAdd("DELETE", "/api/records-delete", deleteRecords);
+ym-db.pb.js: routerAdd("POST", "/api/records-delete", deleteRecords);
+ym-db.pb.js: routerAdd("POST", "/api/sheet/{slug}", postSheet);
+ym-db.pb.js: routerAdd("PATCH", "/api/sheet/{slug}/{rowIndex}", patchSheet);
+ym-db.pb.js: routerAdd("DELETE", "/api/sheet/{slug}/{rowIndex}", deleteSheet);
+ym-db.pb.js: routerAdd("POST", "/api/ops", postOps);
+ym-db.pb.js: routerAdd("POST", "/api/ops/row", opsRow);     // [260903 H-4]
+ym-db.pb.js: routerAdd("PATCH", "/api/ops/row", opsRow);
+ym-db.pb.js: routerAdd("DELETE", "/api/ops/row", opsRow);
+ym-db.pb.js: routerAdd("POST", "/api/qa", postQa);
+ym-db.pb.js: routerAdd("PATCH", "/api/qa", patchQa);
+ym-db.pb.js: routerAdd("POST", "/api/messages", postMessages);   // [260901] 알림 저장 복구
+ym-db.pb.js: routerAdd("PATCH", "/api/messages/{id}", patchMessages);
+ym-db.pb.js: routerAdd("DELETE", "/api/messages/{id}", deleteMessages);
+ym-db.pb.js: routerAdd("POST", "/api/config", postConfig);
+ym-db.pb.js: routerAdd("POST", "/api/memo", postMemo);
+ym-db.pb.js: routerAdd("POST", "/api/presence", postPresence);
+ym-db.pb.js: routerAdd("POST", "/api/auth/verify-pin", authVerifyPin);
+ym-db.pb.js: routerAdd("POST", "/api/auth/set-pin", authSetPin);
+ym-db.pb.js: routerAdd("POST", "/api/ym-db/fix-holidays", fixHolidays);
+content-kakao.pb.js: routerAdd("POST", "/api/content/kakao", function(e) {
+ym-changelog.pb.js: routerAdd("GET", "/api/ym/changelog", function (e) {
+content-detail.pb.js: routerAdd("POST", "/api/content/detail", function(e) {
+ym-plan.pb.js: routerAdd("GET", "/api/ym/plan/meta", function (e) { return require(__hooks + "/ym-plan-lib.js").handle(e, $app, __hooks, "meta"); });
+ym-plan.pb.js: routerAdd("GET", "/api/ym/plan/biz", function (e) { return require(__hooks + "/ym-plan-lib.js").handle(e, $app, __hooks, "biz"); });
+ym-plan.pb.js: routerAdd("POST", "/api/ym/plan/biz", function (e) { return require(__hooks + "/ym-plan-lib.js").handle(e, $app, __hooks, "bizSave"); });
+ym-plan.pb.js: routerAdd("GET", "/api/ym/plan/programs", function (e) { return require(__hooks + "/ym-plan-lib.js").handle(e, $app, __hooks, "programs"); });
+ym-plan.pb.js: routerAdd("POST", "/api/ym/plan/program", function (e) { return require(__hooks + "/ym-plan-lib.js").handle(e, $app, __hooks, "programSave"); });
+ym-plan.pb.js: routerAdd("POST", "/api/ym/plan/settle", function (e) { return require(__hooks + "/ym-plan-lib.js").handle(e, $app, __hooks, "settle"); });
+ym-plan.pb.js: routerAdd("POST", "/api/ym/plan/delete", function (e) { return require(__hooks + "/ym-plan-lib.js").handle(e, $app, __hooks, "remove"); });
+ym-crons.pb.js: routerAdd("POST", "/api/monitor/scan", function(e) {
+ym-crons.pb.js: routerAdd("GET", "/api/monitor/kopis-related", function(e) {
+ym-crons.pb.js: routerAdd("POST", "/api/monitor/judge", function(e) {
+miso-llm-adapter.pb.js: routerAdd("POST", "/api/blog/dispatch", function(e) {
+miso-llm-adapter.pb.js: routerAdd("GET", "/api/blog/draft", function(e) {
+miso-llm-adapter.pb.js: routerAdd("POST", "/api/promo/auto-run", function(e) {
+miso-llm-adapter.pb.js: routerAdd("GET", "/api/promo/auto-latest", function(e) {
+miso-llm-adapter.pb.js: routerAdd("POST", "/api/content/structure", function(e) {
+ym-env.pb.js: routerAdd("GET", "/api/ym/env", function (e) {
+ym-env.pb.js: routerAdd("POST", "/api/ym/env/init-dev", function (e) {
+ym-env.pb.js: routerAdd("POST", "/api/ym/env/refresh-dev", function (e) {
+ym-env.pb.js: routerAdd("GET", "/api/ym/migrations", function (e) {
+ym-env.pb.js: routerAdd("POST", "/api/ym/migrate", function (e) {
+miso-llm-bridge.pb.js: routerAdd("GET", "/api/miso-llm/models", bridgeGetModels);
+miso-llm-bridge.pb.js: routerAdd("POST", "/api/miso-llm", bridgePost);

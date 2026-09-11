@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>standalone.html 헬스체크</title>
+<style>
+body{font-family:system-ui,-apple-system,"Malgun Gothic",sans-serif;background:#0f1220;color:#e8eaf6;margin:0;padding:24px}
+h1{font-size:20px;margin:0 0 4px}
+.sub{color:#9aa0b5;font-size:12px;margin-bottom:16px}
+.verdict{font-size:26px;font-weight:800;padding:14px 18px;border-radius:12px;display:inline-block;margin:8px 0 16px}
+.pass{background:#0e3a24;color:#4ade80}.fail{background:#42101c;color:#f87171}.wait{background:#2a2f45;color:#cbd5f5}
+table{border-collapse:collapse;width:100%;font-size:12px}
+td,th{border-bottom:1px solid #262b40;padding:6px 8px;text-align:left;vertical-align:top}
+.ok{color:#4ade80}.bad{color:#f87171}.warn{color:#fbbf24}.muted{color:#9aa0b5}
+.err{white-space:pre-wrap;color:#fca5a5;font-size:11px}
+</style>
+</head>
+<body>
+<h1>standalone.html 헬스체크</h1>
+<div class="sub">최종 판정 기준 = 실제 브라우저 파서(2단계). 1단계 표는 참고용 사전 스캔. 수정 후 이 페이지만 열면 됨. 판정까지 약 12초.</div>
+<div id="verdict" class="verdict wait">검사 중... (12초)</div>
+<div id="meta" class="sub"></div>
+<h3>2단계(판정): 브라우저 실제 파싱·로딩</h3>
+<div id="live" class="sub">로딩 중...</div>
+<div id="liveerrs"></div>
+<h3>1단계(참고): 인라인 스크립트 사전 스캔</h3>
+<div class="sub">주의: id="miso-db" 블록은 코드가 아니라 내장 데이터+설명문이라 여기서 "의심"이 떠도 정상. 최종 판정은 위 2단계.</div>
+<table id="tbl"><thead><tr><th>#</th><th>위치</th><th>크기</th><th>구분</th><th>사전 스캔</th></tr></thead><tbody></tbody></table>
+<script>
+(async function(){
+const $=s=>document.querySelector(s);
+const txt=await fetch("standalone.html?_hc="+Date.now()).then(r=>r.text());
+$("#meta").textContent="파일 크기: "+txt.length.toLocaleString()+"자 · 검사시각: "+new Date().toLocaleString("ko-KR");
+const segs=[];let pos=0;const re=/<script\b[^>]*>/g;let m;
+while((m=re.exec(txt))){if(m.index<pos)continue;const tag=m[0];const close=txt.indexOf("</scr"+"ipt>",m.index);if(close<0)break;const body=txt.slice(m.index+tag.length,close);const src=(tag.match(/src="([^"]+)"/)||[])[1];const id=(tag.match(/id="([^"]+)"/)||[])[1];segs.push({off:m.index,src:src,id:id,body:body});pos=close+9;re.lastIndex=pos;}
+const tb=$("#tbl tbody");
+segs.forEach(function(s,i){let cls="muted",msg="건너뜀(외부 스크립트)";
+if(!s.src){try{new Function(s.body);cls="ok";msg="정상";}catch(e){cls="warn";msg="의심: "+e.message+" (2단계가 최종 판정)";}}
+const tr=document.createElement("tr");tr.innerHTML="<td>"+i+"</td><td>"+(s.off/1000|0)+"k</td><td>"+(s.body.length/1000|0)+"k</td><td>"+(s.src?("외부: "+s.src):("인라인"+(s.id?" #"+s.id:"")))+"</td><td class=\""+cls+"\">"+String(msg).replace(/</g,"&lt;")+"</td>";tb.appendChild(tr);});
+const syn=[],run=[];
+window.addEventListener("message",function(ev){const d=ev.data&&ev.data.__hcErr;if(!d)return;if(String(d.s).indexOf("/__")>-1||String(d.s).indexOf("coder-selection-bridge")>-1)return;(d.syn?syn:run).push(d.m+" @"+(d.s||"인라인")+":"+d.l);
+$("#liveerrs").innerHTML=syn.concat(run).map(function(e){return "<div class=\"err\">• "+String(e).replace(/</g,"&lt;")+"</div>";}).join("");});
+const catcher="<scr"+"ipt>window.onerror=function(m,s,l,c,e){parent.postMessage({__hcErr:{m:String(m),s:String(s||\"\"),l:l,syn:!!(e&&e.name===\"SyntaxError\")||String(m).indexOf(\"SyntaxError\")>-1}},\"*\");return false;};</scr"+"ipt>";
+const base=location.origin+location.pathname.replace(/healthcheck\.html.*$/,"");
+const withBase=txt.replace(/<head([^>]*)>/i,"<head$1><base href=\""+base+"\">"+catcher);
+const f=document.createElement("iframe");f.style.cssText="width:2px;height:2px;opacity:0;position:absolute";f.srcdoc=withBase;document.body.appendChild(f);
+setTimeout(function(){const l=$("#live"),v=$("#verdict");
+if(syn.length===0){v.textContent="통과 — 문법 오류 0건"+(run.length?" (런타임 주의 "+run.length+"건)":"");v.className="verdict pass";l.innerHTML="<span class=\"ok\">문법 오류 0건</span>"+(run.length?" · <span class=\"warn\">런타임 주의 "+run.length+"건(아래)</span>":"");}
+else{v.textContent="실패 — 문법 오류 "+syn.length+"건";v.className="verdict fail";l.innerHTML="<span class=\"bad\">문법 오류 "+syn.length+"건(아래)</span>";}
+f.remove();},12000);
+})();
+</script>
+<h3>3단계: 이관(migration) 상태 — 개발본 전용</h3>
+<div class="sub">api/migrations/NNN_*.js 목록과 적용 여부. 미리보기(개발) 주소에서만 실행 버튼이 뜬다. 발행본은 CLAUDE.md §2 절차대로 콘솔 XHR 로만.</div>
+<table id="mig"><thead><tr><th>#</th><th>파일</th><th>적용</th><th>결과</th><th></th></tr></thead><tbody></tbody></table>
+<div id="migout" class="err"></div>
+<script>
+(function(){
+const isDev=location.pathname.indexOf("/service/coder/preview/")>=0;
+const H={"X-Ym-Env":"dev","Content-Type":"application/json"};
+function esc(x){return String(x).replace(/</g,"&lt;");}
+function load(){
+  fetch("__runtime/api/ym/migrations",{headers:H}).then(function(r){return r.json();}).then(function(j){
+    var tb=document.querySelector("#mig tbody");tb.innerHTML="";
+    (j.migrations||[]).forEach(function(m){
+      var tr=document.createElement("tr");
+      var ap=m.applied?("<span class=\"ok\">적용 "+esc(String(m.applied.at||"").slice(0,16).replace("T"," "))+"</span>"):"<span class=\"warn\">대기</span>";
+      var res=m.applied&&m.applied.result?esc(JSON.stringify(m.applied.result)).slice(0,160):"";
+      var btn=(isDev&&!m.applied)?"<button data-id=\""+esc(m.id)+"\" style=\"padding:4px 10px;border-radius:8px;border:1px solid #4ade80;background:#0e3a24;color:#4ade80;cursor:pointer\">개발본에 실행</button>":"";
+      tr.innerHTML="<td>"+esc(m.id)+"</td><td>"+esc(m.file)+"</td><td>"+ap+"</td><td class=\"muted\">"+res+"</td><td>"+btn+"</td>";
+      tb.appendChild(tr);
+    });
+    tb.querySelectorAll("button[data-id]").forEach(function(b){b.onclick=function(){run(b.getAttribute("data-id"),b);};});
+  }).catch(function(e){document.querySelector("#migout").textContent="이관 목록 조회 실패: "+e;});
+}
+function run(id,b){
+  if(b.getAttribute("data-armed")!=="1"){b.setAttribute("data-armed","1");b.textContent="한 번 더 누르면 실행 (개발본만)";b.style.borderColor="#fbbf24";b.style.color="#fbbf24";return;}
+  b.disabled=true;b.textContent="실행 중…";
+  fetch("__runtime/api/ym/migrate",{method:"POST",headers:H,body:JSON.stringify({only:id})}).then(function(r){return r.json();}).then(function(j){
+    document.querySelector("#migout").textContent=JSON.stringify(j,null,1);load();
+  }).catch(function(e){document.querySelector("#migout").textContent="실행 실패: "+e;b.disabled=false;b.textContent="개발본에 실행";});
+}
+load();
+})();
+</script>
+</body>
+</html>

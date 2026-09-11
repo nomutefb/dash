@@ -1,0 +1,19 @@
+public/standalone.html L6257-6274
+function openAdminPanel(){if(userRole!=='admin')return;var el=document.getElementById('admin-panel');if(!el){el=document.createElement('div');el.id='admin-panel';document.body.appendChild(el);}el.innerHTML='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeAdminPanel)"><div class="modal admin-modal" style="width:440px;position:relative"><button class="modal-x" onclick="closeAdminPanel()" aria-label="닫기">✕</button>'+_mhead('관리','관리할 항목을 선택하세요')+_adminMarkup()+'</div></div>';_adminBind(el);}
+function closeAdminPanel(){const el=document.getElementById('admin-panel');if(el)el.innerHTML='';}
+// [260724 운영자] 자동 잠금 시간 = 톱니(관리) 드롭다운의 독립 항목(전용 모달). 관리 6개(데이터 관리 화면)와 성격이 다른 시스템 설정이라 '설정 관리' 패널 종속에서 분리 — 향후 관련 설정 모이면 이 자리가 '시스템 설정' 그룹. 값·저장 로직(_lockMinChange·cfg:lock_minutes)은 공용. 모달 골격 = openAdminPanel 계승(색은 var 토큰 → 신규 raw hex 0).
+function openLockSettings(){
+ var cur=Math.max(1,Math.min(240,Math.round((IDLE_MS||1800000)/60000))),on=!_idleLockDisabled;
+ var el=document.getElementById('admin-panel');if(!el){el=document.createElement('div');el.id='admin-panel';document.body.appendChild(el);}
+ el.innerHTML='<div class="modal-bg show" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeLockSettings)"><div class="modal" style="width:420px;position:relative"><button class="modal-x" onclick="closeLockSettings()" aria-label="닫기">✕</button>'+_mhead('보안 관리','전체 사용자에게 적용되는 설정')+'<section aria-label="보안 설정"><h3 style="font-size:13px;margin:0 0 16px">보안 설정</h3><label style="display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:13px;font-weight:600">자동 잠금<input id="lock-enabled" type="checkbox" role="switch" aria-label="자동 잠금" '+(on?'checked':'')+' onchange="_lockEnableChange(this.checked)"></label><p style="font-size:12px;color:var(--dim);margin:8px 0 16px">'+(on?'입력이 없으면 설정한 시간 후 잠깁니다.':'꺼짐 · 자동으로 잠그지 않습니다.')+'</p><div id="lock-minute-row" '+(on?'':'hidden')+'><label for="lock-min-input" style="font-size:13px">잠금까지 대기 시간 (분)</label><input id="lock-min-input" type="number" min="1" max="240" step="1" value="'+cur+'" onchange="_lockMinChange(this.value)" style="width:100%;margin-top:8px;padding:8px 12px"></div><div style="border-top:1px solid var(--border);margin-top:20px;padding-top:16px"><label style="display:flex;justify-content:space-between;gap:16px;font-size:13px">Microsoft 인증<input id="auth-gate-toggle" type="checkbox" '+(_authGateEnabled?'checked':'')+' onchange="_authGateToggle(this.checked)"></label></div></section></div></div>';
+}
+async function _saveLockSetting(m){
+ var root=document.getElementById('admin-panel');if(root)root.querySelectorAll('#lock-enabled,#lock-min-input').forEach(function(e){e.disabled=true;});
+ try{var result=await api('POST','/api/config',{lock_minutes:m,pets_visible:_petsOn});if(result&&result.ok===false)throw new Error(result.error||'저장 실패');_applyLockMin(m);showToast(m?'자동 잠금 '+m+'분으로 저장':'자동 잠금 꺼짐으로 저장','success');}
+ catch(e){showToast('저장 실패: '+e.message,'error');}
+ if(document.getElementById('lock-enabled'))openLockSettings();
+}
+function _lockEnableChange(on){var e=document.getElementById('lock-min-input');var m=Number(e&&e.value)||30;return _saveLockSetting(on?m:0);}
+
+function closeLockSettings(){var el=document.getElementById('admin-panel');if(el)el.innerHTML='';}
+// ── [260807 운영자 「설정- 검색량 확인 하나 만들어서 리스트업 · 디자인은 사업 대시보드 공연 리스트와 동일한 느낌」] ──

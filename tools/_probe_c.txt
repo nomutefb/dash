@@ -1,0 +1,1 @@
+if (ref.indexOf("/service/coder/preview/") >= 0) env = "dev";

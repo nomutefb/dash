@@ -1,0 +1,9 @@
+routerAdd('POST','/api/ym/ticketlink/member-status',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'status');});
+routerAdd('POST','/api/ym/ticketlink/member-prepare',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'prepare');});
+routerAdd('POST','/api/ym/ticketlink/member-heartbeat',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'heartbeat');});
+routerAdd('POST','/api/ym/ticketlink/member-login-state',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'login-state');});
+routerAdd('POST','/api/ym/ticketlink/member-begin',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'begin');});
+routerAdd('POST','/api/ym/ticketlink/member-chunk',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'chunk');});
+routerAdd('POST','/api/ym/ticketlink/member-commit',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'commit');});
+routerAdd('POST','/api/ym/ticketlink/member-failure',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'failure');});
+routerAdd('POST','/api/ym/ticketlink/member-rows',function(e){return require(__hooks+'/ym-member-sync-lib.js').handle(e,$app,__hooks,'rows');});

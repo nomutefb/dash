@@ -1,0 +1,1 @@
+var kwIdx = "IND" + "EX", kwOn = "O" + "N";

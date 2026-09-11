@@ -1,0 +1,882 @@
+@import "tailwindcss";
+@import "./styles/yeulmaru.css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --accent: #4A4DE7;
+  --accent-light: #E8E8FD;
+  --accent-glow: rgba(74, 77, 231, 0.15);
+
+  --peach: #F0C4B8;
+  --peach-light: #FBF0EC;
+  --peach-bg: #FDF6F3;
+  --peach-text: #D88455;
+
+  --bg: linear-gradient(135deg, #FDF6F3 0%, #F0EBF5 50%, #EBF0F8 100%);
+
+  --surface: var(--glass-surface);
+  --surface-solid: #fff;
+  /* 본문 콘텐츠 기본 캔버스 — 정본 표기 그대로 */
+  --content-canvas: #FDFCFB;
+
+  --glass: rgba(255, 255, 255, 0.55);
+  --glass-border: var(--glass);
+  --glass-shadow: 0 8px 32px rgba(74, 77, 231, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+
+  --border: rgba(0, 0, 0, 0.09);
+  --border2: rgba(0, 0, 0, 0.12);
+
+  --text: #1A1A2E;
+  --dim: #888;
+  --muted: #bbb;
+
+  --past-bg: rgba(0, 0, 0, 0.02);
+  --past-text: var(--muted);
+  --today-bg: rgba(230, 240, 255, 0.8);
+  --off-bg: var(--border2);
+
+  --green: #1A6B3C;
+  --danger: #E24B4A;
+  --danger-btn: #E24B4A;
+
+  --kakao: #F5B400;
+  --insta: #C02872;
+  --youtube: #B71C1C;
+  --blog: var(--green);
+  --etc: #2D8AB3;
+
+  --radius: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --r-btn: 10px;
+  --r-pop: 16px;
+  --r-modal: 20px;
+
+  --elev: 0 20px 56px rgba(74, 77, 231, 0.16), 0 6px 18px rgba(26, 26, 46, 0.07);
+  --backdrop: rgba(26, 26, 46, 0.42);
+
+  --glass-surface: rgba(255, 255, 255, 0.78);
+
+  --c1: #4A4DE7;
+  --c2: #D88455;
+  --c3: #1A6B3C;
+  --c4: #C02872;
+  --c5: #2D8AB3;
+  --c6: #F5B400;
+
+  --cell-pad-y: 10px;
+  --cell-pad-x: 12px;
+  --cell-fs: 13px;
+
+  --ym-ink: #1A1A2E;
+  --ym-ink-soft: #6B6B7B;
+  --ym-glass: rgba(255, 255, 255, 0.78);
+  --ym-glass-border: rgba(255, 255, 255, 0.6);
+  --ym-glass-shadow: 0 8px 32px rgba(74, 77, 231, 0.08);
+  --ym-success: #1A6B3C;
+  --ym-danger: #E24B4A;
+}
+
+@theme inline {
+  --color-accent: var(--accent);
+  --color-peach-text: var(--peach-text);
+  --color-c1: var(--c1);
+  --color-c2: var(--c2);
+  --color-c3: var(--c3);
+  --color-ink: var(--text);
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  font-family:
+    "Pretendard",
+    "Noto Sans KR",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    "Malgun Gothic",
+    system-ui,
+    sans-serif;
+  background: var(--bg);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+* {
+  box-sizing: border-box;
+  /* [260730 운영자 v31] 전 요소 pretandard 선두·Noto 2순위 — body/templates/nav/KPI/표 셀 모두 동일하게 Pretendard 우선. */
+  font-family:
+    "Pretendard",
+    "Noto Sans KR",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    "Malgun Gothic",
+    system-ui,
+    sans-serif;
+  letter-spacing: -0.015em;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ym-pin-cell {
+  /* deprecated — slot styling moved to PinGate.css (circle dots, no box) */
+}
+
+@keyframes ym-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ym-fade-in {
+  animation: ym-fade-in 0.2s ease-out;
+}
+
+.ym-glass-card {
+  background: var(--ym-glass);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--ym-glass-border);
+  box-shadow: var(--ym-glass-shadow);
+  border-radius: var(--radius);
+}
+
+.ym-card {
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: var(--radius);
+  box-shadow: rgba(74, 77, 231, 0.04) 0px 2px 10px 0px;
+}
+
+.ym-nav {
+  background-color: var(--accent);
+  color: #fff;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav, 90);
+}
+
+.ym-nav-logo {
+  height: 34px;
+  width: 95px;
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.3px;
+  color: #fff;
+}
+
+.ym-nav-tab {
+  color: rgba(255, 255, 255, 0.86);
+  padding: 0 14px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+}
+.ym-nav-tab:hover {
+  color: #fff;
+}
+.ym-nav-tab[data-active="true"] {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.ym-tab-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: rgba(0, 0, 0, 0.04);
+  color: var(--ym-ink-soft);
+  transition: all 0.15s ease;
+}
+.ym-tab-pill:hover {
+  background: rgba(74, 77, 231, 0.08);
+}
+.ym-tab-pill[data-active="true"] {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.ym-tag-completed {
+  background: rgba(26, 107, 60, 0.12);
+  color: var(--ym-success);
+}
+.ym-tag-cancelled {
+  background: rgba(226, 75, 74, 0.12);
+  color: var(--ym-danger);
+}
+.ym-tag-pending {
+  background: rgba(216, 132, 85, 0.15);
+  color: #b0623c;
+}
+.ym-tag-approved {
+  background: rgba(74, 77, 231, 0.12);
+  color: var(--accent);
+}
+.ym-tag-special {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--ym-ink-soft);
+  font-weight: 500;
+}
+
+.ym-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ym-btn {
+  font-weight: 700;
+  border: 1px solid transparent;
+  border-radius: var(--r-btn);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 16px;
+  font-size: 13.5px;
+  background: transparent;
+  color: var(--text);
+  transition: all 0.15s ease;
+}
+.ym-btn:hover {
+  background: rgba(74, 77, 231, 0.06);
+}
+.ym-btn-primary {
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(74, 77, 231, 0.16);
+}
+.ym-btn-primary:hover {
+  background: #3d40d4;
+}
+
+.ym-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.ym-table thead th {
+  text-align: left;
+  padding: 12px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: rgb(150, 150, 165);
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  white-space: nowrap;
+}
+.ym-table tbody td {
+  padding: 18px 10px;
+  font-size: 13px;
+  color: var(--text);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  vertical-align: top;
+}
+.ym-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.ym-table .td-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ym-table .td-strong {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+.ym-table .td-muted {
+  color: var(--ym-ink-soft);
+  font-size: 11px;
+  font-weight: 700;
+}
+/* [260730 운영자 v35] 판매현황 카드(우측 #sales-rail) 한정 표 타이포·패딩·구분선·호버.
+   좌측 사업 실적 표(#main-area)는 현행 18px 10px 유지 — 무접촉. */
+#sales-rail .ym-table tbody td { padding: 11px 8px; font-size: 13px }
+#sales-rail .ym-table tbody td:nth-child(1) { padding-left: 14px }
+#sales-rail .ym-table tbody td:nth-child(6) { padding-right: 14px }
+#sales-rail .ym-table thead th { padding: 10px; color: #6B6B7B; font-size: 11.5px; font-weight: 700; border-bottom: 1px solid rgba(0,0,0,.09) }
+#sales-rail .ym-table thead th:nth-child(1) { padding-left: 14px }
+#sales-rail .ym-table thead th:nth-child(6) { padding-right: 14px }
+#sales-rail .ym-table tbody tr { border-bottom: 1px solid rgba(0,0,0,.09) }
+#sales-rail .ym-table tbody tr:last-child { border-bottom: none }
+#sales-rail .ym-table tbody tr:hover { background: rgba(74,77,231,0.045) }
+
+/* 판매 상세 확정 시안 — 상세 화면에만 적용 */
+#sales-rail .sales-detail-wrap{display:flex;flex-direction:column;align-items:stretch;min-width:0}
+#sales-rail .sales-detail-card{background:#fff;border:1px solid rgba(62,65,84,.12);border-radius:16px;box-shadow:0 8px 28px rgba(62,65,84,.08);padding:24px;min-width:0;overflow:hidden;color:#3E4154;letter-spacing:-.01em;line-height:1.5}
+#sales-rail .sales-detail-head{padding-bottom:18px}
+#sales-rail .sales-detail-title{display:flex;align-items:center;gap:10px;min-width:0;font-size:24px;line-height:1.5}
+#sales-rail .sales-detail-title strong{color:#4A4DE7;font-weight:800;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sales-rail .sales-detail-bullet{display:inline-block;width:6px;height:20px;border-radius:3px;background:#4A4DE7;flex:none}
+#sales-rail .sales-detail-dday{font-size:13px;color:#D88455;font-weight:700;white-space:nowrap;flex:none}
+#sales-rail .sales-detail-overview{display:inline-block;margin-top:10px;padding:3px 9px;border:1px solid rgba(62,65,84,.12);border-radius:6px;background:rgba(62,65,84,.045);font-size:13px;color:#3E4154;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sales-rail .sales-spark{width:100%;margin-top:0}
+#sales-rail .sales-spark svg{display:block;width:100%;height:auto;min-height:150px}
+#sales-rail .sales-kpi-row{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:7px;color:#3E4154;font-size:11px}
+#sales-rail .sales-kpi-label{font-size:11px;margin-right:10px}
+#sales-rail .sales-kpi-value{font-size:24px;color:#4A4DE7;font-weight:800;margin-right:8px;font-variant-numeric:tabular-nums}
+#sales-rail .sales-kpi-delta{font-size:13px;color:#3C9A67;font-weight:700;margin-right:8px}
+#sales-rail .sales-kpi-sub{font-size:11px;color:#3E4154}
+#sales-rail .sales-kpi-target{font-size:11px;color:#3E4154;white-space:nowrap}
+#sales-rail .sales-progress{height:6px;border-radius:999px;background:rgba(62,65,84,.10);margin-top:7px;overflow:hidden}
+#sales-rail .sales-progress i{display:block;height:100%;border-radius:inherit;background:#4A4DE7}
+#sales-rail .sales-ai{margin-top:18px;padding:12px 13px;border-top:1px solid rgba(62,65,84,.10);border-bottom:1px solid rgba(62,65,84,.10);font-size:13px;color:#3E4154;line-height:1.5}
+#sales-rail .sales-ai b{color:#4A4DE7;margin-right:5px}
+#sales-rail .booking-section{margin-top:22px;padding-top:20px;border-top:1px solid rgba(62,65,84,.14)}
+#sales-rail .booking-section h3{display:flex;align-items:center;gap:9px;margin:0 0 16px;font-size:24px;color:#3E4154;line-height:1.5}
+#sales-rail .booking-section h3 .sales-detail-bullet{height:18px;width:5px}
+#sales-rail .booking-grid{display:grid;grid-template-columns:.5fr 1.5fr 1fr 1fr;gap:10px;align-items:stretch}
+#sales-rail .booking-box{min-width:0;border:1px solid rgba(62,65,84,.15);border-radius:0 10px 10px 10px;background:#fff}
+#sales-rail .booking-tab{display:inline-block;padding:3px 9px;border:1px solid rgba(62,65,84,.15);border-top:0;border-radius:0 0 8px 8px;font-size:11px;font-weight:800;color:#3E4154;background:#fff;white-space:nowrap}
+#sales-rail .booking-box-body{padding:12px 10px}
+#sales-rail .booking-numbers{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+#sales-rail .booking-metric{display:flex;align-items:baseline;gap:4px;white-space:nowrap}
+#sales-rail .booking-metric strong{font-size:32px;line-height:1;font-weight:800;color:#4A4DE7;font-variant-numeric:tabular-nums}
+#sales-rail .booking-metric span{font-size:13px;color:#3E4154}
+#sales-rail .booking-metric.peach strong{color:#D88455}
+#sales-rail .age-list{display:flex;flex-direction:column;gap:8px}
+#sales-rail .age-row{display:grid;grid-template-columns:52px minmax(0,1fr) 38px;align-items:center;gap:8px;font-size:11px;color:#3E4154}
+#sales-rail .age-row>i{height:7px;background:rgba(62,65,84,.10);border-radius:999px;overflow:hidden}
+#sales-rail .age-row>i b{display:block;height:100%;background:#4A4DE7;border-radius:inherit}
+#sales-rail .age-row strong{font-size:11px;text-align:right;font-variant-numeric:tabular-nums}
+#sales-rail .ranked-chart{display:grid;grid-template-columns:minmax(54px,1fr) minmax(86px,1fr);align-items:center;gap:10px}
+#sales-rail .donut{width:76px;height:76px;border-radius:50%;position:relative;background:#D88455}
+#sales-rail .donut:after{content:"";position:absolute;inset:18px;background:#fff;border-radius:50%}
+#sales-rail .rank-legend{display:flex;flex-direction:column;gap:8px;min-width:0;font-size:11px}
+#sales-rail .rank-legend>div{display:flex;justify-content:space-between;gap:6px;color:#3E4154}
+#sales-rail .rank-legend>div span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#sales-rail .rank-legend>div b{font-variant-numeric:tabular-nums}
+#sales-rail .rank-legend .rank-top{font-weight:800}
+#sales-rail .booking-top3{margin-top:16px;font-size:13px;color:#3E4154;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sales-rail .booking-top3 b,#sales-rail .booking-top3 em{color:#4A4DE7;font-weight:800;font-style:normal}
+#sales-rail .sales-detail-empty{padding:24px 0;color:#3E4154;font-size:13px}
+#sales-rail .sales-detail-nav{display:flex;align-items:center;justify-content:center;gap:9px;padding:14px 0 2px}
+#sales-rail .sales-detail-nav-btn{width:44px;height:44px;border:1px solid rgba(62,65,84,.16);border-radius:8px;background:#fff;color:#3E4154;font:700 15px/1 inherit;cursor:pointer}
+#sales-rail .sales-detail-nav-btn:hover{border-color:#4A4DE7;color:#4A4DE7}
+#sales-rail .sales-detail-dots{display:flex;align-items:center;gap:6px;max-width:70%;overflow:hidden}
+#sales-rail .sales-detail-dot{width:22px;height:44px;padding:0;border:0;border-radius:0;background:transparent;cursor:pointer;flex:none;position:relative}
+#sales-rail .sales-detail-dot:after{content:"";position:absolute;left:8px;top:19px;width:6px;height:6px;border-radius:50%;background:rgba(62,65,84,.25)}
+#sales-rail .sales-detail-dot.on{width:34px}
+#sales-rail .sales-detail-dot.on:after{left:8px;width:18px;border-radius:999px;background:#4A4DE7}
+#sales-rail .sales-detail-nav-btn:focus-visible,#sales-rail .sales-detail-dot:focus-visible{outline:2px solid #4A4DE7;outline-offset:2px}
+@media(max-width:1400px){#sales-rail .booking-grid{grid-template-columns:1fr 2fr 1.35fr 1.35fr}}
+@media(max-width:1250px){#sales-rail .sales-detail-card{padding:18px}#sales-rail .booking-grid{grid-template-columns:1fr 1fr}#sales-rail .booking-box:first-child{grid-row:span 2}}
+.ym-table .th-year-last {
+  color: var(--accent);
+  background: rgba(74, 77, 231, 0.05);
+  border-radius: 8px;
+}
+.ym-table .td-year-last {
+  background: rgba(74, 77, 231, 0.06);
+  color: var(--accent);
+  font-weight: 700;
+}
+.ym-table .row-perf td.td-label { color: var(--accent); }
+.ym-table .row-exh td.td-label { color: var(--peach-text); }
+.ym-table .row-edu td.td-label { color: var(--c3); }
+.ym-table .row-total td.td-label { color: var(--text); }
+
+.ym-strip {
+  display: flex;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: rgba(74, 77, 231, 0.04) 0px 2px 10px 0px;
+  overflow: hidden;
+}
+.ym-strip > .cell {
+  flex: 1 1 0;
+  padding: 14px 18px;
+  border-right: 1px solid var(--border);
+}
+.ym-strip > .cell:last-child {
+  border-right: none;
+}
+.ym-strip .lab {
+  font-size: 11px;
+  color: var(--ym-ink-soft);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: none;
+}
+.ym-strip .val {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  margin-top: 4px;
+  letter-spacing: -0.3px;
+}
+/* [260730 운영자 v31] 실적표 페이저 — 26×26 radius 10 화살표(좌/우) */
+.uit-pager button{
+  width:26px;height:26px;border-radius:10px;
+  border:1px solid var(--border);background:var(--surface-solid);
+  color:var(--text);font-size:14px;line-height:1;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.04);
+  transition:background .15s,color .15s,border-color .15s;
+  font-family:inherit;
+}
+.uit-pager button:hover:not(:disabled){background:var(--accent-light);color:var(--accent);border-color:var(--accent)}
+.uit-pager button:disabled{opacity:.4;cursor:not-allowed}
+.uit-pager .uit-pager-window{font-size:13px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:.2px;margin:0 8px}
+
+.ym-card-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ym-card-title .ct-bul {
+  width: 4px;
+  height: 14px;
+  background: var(--accent);
+  border-radius: 2px;
+  display: inline-block;
+}
+
+.ym-card-sub {
+  font-size: 11px;
+  color: var(--ym-ink-soft);
+  font-weight: 600;
+}
+
+.ym-input {
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border2);
+  background: #fff;
+  font-size: 13px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.ym-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(74, 77, 231, 0.12);
+}
+
+/* calendar cells */
+.ym-day-cell {
+  min-height: 110px;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.ym-day-cell[data-today="true"] {
+  background: var(--today-bg);
+  border-color: rgba(74, 77, 231, 0.25);
+}
+.ym-day-cell[data-past="true"] {
+  background: var(--past-bg);
+}
+.ym-day-empty {
+  background: transparent !important;
+  border-color: transparent !important;
+}
+.ym-day-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+.ym-day-cell[data-today="true"] .ym-day-num {
+  color: var(--accent);
+}
+
+.ym-day-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-top: 4px;
+}
+
+.ym-day-badge {
+  display: block;
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+/* modal — 정본 §3 모달 배경 rgba(26,26,46,.4) + blur(4px) */
+.ym-modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 26, 46, 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: ym-fade-in 0.15s ease;
+}
+.ym-modal {
+  background: var(--ym-glass);
+  backdrop-filter: blur(12px);
+  border-radius: var(--r-modal);
+  border: 1px solid var(--ym-glass-border);
+  box-shadow: var(--elev);
+  padding: 26px;
+  max-width: 560px;
+  width: calc(100% - 32px);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+}
+.ym-modal-title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.3;
+}
+.ym-modal-sub {
+  font-size: 13px;
+  color: var(--ym-ink-soft);
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+.ym-keyval {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 13px;
+}
+.ym-keyval:last-child { border-bottom: none; }
+.ym-keyval .k {
+  color: var(--ym-ink-soft);
+  font-weight: 600;
+}
+.ym-keyval .v {
+  color: var(--text);
+  font-weight: 500;
+  word-break: break-word;
+}
+
+/* scoreboard */
+.ym-score {
+  background: rgba(74, 77, 231, 0.08);
+  color: var(--accent);
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* tab indicator */
+.ym-tab-active-line {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* sales rail group headers */
+.ym-rail-hd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text);
+}
+.ym-rail-hd .grp-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.ym-rail-hd .grp-count {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid rgba(74, 77, 231, 0.18);
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* status pill */
+.ym-status-pill {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.ym-status-selling {
+  background: var(--peach);
+  color: #fff;
+}
+.ym-status-upcoming {
+  background: rgba(74, 77, 231, 0.12);
+  color: var(--accent);
+}
+
+/* tiny trend mini */
+.ym-trend-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--ym-ink-soft);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* prevent layout jitter on first paint */
+html, body, #root { height: 100%; }
+html { background: var(--bg); }
+
+/* ── 브랜드 마크 (운영자 260730 v5) ──────────────────────────────────────────
+   영문 2단 로고타입 차콜 PNG (8842×3000, 2.95:1) — 첨부 v5 그대로.
+   nav 위에 가로 한 줄 (40px) 브랜드 마크 바. 본인 캔버스 #FDFCFB 위에 놓임. */
+.brand-bar{
+  background: #FDFCFB;
+  padding: 4px 32px;
+  display: flex;
+  align-items: center;
+  height: 40px;
+  border-bottom: 1px solid rgba(0,0,0,.06);
+}
+.brand-bar img{
+  display: block;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* shadcn 잔재 회색(#f3f3f3/#e5e5e5) 차단 — 운영자 260730: 신규 hex·회색 금지.
+   폰트는 *에서 Pretendard 위주로 잡혀 있어 bg만 본문 캔버스로 강제. */
+.bg-background,
+[data-slot="popover-content"] {
+  background-color: var(--content-canvas) !important;
+}
+.text-foreground,
+[data-slot="popover-content"] * { color: var(--text) !important; }
+.border, .border-input, [data-slot="popover-content"] { border-color: var(--border) !important; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   §1 반응형 레이아웃 정본화 (운영자 260730 v8)
+   원본 정본_스타일.css 룰 그대로 이식. 값 수정 금지.
+   데스크탑 풀블리드 / 모바일 flex-column / 햄버거·시트·컨테이너 쿼리.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+#body-wrap{display:flex;position:relative;min-height:calc(100vh - 56px);isolation:isolate}
+#main-area{flex:1;padding:18px 20px 24px 20px}
+#sales-rail{width:50%;min-width:300px;flex-shrink:0;padding:18px 20px 24px 0;display:flex;flex-direction:column}
+
+@media(min-width:1201px){
+  #main-area{padding-right:15px !important}
+}
+
+/* 데스크탑 1200+ → 풀, ≤1200 → 레일 닫힘 */
+@media(max-width:1200px){
+  #sales-rail{display:none}
+}
+
+/* ≤768 → 모바일 시트 */
+@media(max-width:768px){
+  #body-wrap{flex-direction:column}
+  #main-area{padding:16px !important}
+}
+
+@media(max-width:760px){
+  /* 영상편집/뉴스봇 1열 — 미래용 자리명: */
+  /* .news-grid,[data-grid="editorial"]{grid-template-columns:1fr} */
+}
+@media(max-width:720px){
+  /* .bp-pop → 하단 시트 70vh — 미래용 */
+}
+@media(max-width:680px){ /* 연간일정 타임라인 좌우 여백 약간 축소 — 미래용 */ }
+@media(max-width:640px){ /* .msg-toast 풀폭 — 미래용 */ }
+@media(max-width:600px){ /* 챗봇 풀폭 62vh — 미래용 */ }
+@media(max-width:480px){
+  /* .cell-corner 18px */
+}
+
+/* 컨테이너 쿼리 — 셀 좁아지면 .pf(풀네임)→.ps(단축) 축약 */
+@container (max-width:140px){
+  /* 미래용: 셀 내부 .pf 숨김 .ps 노출 */
+}
+@container (max-width:120px){ /* 더 강한 축약 */ }
+@container (max-width:100px){ /* dot-only */ }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   §2 캘린더 화면 정본화 (운영자 260730 v8) — 원문 verbatim 발췌
+   화요일 시작 6열 캘린더. Sun(일)은 마지막 칸에서 1/4만, 월요일 1/4는 .mon-sub 서브셀.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+.cal{background:rgba(255,255,255,.15);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);border-radius:0 0 var(--radius-lg) var(--radius-lg);box-shadow:var(--glass-shadow);border:1px solid rgba(255,255,255,.7)}
+.cal-head-wrap{position:sticky;top:56px;z-index:5;background:rgba(255,255,255,.9);backdrop-filter:blur(11px);-webkit-backdrop-filter:blur(11px);border-radius:var(--radius-lg) var(--radius-lg) 0 0;border:1px solid var(--glass-border);border-bottom:1px solid rgba(0,0,0,.07);margin-bottom:-1px;overflow:hidden}
+.cal-head{display:grid;grid-template-columns:repeat(6,1fr)}
+.dh{padding:14px 8px;text-align:center;font-size:14px;font-weight:700;background:transparent;color:#666}
+.dh.sat{color:#3B7DD8}
+.dh.sun,.dh.dh-split .p-mon{color:#D64545}
+.cal-day{display:grid;grid-template-columns:repeat(6,1fr)}
+.week{display:grid;grid-template-columns:repeat(6,1fr);border-bottom:1px solid rgba(0,0,0,.07);position:relative}
+.c{height:123px;padding:7px 8px 8px 8px;border-right:1px solid rgba(0,0,0,.07);position:relative;overflow:hidden;transition:all .15s;background:rgba(255,255,255,0)}
+.c-inner{overflow-x:hidden;overflow-y:auto;height:calc(100% - 55px);margin-top:18px;margin-bottom:0;scrollbar-width:thin}
+.c.past .c-inner{opacity:.33}
+.c.today{background:var(--today-bg)}
+.c.sel{box-shadow:inset 0 0 0 2px var(--accent);background:rgba(74,77,231,0.04)}
+.c.sunmon .c-inner{width:calc(75% - 5px)}
+.mon-sub{position:absolute;top:0;right:0;bottom:0;width:25%;border-left:1px solid rgba(0,0,0,.07);padding:5px 5px 6px;overflow:hidden;cursor:pointer;z-index:5}
+.dn{font-size:13px;font-weight:600;margin-bottom:2px;color:var(--text);display:flex;align-items:center;flex-wrap:nowrap;min-width:0;gap:5px}
+.ev{display:flex;align-items:center;gap:4px;padding:1.5px 0;font-size:10px;line-height:1.4;min-width:0}
+.ev.done > *{text-decoration:line-through;text-decoration-color:#555;text-decoration-thickness:1.5px;text-decoration-skip-ink:none}
+.c-count{position:absolute;top:4px;right:6px;font-size:9px;color:rgba(0,0,0,0.4);font-weight:600;letter-spacing:0.3px;z-index:6;pointer-events:none;font-variant-numeric:tabular-nums}
+.sp-area{position:absolute;bottom:11px;left:8px;right:8px;height:19px;overflow:hidden;pointer-events:auto}
+.week-collapsed{display:flex;align-items:center;gap:14px;padding:7px 16px;cursor:pointer;border-bottom:1px solid var(--border);font-size:11.5px;color:#888;background:rgba(0,0,0,0.018)}
+.diag{position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 4px,rgba(0,0,0,0.02) 4px,rgba(0,0,0,0.02) 5px);pointer-events:none}
+
+/* 클릭 우측 패널 — glass blur 6px */
+.panel{position:fixed;top:56px;right:0;width:360px;height:calc(100vh - 56px);background:rgba(255,255,255,0.40);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-left:1px solid var(--glass-border);box-shadow:-8px 0 32px rgba(26,26,46,0.03);z-index:10;display:flex;flex-direction:column}
+@keyframes panelSlideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   §2 캘린더 cell internals — 상태·오늘과거·c-inner(.33)·c.count·ev·sp-area
+   ════════════════════════════════════════════════════════════════════════════ */
+
+.c{display:flex;flex-direction:column;position:relative;overflow:hidden;background:rgba(255,255,255,0);transition:all .15s}
+.c.today{background:var(--today-bg)}
+.c.past{cursor:default}
+.c.past .c-inner{opacity:.33}
+.c.sel{box-shadow:inset 0 0 0 2px var(--accent);background:rgba(74,77,231,0.04)}
+.c.sunmon .c-inner{width:75%}
+.c-count{position:absolute;top:4px;right:6px;font-size:9px;color:rgba(0,0,0,0.4);font-weight:600;letter-spacing:0.3px;z-index:6;pointer-events:none;font-variant-numeric:tabular-nums}
+.dn{font-size:13px;font-weight:600;margin-bottom:2px;color:var(--text);display:flex;align-items:center;flex-wrap:nowrap;min-width:0;gap:5px}
+.dn-num.today{color:var(--accent);font-weight:800}
+.dn-num.sat{color:#3B7DD8}
+.dn-num.sun{color:#D64545}
+.c-inner{display:flex;flex-direction:column;gap:2px;padding:0 1px;overflow:hidden}
+.ev{display:flex;align-items:center;gap:4px;padding:1px 0;font-size:10px;line-height:1.4;color:var(--text);min-width:0;background:transparent;border:0;text-align:left;width:100%;cursor:pointer;border-radius:3px;transition:background .15s}
+.ev:hover{background:rgba(74,77,231,0.06)}
+.ev-time{font-variant-numeric:tabular-nums;color:#9aa3b2;font-weight:700;font-size:9px;flex-shrink:0;width:30px}
+.ev-plat{font-size:9px;font-weight:700;color:var(--accent);flex-shrink:0;max-width:34px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ev-title{font-size:10px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+.ev-meta-chip-evig{color:var(--ym-success)}     /* evig — 자체 cleanup */
+.ev-pending{cursor:default;background:rgba(216,132,85,0.06)}
+.ev-completed{opacity:.78}
+.ev-completed>*{text-decoration:line-through;text-decoration-color:#555;text-decoration-thickness:1.5px;text-decoration-skip-ink:none}
+.ev-cancelled{opacity:.5;background:rgba(0,0,0,0.02)}
+.ev-approved{}
+.sp-area{position:absolute;bottom:8px;left:8px;right:8px;height:18px;display:flex;align-items:center;overflow:hidden;background:rgba(26,26,46,0.04);border-radius:3px;z-index:4;pointer-events:auto}
+.sp-line{font-size:10px;color:var(--accent);font-weight:600;padding:0 6px;white-space:nowrap;animation:spMarquee 12s linear infinite}
+@keyframes spMarquee{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+
+.week-collapsed{display:flex;align-items:center;gap:14px;padding:7px 16px;cursor:pointer;border-bottom:1px solid var(--border);font-size:11.5px;color:#888;background:rgba(0,0,0,0.018)}
+.wk-collapse-handle{position:absolute;left:0;top:0;bottom:0;width:15px;cursor:col-resize;background:transparent;z-index:3}
+.mon-sub{position:relative;background:rgba(230,240,255,0.06);border-left:1px solid rgba(0,0,0,0.05);font-size:10px;color:var(--dim);padding:5px 6px;overflow:hidden}
+
+/* ── event auto-marquee today ─ */
+.c.today .c-inner{animation:cellMarquee 14s linear infinite}
+@keyframes cellMarquee{
+  0%{transform:translateY(0)}
+  100%{transform:translateY(-50%)}
+}
+
+/* ── 패널 slideIn ── */
+@keyframes panelSlideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+.panel{animation:panelSlideIn .35s ease}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   B 옵션 — biz-mode 게이트 (standalone.html 정합 #app.biz-mode #cal...)
+   사업실적 뷰: #cal-head-wrap / #cal / .pet / .crablane 숨김
+   캘린더 뷰: 일반 표시 (.cal-mode 게이트 시 노출)
+   ════════════════════════════════════════════════════════════════════════════ */
+
+#app.biz-mode #cal-head-wrap,#app.biz-mode #cal,#app.biz-mode .pet,#app.biz-mode .crablane{display:none}
+#app.biz-mode #chips{display:flex}
+/* 캘린더 페이지 시 pet/crablane hide — #app.cal-mode */
+#app.cal-mode #biz-main,#app.cal-mode .nav-center .nav-btn[data-menu-id="콘텐츠 제작"]{opacity:.4}
+
+/* ── 컨테이너 쿼리 (§1) — 셀 .ev-plat / .pf → .ps 축약 ── */
+@container (max-width:140px){
+  .ev .ev-plat{max-width:24px;font-size:8px}
+}
+@container (max-width:120px){
+  .ev .ev-title{font-size:9px}
+}
+@container (max-width:100px){
+  .ev .ev-time{width:24px;font-size:8px}
+  .ev .ev-plat{display:none}
+}
+
+/* ── ≤480 .cell-corner 18px (placeholder) ── */
+@media(max-width:480px){
+  .c-corner,.cell-corner{width:18px;height:18px}
+}
+@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   standalone.html 정합 — (.login-welcome, .lw-thin, .lw-ac, .sub) verbatim
+   정본 PIN 게이트 좌측 타이틀 문구 + 부제 — ref L167~L170 원문 그대로.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+.login-welcome{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:23px;font-weight:800;color:var(--text);opacity:.71;letter-spacing:.4px;margin-bottom:22px;line-height:1.3;white-space:nowrap}
+.login-welcome .lw-thin{font-weight:400}
+.login-welcome .lw-ac{color:var(--accent)}
+.login-sub{font-size:13px;color:#888;line-height:1.5}
+.data-loading{font-size:13px}

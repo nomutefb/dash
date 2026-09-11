@@ -1,0 +1,30 @@
+function _enterApp(){
+if(window.YMAuth){if(!window.YMAuth.session)return window.YMAuth.start();}
+
+  window._appEnteredAt=Date.now();  // 알림 토스트 10초 지연 기준(진입 직후 억제)
+  window._pinActive=false;
+  try{ if(typeof window._hideCapsWarn==='function') window._hideCapsWarn(); }catch(e){}  // CapsLock 경고 떠다님 차단
+  // 진입 전환 = 카드 리프트 디졸브 — 로그인 화면이 보이는 상태에서만 연출(복원·예외 경로는 즉시 전환). 데이터 로딩(initApp)은 연출과 병렬 출발.
+  var _lg=document.getElementById('login'), _appEl=document.getElementById('app'), _card=document.querySelector('.login-card');
+  var _anim=false;
+  try{ _anim=_lg && _lg.style.display!=='none' && !!_card && !window._appEntering && !(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){}
+  if(_anim){
+    window._appEntering=true;  // 640ms 창 재진입 가드 — 창 안 재호출은 즉시 전환 폴백으로
+    _card.classList.add('lc-lift'); _lg.classList.add('login-leave');
+    setTimeout(function(){
+      window._appEntering=false;
+      _lg.style.display='none'; _lg.classList.remove('login-leave'); _card.classList.remove('lc-lift');
+      _appEnterStagger(_appEl);
+    },640);
+  }else{
+    _lg.style.display='none'; _appEl.style.display='';
+  }
+  try{ if(typeof _loginEmail!=='undefined' && _loginEmail) localStorage.setItem('lastLoginEmail', _loginEmail); }catch(e){}
+  try{ localStorage.removeItem('_msAutoRedirAt'); }catch(e){}   // [분신술 260710] 자동 리다이렉트 TTL 백스톱 클리어(성공 진입 = 루프 아님 확정)
+  try{ sessionStorage.removeItem('_lockedAt'); }catch(e){}   // [260721] 잠금 도장 제거 — 정상 진입·PIN 해제 성공의 단일 수렴점
+  _locked=false; initApp(); if(typeof _bindIdleEvents==='function'){ _bindIdleEvents(); resetIdleTimer(); }
+}
+
+// 시트 컬럼 fallback (헤더 변형 매칭)
+function _authGetCol(rec, candidates){
+  for(let i=0;i<candidates.length;i++){

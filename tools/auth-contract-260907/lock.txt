@@ -1,0 +1,67 @@
+public/standalone.html L6090-6155
+  try{
+    const email=await _msalLoginEmail();
+    if(email){ try{localStorage.setItem('_resumePin',email);}catch(e){} location.reload(); }
+    else { initLoginScreen(); }
+  }catch(e){ console.warn('[switchUser]',e); initLoginScreen(); }
+}
+async function _doLogout(){
+  closeLogoutModal(); _stopIdleTimer();
+  try{ sessionStorage.removeItem('pw'); sessionStorage.removeItem('role'); sessionStorage.removeItem('subAdminPin'); sessionStorage.removeItem('myApplicant'); sessionStorage.removeItem('myUserDept'); sessionStorage.removeItem('_lockedAt'); }catch(e){}
+  try{ await _msalLogout(); }catch(e){ console.warn('[logout msal]',e); }
+  location.reload();
+}
+var _idleTimer=null, _idleBound=false, _locked=false;
+// IDLE_MS is declared above the session-restore IIFE (see ~line 1795) so reload-time resetIdleTimer gets the real value, not undefined.
+function resetIdleTimer(){
+  if(_idleTimer)clearTimeout(_idleTimer);
+  const app=document.getElementById('app');
+  if(_idleLockDisabled){return;} if(app && app.style.display!=='none' && !_locked){ _idleTimer=setTimeout(lockScreen, IDLE_MS||30*60*1000); }
+}
+function _stopIdleTimer(){ if(_idleTimer){clearTimeout(_idleTimer);_idleTimer=null;} }
+function _bindIdleEvents(){
+  if(_idleBound)return; _idleBound=true;
+  ['mousemove','keydown','mousedown','touchstart','scroll'].forEach(function(ev){ document.addEventListener(ev, resetIdleTimer, {passive:true}); });
+}
+function lockScreen(){
+  if(window._OPEN_ENTRY){ _stopIdleTimer(); return; }   // [260812 운영자 「잠금 기능 아예 없애고」] 전면 개방 = 잠금 자체를 걸지 않는다(유휴 타이머·수동 잠금·F5 복원 도장 전부 무효)
+  _stopIdleTimer(); _locked=true;
+  try{sessionStorage.setItem('_lockedAt',String(Date.now()));}catch(e){}   // [260721] 잠금 도장 — F5 세션복원 IIFE가 이 도장을 보면 앱 직행 대신 잠금화면 유지(새로고침 우회 봉쇄). 해제 성공(_enterApp)·로그아웃(_doLogout)이 제거
+  try{if(typeof _memPurge==='function')_memPurge();}catch(e){}   // 회원 PII 모달은 body 직속(z 2000)이라 #app 숨김만으론 잠금화면 위에 남음(분신술 보안 MED-4) — 잠금 시 소거
+  const app=document.getElementById('app'); if(app)app.style.display='none';
+  const login=document.getElementById('login'); if(login){login.style.display='';login.classList.remove('login-leave');}
+  try{var _lkc=document.querySelector('.login-card');if(_lkc)_lkc.classList.remove('lc-lift');}catch(e){}  // 진입 연출 잔류 클래스 방어 청산
+  if(typeof startLoginShader==='function'){try{startLoginShader();}catch(e){}}
+  const a=document.getElementById('account-step'); if(a)a.style.display='none';
+  const ps=document.getElementById('pin-step'); if(ps)ps.style.display='';
+  const pa=document.getElementById('pin-account'); if(pa)pa.innerHTML='<b style="color:var(--peach-text)">'+escapeHtml(_loginEmail||'')+'</b>';
+  const lm=document.getElementById('login-msg'); if(lm){ lm.textContent=(Math.round((IDLE_MS||1800000)/60000))+'분간 입력이 없어 잠금되었습니다'; lm.style.color='#e53935'; lm.style.fontSize='11px'; lm.style.marginTop='6px'; }
+  const ll=document.getElementById('login-load'); if(ll)ll.textContent='';
+  _pinClear(false);
+  if(typeof _pinFocusFirst==='function')_pinFocusFirst(); else if(pins[0])pins[0].focus();   // [260714] 잠금 재진입도 견고화 포커스로 통일(경로 일관성)
+  if(typeof _pinFirstHintStart==='function')_pinFirstHintStart();   // [분신술 260710 감사5] 잠금 재진입도 PIN 진입 — 첫 칸 안내 링 발동(경로 일관성)
+  try{if(typeof _plKick==='function')_plKick();}catch(_e){}   // [로그인 프리로드] F5 잠금 복원(_lockedAt 도장) = 해제 즉시 initApp 재로딩 → 그 데이터 선출발(_appEnteredAt 가드가 앱 사용 중 유휴 잠금은 자동 제외)
+}
+function toggleMobileNav(){
+  const c=document.getElementById('nav-menus');if(!c)return;
+  if(c.classList.contains('mobile-open')){closeMobileNav();return;}
+  c.classList.add('mobile-open');
+  const h=document.querySelector('.hamburger');if(h){h.classList.add('is-open');h.setAttribute('aria-expanded','true');}   // navigation-01 이식 — 2줄 → X 모프
+}
+function closeMobileNav(){
+  const c=document.getElementById('nav-menus');
+  if(c){c.classList.remove('mobile-open');
+    c.querySelectorAll('.nav-acc.is-expanded').forEach(function(a){a.classList.remove('is-expanded');});   // 아코디언 원복 — 다음 오픈 = 접힌 상태
+    c.querySelectorAll('.nav-btn.acc-on').forEach(function(x){x.classList.remove('acc-on');x.removeAttribute('aria-expanded');});}
+  const h=document.querySelector('.hamburger');if(h){h.classList.remove('is-open');h.setAttribute('aria-expanded','false');}
+}
+// [260731 운영자] "지나가는 중에는 안 열리게" — 포인터 속도 기반 의도 판정(hover intent).
+//   느리게(=겨냥해서) 들어오면 지연 0으로 즉시 열고, 빠르게 스쳐 지나가는 중이면 열지 않는다.
+//   스쳐가다 그 메뉴에서 멈추거나 느려지면 그 순간 열림 — '못 열리는 메뉴'는 없음.
+//   [260731 운영자 "자연스럽게 · 프레임 높게"] 재판정 = 고정 타이머가 아니라 **매 프레임(requestAnimationFrame)** — 디스플레이 주사율(60/120Hz)을 그대로 타서
+//   느려지는 순간 같은 프레임에 열린다. 등장 모션 자체는 260723 navigation-01 이식 정본(.nav-hover-bg L228 · .dd-menu/.dd-panel linear() 스프링) 무접촉 계승.
+//   조절값 = 아래 상수 3개뿐(신규 CSS·색 0).
+var _NAV_HOV_SLOW=0.55,    // px/ms(=550px/s) 이하 = '의도' 판정 → 즉시 열기
+    _NAV_HOV_IDLE=70,      // ms — 이만큼 mousemove가 없으면 '멈춤'(속도 0)으로 간주 = 급히 와서 딱 멈춘 경우 즉시 열림
+    _NAV_HOV_SMOOTH=0.4,   // 속도 EMA 계수 — 매 프레임 재판정이라 한 샘플의 튐(이벤트 병합·손떨림)으로 오판하지 않게 평활
+    _navPtr={x:0,y:0,t:0,v:0};

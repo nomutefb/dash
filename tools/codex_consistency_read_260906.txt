@@ -1,0 +1,423 @@
+5186: (async function(){if(window._QA){try{_qaEnter();}catch(_qe){console.error('[QA] enter fail',_qe);}return;}if(await _authGateBoot())return;if(window._OPEN_ENTRY){try{await _openEnter();}catch(_oe){console.error('[open-entry] fail',_oe);}return;}   /* [260812 운영자 「로그인 기능 없애서 바로 전면으로」] 개방 진입 = 세션복원·PIN·MS 인증 분기를 전부 건너뛴다 */try{localStorage.removeItem('myApplicant');localStorage.removeItem('myUserDept');}catch(e){}try{ if(!window._OPEN_ENTRY&&sessionStorage.getItem('myApplicant')==='Jordan Reed 07890'){ ['pw','role','myApplicant','myUserDept','subAdminPin','isAcct','acctPin','_lockedAt'].forEach(function(k){sessionStorage.removeItem(k);}); console.warn('[260902] 개방진입(예울마루) 잔여 세션 폐기 → MS+PIN 재인증'); } }catch(e){}   /* [260902] OPEN_ENTRY 꺼진 뒤 남은 우회 세션(이름 예울마루)이 정식 로그인으로 오인되던 것 차단 */const s=sessionStorage.getItem('pw');if(s){var _lk=null;try{_lk=sessionStorage.getItem('_lockedAt');}catch(e){} if(_lk){try{if(!_loginEmail)_loginEmail=(sessionStorage.getItem('myEmail')||'').trim();}catch(e){} lockScreen();}else{_enterAppFromSession();_msalHasLiveSession();}}else{var _rp=null;try{_rp=localStorage.getItem('_resumePin');}catch(e){} if(_rp){try{localStorage.removeItem('_resumePin');}catch(e){} _loginEmail=_rp; if(typeof startLoginShader==='function'){try{startLoginShader();}catch(e){}} if(typeof goToPinStep==='function'){setTimeout(function(){goToPinStep(true);},0);}else{if(typeof initLoginScreen==='function')initLoginScreen();}}else{if(typeof initLoginScreen==='function')initLoginScreen();}}})();
+5187: 
+5188: var _apiWrites=0;   // [Q39 평의회6] 비행 중 쓰기 재계 — nmSyncBusy가 읽어 배포 자동 리로드가 PATCH/POST를 절단하지 못하게(모달 닫힘~쓰기 완료 사이 무방비 창 봉합)
+5189: async function api(method,path,body){
+5190:   if(window._QA)return _qaApi(method,path,body);   // [QA] 실네트워크 차단 — 목데이터만(실API·실데이터 미접촉)
+5191:   // [로그인 프리로드] 같은 경로 GET의 선행 응답을 1회 재사용(신선할 때만) — 만료·실패는 아래 정상 fetch 폴백(회귀 0)
+5192:   if(method==='GET'&&_plJobs[path]){
+5193:     var _pl=_plJobs[path]; delete _plJobs[path];   // 1회 소비 — 이후 같은 경로(수동 새로고침·syncReload)는 항상 네트워크
+5194:     // [평의회1] records↔lastmod 에폭 짝 — lastmod 프리로드가 이미 죽어 있으면(실패·만료) records 워밍도 버리고 둘 다
+5195:     //   지금 네트워크로 정렬(화면=t0·배지 기준선=t1로 갈라지는 사각 차단). 미착(pending)은 h2 같은 연결이라 비대칭 스톨이
+5196:     //   사실상 없고(전환·슬립은 둘 다 죽어 둘 다 폴백 = 정렬), 정상 도착분은 _refreshSeenMod의 .v 경로가 t0 값을 쓴다.
+5197:     if(path==='/api/records'){ try{ var _lm=_plJobs['/api/lastmod']; if(_lm&&(_lm.err||(Date.now()-_lm.t)>=_PL_TTL))_pl=null; }catch(_e){} }
+5198:     if(_pl&&(Date.now()-_pl.t)<_PL_TTL){
+5199:       // [평의회5] 스톨 방어 — 죽은-pending 소켓(잠금 방치 중 네트워크 전환·슬립 복귀)은 TTL 검사로 못 끊는다 →
+5200:       //   8초 안에 안 오면 버리고 아래 정상 fetch(오늘의 경로)로. 최악 추가 대기 8초 상한(구: 소켓 포기까지 수 분 무표시).
+6766:   try{ _srailRender(); }catch(_e){}
+6767:   return true;
+6768: }
+6769: function _v46SalesMergeTick(){
+6770:   _v46sm.done=true; return;   /* [260904 Phase5] 공연마스터_이력·일일입력_이력 은 판매설정·일일실적(통합 시트)에 합류 — 클라이언트 병합 폐기 */
+6771:   if(_v46sm.done)return;
+6772:   _v46sm.tries++;
+6773:   if(_v46sm.tries>3000){ _v46sm.done=true; return; }
+6774:   var st=window._salesState;
+6775:   if(!st||!st.daily||!st.daily.rows||!st.master||!st.master.rows){ setTimeout(_v46SalesMergeTick,_v46sm.tries<60?1000:5000); return; }   /* [260902] 실시트 도착까지 계속 대기(60초 포기 후 빈 통 생성 금지) */
+6776:   _v46sm.done=true;
+6777:   Promise.all([api('GET','/api/ops?sheet='+encodeURIComponent('공연마스터_이력')),api('GET','/api/ops?sheet='+encodeURIComponent('일일입력_이력'))]).then(function(a){ var master=((a[0]&&a[0].rows)||[]).map(function(m){ var o={}; Object.keys(m).forEach(function(k){ o[k]=m[k]; }); o._base=String(m['기준명']||m['사업명']||'');   /* 기준명 = v46 _base(연도 접미 없는 이름) — 실시간 시트 중복 판정 키 */ o._yr=Number(String(m['시작일']||'').slice(0,4))||null; return o; }); var daily=((a[1]&&a[1].rows)||[]); return {master:master,daily:daily}; }).then(function(j){ _v46SalesMergeApply(j); })   /* [260902] 원천 = DB 시트 공연마스터_이력·일일입력_이력(v46 sales_merge 이관본, 프로그램ID 재키) */.catch(function(e){ try{ console.warn('[v46 sales merge]',e); }catch(_e){} });
+6778: }
+6779: setTimeout(_v46SalesMergeTick,1500);
+6780: /* [WA38-v1] v46 → 세부대장(프로그램 리스트) 2026 종료 공연 합류 — PB 무접촉 */
+8141:       e._dday=sd?Math.round((sd-today)/86400000):null;          // 정렬 축 = 공연과 동일(시작일 기준, 진행중=음수)
+8142:       e._endD=ed?Math.round((ed-today)/86400000):null;          // 표시 = 종료까지
+8143:       var last=(e.daily&&e.daily.length)?e.daily[e.daily.length-1]:null;
+8144:       e._paid=last?_salesNum(last['누계유료']):null; if(e._paid===null)e._paid=_salesNum(e.최종유료);
+8145:       e._total=last?_salesNum(last['누계총인원']):null; if(e._total===null)e._total=_salesNum(e.최종총인원);
+8146:       e._goal=_salesNum(e.목표관객);
+8147:       return e;
+8148:     });
+8149:   }catch(err){ console.warn('[srail exhib]',err); return []; }
+8150: }
+8151: // [260826 4b] 기획 전시 마스터 보강 — 운영 시트 조인이 늦거나 누락된 두 항목도 판매 현황에 표시한다.
+8152: function _srailRequestedExhibs(existing){   // [260904 Phase7d] 하드코딩 전시 2건 폐기 — 판매설정(전시) 260825_01·260904_01 로 DB 등록됨. 표 안의 이름(안민환_풍경조각·박금만_여수)이 DB 명칭과 달라 판매 현황에 같은 전시가 두 줄로 떴다.
+8153:   return [];
+8154: }
+8155: // ── [운영자 260710] 레일 노출축 = 「현재 홍보중」(선택 A) — 프로그램 시트 홍보창(ps~se, 종료=판매종료일·폴백 공연종료일 e) 우선,
+8973:   return y&&m>=1&&m<=12&&d>=1&&d<=31?new Date(y,m-1,d):null;
+8974: }
+8975: function _bizOvSalesNum(v){var n=Number(String(v==null?'':v).replace(/[^0-9.\-]/g,''));return isFinite(n)?n:0;}
+8976: function _bizOvSalesLoad(force){
+8977:   if(_bizOvSalesState.rows!==null&&!force)return Promise.resolve(_bizOvSalesState.rows);
+8978:   if(_bizOvSalesState.busy&&!force)return _bizOvSalesState.p||Promise.resolve([]);
+8979:   _bizOvSalesState.busy=true;
+8980:   _bizOvSalesState.p=Promise.resolve({rows:[]}) /* [260905 감사] 기획공연판매결과 시트는 DB에 없음(발행본도) — 빈 응답과 같은 결과, 부팅 요청 1개 제거. 원래 줄: api('GET','/api/ops?sheet='+encodeURIComponent('기획공연판매결과')+(force?'&fresh=1':'')) */.then(function(d){
+8981:     _bizOvSalesState.rows=(d&&d.rows)?d.rows:[];_bizOvSalesState.err=null;return _bizOvSalesState.rows;
+8982:   }).catch(function(e){_bizOvSalesState.rows=[];_bizOvSalesState.err=e;console.warn('[사업 개요 판매결과]',e);return [];}).then(function(rows){
+8983:     _bizOvSalesState.busy=false;_bizOvSalesState.p=null;
+8984:     try{if(document.getElementById('biz-main')&&typeof _bizInlineRender==='function')_bizInlineRender();}catch(_e){}
+8985:     try{if(document.getElementById('rail-yrm')&&typeof _railYrmRender==='function')_railYrmRender();}catch(_e2){}
+8986:     return rows;
+8987:   });
+9491:      slot.innerHTML='<div style="min-width:0">'+'<div class="bizm-card" style="min-width:0;overflow:hidden"><div class="ct"><span class="ct-bul"></span>역대 사업 실적 추이 <span class="sub">2012~2026 · 금액=억원 · 수익률=%</span></div><div id="bizov-historical-chart" style="height:390px;margin:0 6px 4px"></div></div>'+_bizOvHistoricalTable(data)+'</div>'+_bizOvHistoricalGrouped(data);
+9492:     _bizEnsurePlotly(function(){_bizOvDrawHistorical('bizov-historical-chart',data);});
+9493:   }
+9494:   function _bizOvHistoricalLoad(){
+9495:    if(_bizOvHistoricalData){_bizOvHistoricalRender(_bizOvHistoricalData);return;}
+9496:    if(_bizOvHistoricalLoading)return;
+9497:     _bizOvHistoricalLoading=fetch('data/historical_business_performance.json').then(function(r){if(!r.ok)throw new Error('historical business data '+r.status);return r.json();}).then(function(data){
+9498:        if(Array.isArray(data))data={meta:{단위:'원'},rows:data};
+9499:        if(!data||!Array.isArray(data.rows)||data.rows.length!==45)throw new Error('historical business data must contain 45 rows');
+9500:        _bizOvHistoricalData=data;
+9501:        try{if(document.getElementById('biz-main'))_bizInlineRender();}catch(_e){}
+9502:        try{if(document.getElementById('rail-yrm'))_railYrmRender();}catch(_e2){}
+9503:        try{if(_bizPerfModal&&_bizPerfModal.body)_bizPerfModalRender();}catch(_e3){}
+9504:    }).catch(function(e){console.warn('[bizov historical]',e);var slot=document.getElementById('bizov-historical');if(slot)slot.innerHTML='<div class="bizm-card" style="padding:18px;color:var(--dim);font-size:13px">역대 사업 실적을 불러오지 못했어요</div>';}).finally(function(){_bizOvHistoricalLoading=null;});
+9505:  }
+9559: function _bizOvDetailRows(){
+9560:   return _bizOvDetailData&&Array.isArray(_bizOvDetailData['행'])?_bizOvDetailData['행']:[];
+9561: }
+9562:  function _bizOvDetailLoad(){
+9563:   if(_bizOvDetailData)return Promise.resolve(_bizOvDetailData);
+9564:   if(_bizOvDetailLoading)return _bizOvDetailLoading;
+9565:   _bizOvDetailLoading=fetch('data/business_performance_detail.json').then(function(r){
+9566:     if(!r.ok)throw new Error('business detail data '+r.status);
+9567:     return r.json();
+9568:   }).then(function(data){
+9569:     if(!data||!Array.isArray(data['행'])||data['행'].length!==504)throw new Error('business detail data must contain 504 rows');
+9570:     _bizOvDetailData=data;
+9571:     if(document.getElementById('rail-yrm'))_railYrmRender();
+9572:     return data;
+9573:   }).catch(function(e){
+9581:  }
+9582:  /* [WA77b-v1] 프로그램 상태 판정(계획/홍보 중/판매 중/진행 중/완료/취소) — 렌더 시 오늘 기준 계산. 규칙: 취소→완료(종료일<오늘)→진행 중(시작≤오늘≤종료)→판매 중(판매시작≤오늘 또는 예매데이터)→홍보 중(홍보시작≤오늘 또는 웹 게시)→계획. 망마_/장도_ 예산행은 '—' */
+9583: var _PM_UN=null;
+9584: function _pmUnIdx(){ if(_PM_UN)return _PM_UN; if(typeof _PM==='undefined'||!_PM||!_PM.length)return null; var m={}; for(var i=0;i<_PM.length;i++){ var r=_PM[i]; var k=_uName(String(r.명칭||''))+'|'+r.연도; if(!m[k])m[k]=r; } for(var j=0;j<_PM.length;j++){ var q=_PM[j], al=q.별칭; if(!al||!al.length)continue; for(var a=0;a<al.length;a++){ var ka=_uName(String(al[a]||''))+'|'+q.연도; if(!m[ka])m[ka]=q; } } _PM_UN=m; return _PM_UN; }   /* [WA85-v1] 별칭 색인 — 정본명이 바뀐 행(v55: 표기통일·문헌근거 교체)도 판매원천·운영대장의 옛 이름으로 매칭. 정본명 우선, 별칭은 빈 키에만 */
+9585: function _progD8(v){ if(v==null||v==='')return 0; if(v&&v.getFullYear)return v.getFullYear()*10000+(v.getMonth()+1)*100+v.getDate(); var n=Number(v); return isFinite(n)?n:0; }
+9586: function _progStatus(o){ o=o||{}; var t=new Date(),td=t.getFullYear()*10000+(t.getMonth()+1)*100+t.getDate(); var s=_progD8(o.s),e=_progD8(o.e)||s,ps=_progD8(o.ps),hs=_progD8(o.hs),wg=_progD8(o.wg); if(o.acct)return '—'; if(String(o.st||'').indexOf('취소')>-1)return '취소'; if(!s)return '—'; if(td>e)return '완료'; if(td>=s)return '진행 중'; if(o.sale||(ps&&td>=ps))return '판매 중'; if(hs&&td>=hs)return '홍보 중'; return '계획'; }
+9587:  function _progStatusCell(st){ var on=(st==='계획'||st==='홍보 중'||st==='판매 중'||st==='진행 중'); return '<td style="padding:7px 8px;white-space:nowrap;color:'+(st==='판매 중'?'var(--accent)':'var(--neutral-text)')+';font-weight:'+(on?'600':'400')+'">'+st+'</td>'; }
+9588: function _progStatusOf(name,year,dateS,dateE,saleOn){ var pm=null,ix=_pmUnIdx(); if(ix)pm=ix[_uName(String(name||''))+'|'+Number(year)]||null; var nm=String(name||''); return _progStatus({ s:(pm?pm._s:dateS), e:(pm?pm._e:dateE), ps:pm?pm._ps:0, hs:pm?pm._hs:0, wg:pm?pm._wg:0, st:pm?pm._st:'', sale:!!saleOn, acct:/^(망마_|장도_)/.test(nm) });}
+9589: 
+9590: /* [260902] 운영_프로그램마스터 시트 → v46 programs.json과 같은 모양의 레코드 배열(_json 파싱). _pmLoad·_ymEduLoad 공용. */
+9591: var _pmSheetP=null;
+9592: function _pmSheetRows(){
+9593:   if(_pmSheetP)return _pmSheetP;
+9594:   _pmSheetP=api('GET','/api/ops?sheet='+encodeURIComponent('프로그램마스터')).then(function(j){
+9595:     var list=[];
+9596:     // [260904 Phase5] _json 봉인 폐기 — 열이 정본. 숫자 열은 Number, 별칭·병합_ID 는 JSON 배열, 빈 칸은 키 생략(옛 _json 과 같은 모양)
+9597:     var NUM={}; ['연도','부문코드','시작일','종료일','기간','판매시작일','판매종료일','데이터_원천수','회차수','기본좌석','발권유료','발권초대','재무_집행액','회차_건수','회차_첫공연일','회차_끝공연일','표시_사업비','표시_수익률','재무_수입','표시_수입','대장_관람객','재무_사업비','재무_객단가','재무_수익률','검토필요','재무_수강인원','교육_프로그램군','전시_티켓가격','원장_금액','원장_정상매수','검증_발권vs원장','원장_첫판매일','원장_끝판매일','재무_매출실적','보고서_유료','보고서_무료','보고서_관객','보고서_매출','보고서_사업비','보고서_수익률','재무_집행률','사업비_분할N','재무_최종예산','전시_일수','수입_분할N','티켓_가용좌석','티켓_유료판매','홍보시작일','홍보종료일','대장_판매금액','회차_공연횟수','회차_공연인원합','일일_유료판매','일일_유료금액','일일_점유율','일일_최종일자','오픈석실측','검증_회차합vs마스터','무료여부','웹_게시일'].forEach(function(k){NUM[k]=1;});
+9598:     var ARR={'별칭':1,'병합_ID':1}, SKIP={'_json':1,'프로그램ID':1,'구분':1,'매칭근거':1,'구ID':1,'사업코드':1};
+9599:     ((j&&j.rows)||[]).forEach(function(r){
+9600:       var o={}, ks=Object.keys(r||{});
+9601:       for(var i=0;i<ks.length;i++){ var k=ks[i]; if(SKIP[k])continue; var v=r[k]; if(v===''||v===null||v===undefined)continue;
+9602:         if(ARR[k]){ try{ v=JSON.parse(v); }catch(_e){} }
+9603:         else if(NUM[k]){ var t=String(v).trim(); if(/^-?\d+(\.\d+)?$/.test(t))v=Number(t); }
+9659:   return {added:added,updated:updated};
+9660: }
+9661: 
+9662: function _pmLoad(){
+9663:    if(_PM&&_BPL)return Promise.resolve({pm:_PM,bpl:_BPL});
+9664:    if(_pmLoading)return _pmLoading;
+9665: _pmLoading=_pmSheetRows().then(function(list){ /* [260903 M-2] programs 시트도 같이 받는다 */ return Promise.all([list,(window._PM_OVERLAY===false)?null:api('GET','/api/programs').catch(function(){return null;})]); }).then(function(res){ var list=res[0],_progRows=(res[1]&&res[1].programs)||[];   /* [260902] 프로그램 마스터 원천 = DB 시트 운영_프로그램마스터(v46 programs.json 이관본 · _json 컬럼에 원본 레코드, 사업ID→프로그램ID(YYMMDD_NN)+사업코드) */
+9666:   if(!Array.isArray(list)||list.length<100)throw new Error('db_v46 empty');
+9667:   function d8(v){v=String(v||'');return v.length>=8?v.slice(4,6)+'.'+v.slice(6,8):'';}
+9668:   _PM=list.map(function(p){
+9669:     var bu=Number(p.부문코드);var ca=String(p.카테고리||'');
+9670:     var gu=(bu===3)?'교육':(bu===2)?(ca.indexOf('대관')>-1?'대관전시':'기획전시'):(bu===1)?(ca==='기획공연'?'기획공연':'대관공연'):'기타';
+9671:     var s=d8(p.시작일),e=d8(p.종료일);var sch=(e&&e!==s)?(s+'~'+e):s;
+9672:       return {id:String(p.사업ID),연도:Number(p.연도)||null,구분:gu,명칭:p.정본명||'',일정:sch,장소:p.장소||null,횟수:(p.회차수==null?null:p.회차수),수강인원:(p.재무_수강인원==null?null:p.재무_수강인원),출처:p.출처||'db_v46',비고:(p.상태&&p.상태!=='정상')?('['+p.상태+']'):(p.비고!=null?String(p.비고):null),앱_프로그램명:null,사업비:(p.표시_사업비==null?null:p.표시_사업비),수입:(p.표시_수입==null?null:p.표시_수입),수익률:(p.표시_수익률==null?null:p.표시_수익률),무료여부:(p.무료여부==null?null:p.무료여부),사업비분할:(p.사업비_분할N==null?null:p.사업비_분할N),수입분할:(p.수입_분할N==null?null:p.수입_분할N),구분2:(function(c){return c==='b'?'대관':(c==='a'?'기획':(p.표시_구분||'—'));})(String(p.구ID||p.사업ID||'').charAt(12)) /* [WA80-v1] 기획/대관 = 구ID(v46) 13번째 글자 · [260902] 사업ID는 프로그램ID로 바뀌어 구ID로 판정 */,사업코드:String(p.사업코드||''),분야:(p.표시_분야||null),_s:(Number(p.시작일)||99999999),_e:(Number(p.종료일)||0),_ps:(Number(p.판매시작일)||0),_hs:(Number(p.홍보시작일)||0),_st:String(p.상태||''),_wg:(Number(p.웹_게시일)||0),_g2:(p.세부장르||p.장르||null),별칭:(Array.isArray(p.별칭)?p.별칭:null),보고서명:(p.보고서명||null)} /* [WA80-v1] 장르 */ /* [WA85-v1] 별칭(구명·문헌명)·보고서명 — v55 programs.json */;
+9673:   });
+9674:   try{ _pmOverlayPrograms(_PM,_progRows); }catch(_oe){ console.warn('[260903 M-2] programs 오버레이 실패',_oe); }
+9675:   _BPL=[];_PM_BY_ID={};_BPL_BY_KEY={};
+9676:   _PM.forEach(function(r){_PM_BY_ID[String(r.id)]=r;});
+9677:   console.log('[WA31] 프로그램 마스터 = db_v46/programs.json',_PM.length);
+9678:   return {pm:_PM,bpl:_BPL};
+9679: }).catch(function(err){
+9680:   console.warn('[WA31] db_v46 로드 실패 — 구 마스터 폴백',err);
+9681:   _pmLoading=null;return _pmLoadLegacy();
+9682: });
+9683: return _pmLoading;
+11703:       var sd=_salesDate(e.시작일), ed=_salesDate(e.종료일);
+11704:       var y=e.year||(sd?sd.getFullYear():null);
+11705:       if(y!==year)return;
+11706:       var paid=_salesNum(e.최종유료)||0, tot=_salesNum(e.최종총인원)||0, goal=_salesNum(e.목표관객)||0, rev=_salesNum(e.최종매출)||0;
+11707:       var head=tot||paid;
+11708:       out.push({name:e.name,genre:'전시',_col:_bizExCol(e.name,''),   // [260805 운영자] 색 = **캘린더 전시선과 같은 것**(_EX_SPACE·_exLaneOf 정본 공유) · ⚠ Plotly는 CSS var()를 못 읽어 런타임 해석값으로 넘긴다 = 소스 raw hex 0
+11709:         start:sd||ed||null,end:ed||sd||null,cnt:_salesNum(e.운영일수)||0,
+11710:         paid:head,seat:goal,
+11711:         avg:(goal>0)?(head/goal*100):(parseFloat(e.occ)||0),
+11712:         _rev:(rev>0?rev:null),_sold:(head>0?head:null),
+11713:         _dly:e.daily||[],   // [260804 운영자] 누적범위 그래프용 일일 누계 실측점(전시일일 · _anaExhibBuild가 이미 정렬해 둔 참조 전달 — 재집계 0)
+11714:         _st:(e.status==='active')?'active':((e.status==='notyet')?'planned':'ended')});
+11715:     });
+11716:   }catch(_e){ console.warn('[biz exhib rows]',_e); return []; }
+11717:   // [260805 운영자 「깃에 전시 실적 넣어놨다 — 상반기 것도 채워줘」] 전시 실적 거울 합류(data/exhib_daily_2026.js ·
+12983: //   로더 = 기틀 §2-13 로딩 표준(.sk-sweep 빔 + _ldHtml + 「~중」 · 말줄임 점 금지) — 구 전시 반쪽 인라인 문자열을 그대로 뽑았다(마크업 동일).
+12984: //   실패 = 이 파일의 정본 실패 카드 문법 계승(--danger 문구 + .ana-chip 「다시 시도」 · _bizCompRender 운영대장 실패 ~L7455)를 반쪽 크기로.
+12985: //   ink는 `var(--토큰)` **완성 문자열**로 받는다 — 토큰명만 넘겨 조립하면 소스에서 var() 표기가 사라져 게이트·grep이 못 본다.
+12986: function _bizHalfLoad(ink,msg){
+12987:   return '<div style="position:relative;min-height:150px"><div class="sk-sweep" aria-hidden="true"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:'+ink+';opacity:.75;font-size:12.5px;font-weight:600">'+_ldHtml(14)+msg+'</div></div>';
+12988: }
+12989: function _bizHalfFail(what,retry){
+12990:   return '<div style="padding:30px 18px;text-align:center;color:var(--danger);font-size:12.5px;font-weight:600">'+what+' 데이터를 불러오지 못했어요'
+12991:     +'<div style="margin-top:10px"><button class="ana-chip" onclick="'+retry+'">다시 시도</button></div></div>';
+12992: }
+12993: // [260808] 전시 원천 재시도 — 실패 딱지를 걷고 다시 확보한다(도착하면 _bizExhibEnsure가 그 면을 다시 그린다).
+12994: function _bizExhibRetry(){ window._bizmExFail=0; try{_bizExhibEnsure();}catch(_e){} try{_bizInlineRender();}catch(_e){} }
+12995: // 전시 원천(전시마스터·전시일일) 자체 확보 — 넓은 화면은 레일 6시트 플로우가 채우지만 좁은 화면·부팅 중엔 비어 있다.
+12996: //   도착하면 그 면만 다시 그린다(중복 fetch 방지 = window._bizmExBusy · 260805 배선 계승).
+12997: function _bizExhibEnsure(){
+15677:     if(status==='active'){ var _edChk=_salesDate(m['종료일']); if(_edChk){ var _tdChk=new Date(); _tdChk.setHours(0,0,0,0); if(_edChk<_tdChk)status='ended'; } }
+15678:     return {id:id,name:String(m['전시명']||'').trim(),year:parseInt(m['연도'],10)||null,
+15679:       occ:occ,deltaPP:deltaPP,spark:occClean.slice(-7),free:free,status:status,
+15680:        목표관객:m['목표관객'],목표금액:m['목표금액'],최종유료:m['최종유료'],최종무료:m['최종무료'],최종점유율:m['최종점유율'],
+15681:       최종총인원:m['최종총인원'],최종매출:m['최종매출'],시작일:m['시작일'],종료일:m['종료일'],운영일수:m['운영일수'],daily:ds};
+15682:   });
+15683:   // [260729 운영자] 전시일일에만 있고 전시마스터엔 없는 전시(=고아)를 합류시킨다.
+15684:   //   왜 = 마스터 미등재 전시의 첫 입력은 「프로그램ID를 전시ID로」 전시일일에 append 된다(_dailyExhibList 260723h).
+15685:   //   그런데 이 함수가 master.map이라 그 전시는 목록에 아예 안 생겼다 → 일일 입력은 쌓이는데 분석 보드는 「조건에 맞는 전시가 없어요」,
+15686:   //   진행중 표는 「집계 전(—·데이터 부족)」. 여기 한 곳만 메우면 세 화면(분석 보드·레일 카드·진행중 표·드릴)이 같이 산다.
+15687:   //   값은 전부 실값 계승(창작 0): 이름·누계 = 전시일일 마지막 행 · 기간 = 프로그램 시트 · 목표관객은 미상이면 null(달성률은 마스터 등재 후).
+15688:   try{
+15689:     var have={}; out.forEach(function(e){ if(e.id)have[e.id]=1; });
+15690:     var pgAll=((typeof PERFS!=='undefined'&&PERFS)||[]);
+15691:     var tISO=_srailTodayISO();
+15707:       out.push({id:id,name:nm,year:parseInt(String(last['기준일자']||'').replace(/[^0-9]/g,'').slice(0,4),10)||null,
+15708:         occ:(oc2.length?oc2[oc2.length-1]:0),deltaPP:((oc2.length>1)?(oc2[oc2.length-1]-oc2[oc2.length-2]):null),
+15709:         spark:oc2.slice(-7),free:false,status:st2,_orphan:true,
+15710:         목표관객:null,목표금액:null,최종유료:last['누계유료'],최종무료:last['누계무료'],
+15711:         최종총인원:last['누계총인원'],최종매출:last['누계금액'],시작일:sIso,종료일:eIso,운영일수:null,daily:ds2});
+15712:     });
+15713:   }catch(_e){ console.warn('[exhib orphan]',_e); }
+15714:   return out;
+15715: }
+15716: function _anaNum(v){ var n=parseFloat(v); return isNaN(n)?'—':Math.round(n).toLocaleString(); }
+15717: // 전시 섹션(스택용 — 탭 없음 · 필터 = 공연과 독립: exYear)
+15718: function _anaExhibSecHtml(){
+15719:   var ex=_anaExhibBuild();
+15720:   var yrs={}; ex.forEach(function(e){if(e.year)yrs[e.year]=1;});
+15721:   var yrList=Object.keys(yrs).map(Number).sort(function(a,b){return b-a;});
+15742:     h+='<td>'+_anaSpark(e.spark)+'</td>';
+15743:     h+='<td style="text-align:right;color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums">'+_exOccTxt(e)+'</td>';
+15744:     h+='<td style="text-align:right;color:'+dCol+';font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap">'+dStr+'</td>';
+15745:     h+='<td style="text-align:right;font-variant-numeric:tabular-nums;color:#555">'+_anaNum(e.최종유료)+'</td>';
+15746:     h+='<td style="text-align:center;font-size:11.5px;font-weight:700;color:'+stCol+'">'+stTxt+'</td>';
+15747:     h+='</tr>';
+15748:   });
+15749:   h+='</tbody></table>';
+15750:   h+='<div style="color:#bbb;font-size:11px;margin-top:12px">행 클릭 → 전시 상세 · 달성률 = 누계유료/목표관객(원본 점유율, 100%↑=초과달성) · 데이터: 운영_전시일일/전시마스터</div>';
+15751:   return h;
+15752: }
+15753: function _anaSetExYear(y){ _anaState.exYear=parseInt(y,10); _anaRender(); }
+15754: function _anaExhibDrill(id){ _anaState.exDrillId=id; _anaRender(); }
+15755: function _anaExhibBack(){ _anaState.exDrillId=null; _anaRender(); }
+15756: function _anaExhibDrillRender(sc,headTabs){
+15760:   h+='<button onclick="_anaExhibBack()" style="margin-bottom:12px;padding:6px 12px;border:1px solid #e0e0e8;background:#fafafe;border-radius:8px;font-size:12px;font-weight:600;color:#666;cursor:pointer;font-family:inherit">← 전시 목록</button>';
+15761:   h+='<div style="font-size:18px;font-weight:800;margin-bottom:2px">'+escapeHtml(e.name)+'</div>';
+15762:   h+='<div style="font-size:12px;color:#999;margin-bottom:14px">'+e.year+'년 · '+escapeHtml(String(e.시작일||''))+' ~ '+escapeHtml(String(e.종료일||''))+' · '+(e.status==='active'?'진행중':'종료')+'</div>';
+15763:   var kpi=[['달성률',_exOccTxt(e)],['목표관객',_anaNum(e.목표관객)],['누적유료',_anaNum(e.최종유료)],['누적무료',_anaNum(e.최종무료)],['누적매출',_anaNum(e.최종매출)+'원'],['운영일수',_anaNum(e.운영일수)+'일']];
+15764:   h+='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">';
+15765:   kpi.forEach(function(k){h+='<div style="flex:1;min-width:96px;background:#fafafe;border:1px solid #eef;border-radius:10px;padding:10px 12px"><div style="font-size:10.5px;color:#999;font-weight:600;margin-bottom:3px">'+k[0]+'</div><div style="font-size:15px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums">'+k[1]+'</div></div>';});
+15766:   h+='</div>';
+15767:   h+='<div style="font-size:12px;font-weight:700;color:#666;margin-bottom:6px">일별 달성률(점유율) 추이</div>';
+15768:   h+=_anaExhibTrend(e.daily);
+15769:   sc.innerHTML=h;
+15770: }
+15771: function _anaExhibTrend(daily){
+15772:   var pts=(daily||[]).map(function(r){return {d:String(r['기준일자']||''),o:parseFloat(r['점유율'])};}).filter(function(q){return !isNaN(q.o);});
+15773:   // [260729 운영자] 실측 0~1건 = 「추이 데이터 부족」 텍스트 폐지 → 집계 골격 상시 — 실측 1건 = 첫 점만 채운 원(+값·날짜), 미상 슬롯 = 속빈 원 + 회색 점선(레일 카드 _srailTrend 예측점 노테이션 계승)
+15774:   if(pts.length<2){
+16292:     var ed=_salesDate(m['종료일']); if(ed&&ed<_tdy)return;           // 종료일 지남 = 제외(공연 마지막 공연일 폴백과 동일 축)
+16293:     var last=(byId[id]&&byId[id].length)?byId[id][byId[id].length-1]:null;
+16294:     out.push({ id:id, name:String(m['전시명']||'').trim(), goal:_salesNum(m['목표관객'])||0,
+16295:       cumPaid:last?(_salesNum(last['누계유료'])||0):(_salesNum(m['최종유료'])||0),
+16296:       cumFree:last?(_salesNum(last['누계무료'])||0):(_salesNum(m['최종무료'])||0),
+16297:       cumTotal:last?(_salesNum(last['누계총인원'])||0):(_salesNum(m['최종총인원'])||0),
+16298:       cumMoney:last?(_salesNum(last['누계금액'])||0):(_salesNum(m['최종매출'])||0),
+16299:       lastDate:last?String(_salesNum(last['기준일자'])||''):'' });
+16300:     seen[_uName(String(m['전시명']||''))]=1;
+16301:   });
+16302:   // [260723h 운영자 "모든 오픈된 프로그램 가능하게"] 전시마스터 미등록이어도 오픈된(판매·전시 기간 중) 프로그램-시트 전시(t='e')를 입력 목록에 포함.
+16303:   //   레일 판매현황에 뜨는 전시와 동일 소스 — 첫 입력 = 전시일일이 프로그램ID를 전시ID로 append(이후 누계 자동 합산). 목표관객 미상 = 0(달성률은 전시마스터 등재 후).
+16304:   try{
+16305:     var todayISO=(typeof _srailTodayISO==='function')?_srailTodayISO():(_tdy.getFullYear()+'-'+('0'+(_tdy.getMonth()+1)).slice(-2)+'-'+('0'+_tdy.getDate()).slice(-2));
+16306:     var pgs=(typeof PERFS!=='undefined'&&PERFS&&PERFS.length)?PERFS:((_dailyState.programs||[]).map(function(p){try{return programToPerf(p);}catch(_e){return null;}}).filter(Boolean));
+16439:     var dTot=paid+free, cumPaid=o.cumPaid+paid, cumFree=o.cumFree+free, cumTot=o.cumTotal+dTot, cumMoney=o.cumMoney+money;
+16440:     var occ=o.goal>0?(cumPaid/o.goal*100):0;
+16441:     dailyRows.push({기준일자:ymd, 전시ID:o.id, 전시명:o.name, 일일유료:paid, 일일무료:free, 일일총인원:dTot, 일일금액:money, 누계유료:cumPaid, 누계무료:cumFree, 누계총인원:cumTot, 누계금액:cumMoney, 점유율:occ.toFixed(1)});
+16442:     mpatch[o.id]={최종유료:cumPaid, 최종무료:cumFree, 최종총인원:cumTot, 최종매출:cumMoney, 최종점유율:occ.toFixed(1)};
+16443:   });
+16444:   var btn=document.getElementById('d-save'); _btnBusy(btn,true,'저장 중');
+16445:   try{
+16446:     if(dailyRows.length) await YMDB.save({sheet:'전시일일',mode:'upsert',keyCols:['전시ID','기준일자'],rows:dailyRows});
+16447:     // 이원 저장 — 전시마스터 최종*(드릴 KPI 소스) 갱신. 실패해도 전시일일은 이미 반영 → 경고만(개인 실적 우선 커밋 전례).
+16448:     try{ if(Object.keys(mpatch).length){ var pr=await _opsMasterPatch('전시마스터','전시ID',mpatch); _dailyState.exMaster={sheet:'전시마스터',headers:pr.headers,rows:pr.rows,count:pr.rows.length}; if(typeof _anaState!=='undefined'&&_anaState)_anaState._exMaster=null; } }
+16449:     catch(me){ console.warn('[exhibMasterPatch]',me); showToast('전시일일은 저장됐지만 마스터 최종값 갱신 실패 — 분석 KPI는 잠시 후 반영','error'); }
+16450:     _dailyState.exDaily=null;   // 다음 열람 시 누계 최신 재조회
+16451:     showToast(dailyRows.length+'건 전시 실적 저장됐어요 ('+date+')','success');
+16452:     closeDailyInput();
+16453:     if(typeof _anaState!=='undefined'&&_anaState){_anaState._exDaily=null;_anaState._exMaster=null;}   // 분석 보드 전시 캐시 무효화
+16887:       try{
+16888:         var lastByEx={};
+16889:         exRows.forEach(function(r){ var id=String(r.전시ID||''); if(!id)return; if(!lastByEx[id]||String(r.기준일자)>String(lastByEx[id].기준일자))lastByEx[id]=r; });
+16890:         var mpatch={}; Object.keys(lastByEx).forEach(function(id){ var r=lastByEx[id]; mpatch[id]={최종유료:r.누계유료,최종무료:r.누계무료,최종총인원:r.누계총인원,최종매출:r.누계금액,최종점유율:r.점유율}; });
+16891:         if(Object.keys(mpatch).length){ var pr=await _opsMasterPatch('전시마스터','전시ID',mpatch); _dailyState.exMaster={sheet:'전시마스터',headers:pr.headers,rows:pr.rows,count:pr.rows.length}; if(typeof _anaState!=='undefined'&&_anaState)_anaState._exMaster=null; }
+16892:       }catch(me){ console.warn('[dsx exhibMasterPatch]',me); showToast('전시일일은 저장됐지만 마스터 최종값 갱신 실패 — 분석 KPI는 잠시 후 반영','error'); }
+16893:       _dailyState.exDaily=null;   // 다음 열람 시 누계 최신 재조회
+16894:       if(typeof _anaState!=='undefined'&&_anaState){_anaState._exDaily=null;_anaState._exMaster=null;}
+16895:     }
+16896:     showToast(all.length+'건 반영됐어요');
+16897:     closeDailyInput();
+16898:     _salesState.master=null;_salesState.daily=null;_salesState.rounds=null;
+16899:     try{_srailInit();}catch(_e){}
+16900:     _dailyRestoreOrigin();
+16901:   }catch(e){ var m2=document.getElementById('d-msg')||msg; if(m2)m2.textContent='저장 실패: '+(e.message||e); _btnBusy(document.getElementById('d-xsave')||btn,false,all.length+'건 저장'); }   // [260715 분신술] await 중 재렌더로 노드 분리 시 오류 표시 유실 방지 — 재취득
+19755:   rows.forEach(function(b){ var p=b.프로그램||[], c=escapeHtml(b.사업코드);
+19756:     h+='<tr><td style="font-weight:600;white-space:nowrap">'+c+'</td><td style="white-space:nowrap">'+escapeHtml(b.분야||'')+'</td><td style="font-weight:600">'+escapeHtml(b.사업명||'')+'</td><td style="white-space:nowrap">'+escapeHtml(b.회계구분||'-')+'</td><td style="white-space:nowrap">'+escapeHtml(b.사업형태||'')+'</td><td>'+escapeHtml(b.공연수입||'')+'</td><td style="font-size:11px">'+escapeHtml(b.특이사항||'')+'</td><td style="font-size:11px;white-space:nowrap">'+escapeHtml(((b.담당부서||'')+' '+(b.담당자||'')).trim())+'</td>';
+19757:     h+='<td style="text-align:right;white-space:nowrap">'+_ypFmt(b.예산)+'</td><td style="text-align:right;white-space:nowrap">'+_ypFmt(b.실지출)+'</td><td style="text-align:right;white-space:nowrap">'+_ypFmt(b.수입)+'</td><td style="text-align:right;white-space:nowrap;font-size:11px">'+_ypN(b.유료관객).toLocaleString('ko-KR')+' / '+_ypN(b.무료관객).toLocaleString('ko-KR')+'</td>';
+19758:     h+='<td style="font-size:11px;white-space:nowrap" title="'+escapeHtml(p.map(function(x){return x.프로그램ID+' '+x.정본명+' ('+x.상태+(x.정산?'·정산':'')+')';}).join('\n'))+'">'+p.length+'개 · 정산 '+(b.정산수||0)+'</td>';
+19759:     h+='<td style="text-align:right;white-space:nowrap"><button class="adm-btn" onclick="openBizForm(\''+c+'\')">변경</button><button class="adm-btn" onclick="_ypHistory(\''+c+'\')">이력</button>'+(_ypIsAdmin()?'<button class="adm-btn adm-btn-del" onclick="_ypBizDelete(\''+c+'\')">삭제</button>':'')+'</td></tr>'; });
+19760:   h+='</tbody></table>';
+19761:   _ypBody('yp-biz-body',h);
+19762: }
+19763: function openBizForm(code){
+19764:   var b=code?_yp.biz.filter(function(x){return x.사업코드===code;})[0]:null; if(code&&!b){showToast('사업을 찾을 수 없어요: '+code,'error');return;}
+19765:   _yp.editBiz=b?b.사업코드:'';
+19766:   var m=_yp.meta||{}, admin=_ypIsAdmin(), now=new Date().getFullYear();
+19767:   var v=b||{연도:String(_ypYear()),분야:(_YP_FIELDS.indexOf(_yp.field)>=0?_yp.field:'기획 공연'),사업명:'',회계구분:'',예산:'',사업형태:'미정',공연수입:'유료',공동기획_기관:'',공모사업_기관:'',협력사업_기관:'',담당부서:'',담당자:'',회계담당부서:'',회계담당자:'',비고:''};
+19768:   var ys=[]; for(var i=now+1;i>=2012;i--)ys.push(String(i)); if(ys.indexOf(String(v.연도))<0)ys.push(String(v.연도));
+19769:   var h='<div class="modal-bg show" style="z-index:9600" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeBizForm)"><div class="modal" style="width:96vw;max-width:540px;max-height:88vh;overflow:auto;--mpad-y:24px;--mpad-x:24px;position:relative"><button class="modal-x" onclick="closeBizForm()" title="닫기" aria-label="닫기">✕</button>'+_mhead(b?'기획 사업 변경':'기획 사업 등록',b?b.사업코드:'사업코드는 저장할 때 연도·분야 안에서 입력한 순서대로 자동 부여돼요');
+19790:   var h='<div style="border:1px solid var(--border);border-radius:10px;padding:10px 12px"><div style="font-size:11.5px;font-weight:700;margin-bottom:6px">사업 실적 <span style="font-weight:400;color:#888">— 출처: '+escapeHtml(b.합계출처||'')+' · 프로그램 '+(b.프로그램수||0)+'개 중 '+(b.정산수||0)+'개 정산 · 사업현황 표와 같은 값 · 값을 누르면 합산 근거가 펼쳐져요</span></div>';
+19791:   h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:12px">'+cell('실지출','사업 실지출(전표)')+cell('판매수수료','판매 수수료')+cell('실지출수수료','실 지출+수수료')+cell('수입','사업 수입')+cell('유료관객','유료 관객')+cell('무료관객','무료 관객')+'</div>';
+19792:   h+='<div id="yp-biz-break" hidden style="margin-top:10px;overflow-x:auto"><table class="adm-tbl" style="font-size:11px"><thead><tr><th>프로그램</th><th>상태</th>'+cols.map(function(c){return '<th data-k="'+c[0]+'" style="text-align:right">'+c[1]+'</th>';}).join('')+'<th>근거(비용 / 관객)</th></tr></thead><tbody>';
+19793:   pl.forEach(function(p){ h+='<tr><td style="white-space:nowrap">'+escapeHtml(p.프로그램ID)+' '+escapeHtml((p.정본명||'').slice(0,18))+'</td><td style="white-space:nowrap">'+escapeHtml(p.상태)+(p.정산?' · 정산':'')+'</td>'+cols.map(function(c){return '<td data-k="'+c[0]+'" style="text-align:right;white-space:nowrap">'+_ypFmt(p[c[0]])+'</td>';}).join('')+'<td style="font-size:10.5px;color:var(--dim)">'+escapeHtml((p.비용출처||'-')+' / '+(p.관객출처||'-'))+'</td></tr>'; });
+19794:   h+='<tr style="font-weight:700;background:var(--neutral)"><td>프로그램 합계</td><td>'+pl.length+'개</td>'+cols.map(function(c){return '<td data-k="'+c[0]+'" style="text-align:right">'+_ypFmt(sum[c[0]])+'</td>';}).join('')+'<td></td></tr>';
+19795:   h+='<tr style="font-weight:700"><td>사업 행 값</td><td>'+escapeHtml(b.합계출처||'')+'</td>'+cols.map(function(c){var ok=_ypN(bizv[c[0]])===sum[c[0]]; return '<td data-k="'+c[0]+'" style="text-align:right;color:'+(ok?'var(--accent)':'#c0392b')+'">'+_ypFmt(bizv[c[0]])+(ok?'':' ⚠')+'</td>';}).join('')+'<td style="font-size:10.5px;color:var(--dim)">⚠ = 프로그램 합과 다름(정산 전이거나 프로그램에 전표값이 없음)</td></tr>';
+19796:   h+='</tbody></table></div></div>';
+19797:   return h;
+19798: }
+19799: function _ypBizBreak(k){ var box=document.getElementById('yp-biz-break'); if(!box)return; var cur=box.getAttribute('data-k'); var md=box.closest?box.closest('.modal'):null; /* 표가 9열이라 폼 폭(540px)엔 좁음 → 펼칠 때만 목록 모달 폭(1100px)까지 넓힘 */ if(!box.hidden&&cur===k){ box.hidden=true; if(md)md.style.maxWidth='540px'; return; } box.hidden=false; if(md)md.style.maxWidth='1100px'; box.setAttribute('data-k',k); Array.prototype.forEach.call(box.querySelectorAll('[data-k]'),function(el){ el.style.background=(el.getAttribute('data-k')===k)?'rgba(74,77,231,0.08)':''; }); }
+19800: function closeBizForm(){ _ypClose('yp-biz-form-modal'); _yp.after=null; }
+19801: function _ypSpecToggle(cb){ var f=cb.form||document.getElementById('yp-biz-form'), org=document.getElementById('yp-biz-spec-org'); if(cb.checked){ Array.prototype.forEach.call(f.querySelectorAll('input[type=checkbox]'),function(o){ if(o!==cb&&['공동기획','공모사업','협력사업'].indexOf(o.name)>=0)o.checked=false; }); } var on=!!f.querySelector('input[name="공동기획"]:checked,input[name="공모사업"]:checked,input[name="협력사업"]:checked'); if(org){ org.style.display=on?'':'none'; org.required=on; if(on&&cb.checked)org.focus(); } }
+19802: async function _ypBizSave(){
+19803:   var f=document.getElementById('yp-biz-form'); if(!f)return;
+19804:   var body={}; (new FormData(f)).forEach(function(v,k){ body[k]=v; });
+19838:   h+='<table class="adm-tbl"><thead><tr><th>프로그램ID</th><th>구분</th><th>사업</th><th>프로그램명</th><th>장르</th><th>장소</th><th>진행</th><th>회차</th><th>상태</th><th>정산</th><th>담당</th><th></th></tr></thead><tbody>';
+19839:   if(!rows.length)h+='<tr><td colspan="12" style="text-align:center;color:var(--muted);padding:24px">'+_ypYear()+'년에 등록된 프로그램이 없어요</td></tr>';
+19840:   rows.forEach(function(p){ var id=escapeHtml(p.프로그램ID);
+19841:     h+='<tr><td style="font-weight:600;white-space:nowrap">'+id+'</td><td style="white-space:nowrap">'+escapeHtml(p.구분||'')+'</td><td style="font-size:11px;white-space:nowrap" title="'+escapeHtml(p.사업명||'')+'">'+escapeHtml(p.사업코드||'-')+'<br><span style="color:var(--dim)">'+escapeHtml((p.사업명||'').slice(0,14))+'</span></td><td style="font-weight:600">'+escapeHtml(p.정본명||'')+(p.특이사항?'<br><span style="font-size:10.5px;font-weight:400;color:var(--dim)">'+escapeHtml(p.특이사항)+'</span>':'')+'</td>';
+19842:     h+='<td style="font-size:11px;white-space:nowrap">'+(p.세부장르?escapeHtml(p.세부장르):'<span style="color:var(--muted)">-</span>')+'</td><td style="font-size:11px">'+escapeHtml(p.장소||'')+'</td><td style="font-size:11px;white-space:nowrap">'+escapeHtml(p.시작일||'-')+'<br>'+escapeHtml(p.종료일||'-')+(p.날짜미정?'<br><span style="color:#c0392b">날짜 미정</span>':'')+'</td>';
+19843:     h+='<td style="font-size:11px;white-space:nowrap">'+(p.구분==='기획 공연'?(p.회차수?escapeHtml(p.회차수+'회'):'<span style="color:var(--muted)">-</span>'):(p.구분==='예술 교육'?escapeHtml((p.강좌수?p.강좌수+'강좌':'')+(p.정원?' '+p.정원+'명':'')||'-'):escapeHtml(p.참여작가수?p.참여작가수+'작가':'-')))+'</td>';
+19844:     h+='<td>'+_ypStatusHtml(p.상태)+'</td><td style="font-size:11px;white-space:nowrap">'+(p.정산일?'<span style="color:var(--accent);font-weight:700">완료</span><br><span style="color:var(--dim)">'+escapeHtml(p.정산일)+'</span>':'<span style="color:var(--muted)">-</span>')+'</td><td style="font-size:11px;white-space:nowrap">'+escapeHtml(p.담당자||'')+'</td>';
+19845:     h+='<td style="text-align:right;white-space:nowrap"><button class="adm-btn" onclick="openPlanProgForm(\''+id+'\')">변경</button><button class="adm-btn" onclick="openSettleForm(\''+id+'\')"'+(p.상태==='완료'||p.정산일?' style="color:var(--accent);font-weight:700"':'')+'>정산</button><button class="adm-btn" onclick="_ypHistory(\''+id+'\')">이력</button>'+(_ypIsAdmin()?'<button class="adm-btn adm-btn-del" onclick="_ypProgDelete(\''+id+'\')">삭제</button>':'')+'</td></tr>'; });
+19846:   h+='</tbody></table>';
+19847:   _ypBody('yp-prog-body',h);
+19848: }
+19849: function _ypBizOf(code){ return _yp.biz.filter(function(b){return b.사업코드===code;})[0]||null; }
+19850: function _ypInhHtml(code){
+19851:   var b=_ypBizOf(code); if(!b)return '<span style="color:var(--dim)">사업을 고르면 구분·특이사항·담당·유료/무료가 여기로 따라와요</span>';
+19852:   return [['구분',b.분야],['형태',b.사업형태],['수입',b.공연수입],['특이사항',b.특이사항||'-'],['담당',((b.담당부서||'')+' '+(b.담당자||'')).trim()||'-'],['회계',((b.회계담당부서||'')+' '+(b.회계담당자||'')).trim()||'-'],['프로그램',(b.프로그램수||0)+'개']].map(function(x){return '<span style="display:inline-block;margin:2px 6px 2px 0"><span style="color:var(--dim)">'+escapeHtml(x[0])+'</span> <b>'+escapeHtml(x[1]||'')+'</b></span>';}).join('');
+19879:   var p=id?_yp.progs.filter(function(x){return x.프로그램ID===id;})[0]:null; if(id&&!p){showToast('프로그램을 찾을 수 없어요: '+id,'error');return;}
+19880:   _yp.editProg=p?p.프로그램ID:'';
+19881:   var m=_yp.meta||{}, places=m.장소||[], genres=m.장르||[], chans=m.판매처||[];
+19882:   var v={사업코드:presetBiz||(p?p.사업코드:'')||_yp.bizSel||'',정본명:p?p.정본명:'',시작일:p?p.시작일:'',종료일:p?p.종료일:'',날짜미정:p?!!p.날짜미정:false,장소:p?p.장소:'',세부장르:p?p.세부장르:'',기획사:p?p.기획사:'',유통사:p?p.유통사:'',판매처:p?(p.판매처||[]):[],회차수:p?p.회차수:'',총오픈석:p?p.총오픈석:'',이층오픈:p?p.이층오픈:'N',회차시간:p?(p.회차시간||[]):[],판매시작일:p?p.판매시작일:'',판매종료일:p?p.판매종료일:'',정원:p?p.정원:'',강좌수:p?p.강좌수:'',참여작가수:p?p.참여작가수:'',진행상태:p?p.진행상태:'',비고:p?p.비고:''};
+19883:   if(draft){ for(var k in draft)if(k!=='사업코드')v[k]=draft[k]; if(presetBiz)v.사업코드=presetBiz; }
+19884:   var placeSel=v.장소&&places.indexOf(v.장소)<0?'기타':v.장소, placeEtc=(placeSel==='기타'&&v.장소!=='기타')?v.장소:'';
+19885:   var bizOpts=_yp.biz.map(function(b){return [b.사업코드,b.사업코드+' · '+b.사업명+' ('+b.분야+' · '+b.사업형태+' · '+(b.프로그램수||0)+'개)'];});
+19886:   if(v.사업코드&&!_ypBizOf(v.사업코드))bizOpts.unshift([v.사업코드,v.사업코드+' · (다른 연도 사업)']);
+19887:   var h='<div class="modal-bg show" style="z-index:9500" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closePlanProgForm)"><div class="modal" style="width:96vw;max-width:600px;max-height:88vh;overflow:auto;--mpad-y:24px;--mpad-x:24px;position:relative"><button class="modal-x" onclick="closePlanProgForm()" title="닫기" aria-label="닫기">✕</button>'+_mhead(p?'프로그램 변경':'프로그램 등록',p?p.프로그램ID+' · '+p.상태:'프로그램ID는 시작일(yymmdd_순번)로 자동 부여돼요');
+19888:   h+='<form id="yp-prog-form" onsubmit="event.preventDefault();_ypProgSave()" style="display:flex;flex-direction:column;gap:14px">';
+19889:   h+='<div style="background:#F6F5FF;border:1px solid rgba(74,77,231,0.15);border-radius:10px;padding:10px 12px"><label style="margin-top:0">붙일 사업<span class="req">*</span> <span style="font-size:10px;color:var(--dim);font-weight:400">('+_ypYear()+'년 기획 사업 · 없으면 새로 등록)</span></label><div style="display:flex;gap:8px"><select name="사업코드" required onchange="_ypPfBizChange()" style="flex:1;margin:0">'+_ypOpt(bizOpts,v.사업코드,'선택')+'</select><button type="button" onclick="_ypPfNewBiz()" style="padding:7px 12px;background:var(--accent);color:#fff;border:0;border-radius:10px;cursor:pointer;font-weight:600;font-size:12px;white-space:nowrap">새 사업 등록</button></div><div id="yp-pf-inh" style="margin-top:8px;font-size:11.5px;line-height:1.7">'+_ypInhHtml(v.사업코드)+'</div></div>';
+19890:   h+='<div><label>프로그램명<span class="req">*</span></label><input name="정본명" type="text" value="'+escapeHtml(v.정본명)+'" required placeholder="예: 뮤지컬 <킹키부츠>"></div>';
+19891:   h+='<div style="display:flex;gap:10px;align-items:flex-end"><div style="flex:1"><label>시작일<span class="req">*</span></label><input name="시작일" type="date" value="'+escapeHtml(v.시작일)+'" required onchange="_ypPfSpan()"></div><div style="flex:1"><label>종료일</label><input name="종료일" type="date" value="'+escapeHtml(v.종료일)+'" onchange="_ypPfSpan()"></div><div style="flex:0 0 76px"><label>기간</label><input id="yp-pf-span" type="text" readonly value="-" style="'+_YP_RO+'"></div></div>';
+19892:   h+='<label style="display:inline-flex;align-items:center;gap:6px;margin:-6px 0 0;cursor:pointer;font-size:12px"><input type="checkbox" name="날짜미정"'+(v.날짜미정?' checked':'')+' style="width:16px;height:16px;accent-color:var(--accent);margin:0">날짜 미정 <span style="font-size:10px;color:var(--dim);font-weight:400">(하반기 미정 등 — 예정 달 1일을 시작일로 넣고 체크. 확정되면 날짜만 고치면 돼요)</span></label>';
+19893:   h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>장소<span class="req">*</span></label><select name="장소" required onchange="_ypPfPlace(this)">'+_ypOpt(places,placeSel,'선택')+'</select></div><div style="flex:1"><label>기타 장소 <span style="font-size:10px;color:var(--dim);font-weight:400">(기타일 때)</span></label><input id="yp-pf-place-etc" name="장소기타" type="text" value="'+escapeHtml(placeEtc)+'" placeholder="직접 입력" style="'+(placeSel==='기타'?'':'display:none')+'"></div></div>';
+19894:   // 공연
+19895:   h+='<div id="yp-pf-sec0" style="display:none;border:1px solid var(--border);border-radius:10px;padding:10px 12px"><div style="font-size:11.5px;font-weight:700">공연 정보</div>';
+19896:   h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>장르</label><select name="세부장르">'+_ypOpt(genres,v.세부장르,'선택')+'</select></div><div style="flex:1"><label>회차</label><input name="회차수" type="number" min="1" max="999" step="1" value="'+escapeHtml(String(v.회차수||''))+'" placeholder="예: 2"></div><div style="flex:1"><label>오픈석</label><input name="총오픈석" type="number" min="0" step="1" value="'+escapeHtml(String(v.총오픈석||''))+'" placeholder="석"></div><div style="flex:1"><label>2층 오픈</label><select name="이층오픈">'+_ypOpt([['N','아니오'],['Y','예']],v.이층오픈==='Y'?'Y':'N')+'</select></div></div>';
+19897:   h+='<label>회차별 진행 시간 <span style="font-size:10px;color:var(--dim);font-weight:400">(복제 = 같은 시각 다음 날) · </span><span id="yp-pf-timecnt" style="font-size:10px;color:var(--dim);font-weight:400">'+v.회차시간.length+'개</span></label><div id="yp-pf-times">'+v.회차시간.map(function(t){return _ypTimeRow(String(t).replace(' ','T'));}).join('')+'</div><div style="display:flex;gap:6px;margin-top:6px"><button type="button" class="adm-btn" onclick="_ypTimeAdd(null)">+ 회차 추가</button><button type="button" class="adm-btn" onclick="_ypTimeFill()">회차 수만큼 채우기</button></div></div>';
+19898:   // 전시 · 교육
+19899:   h+='<div id="yp-pf-sec1" style="display:none;border:1px solid var(--border);border-radius:10px;padding:10px 12px"><div style="font-size:11.5px;font-weight:700">전시 정보</div><div><label>참여 작가 수</label><input name="참여작가수" type="number" min="0" step="1" value="'+escapeHtml(String(v.참여작가수||''))+'" placeholder="명"></div></div>';
+19900:   h+='<div id="yp-pf-sec2" style="display:none;border:1px solid var(--border);border-radius:10px;padding:10px 12px"><div style="font-size:11.5px;font-weight:700">교육 정보</div><div style="display:flex;gap:10px"><div style="flex:1"><label>정원</label><input name="정원" type="number" min="0" step="1" value="'+escapeHtml(String(v.정원||''))+'" placeholder="명"></div><div style="flex:1"><label>강좌 수</label><input name="강좌수" type="number" min="0" step="1" value="'+escapeHtml(String(v.강좌수||''))+'" placeholder="개"></div></div></div>';
+19901:   h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>기획사</label><input name="기획사" type="text" value="'+escapeHtml(v.기획사||'')+'"></div><div style="flex:1"><label>유통사 <span style="font-size:10px;color:var(--dim);font-weight:400">(선택)</span></label><input name="유통사" type="text" value="'+escapeHtml(v.유통사||'')+'"></div></div>';
+19916: }
+19917: async function _ypProgDelete(id){
+19918:   var p=_yp.progs.filter(function(x){return x.프로그램ID===id;})[0]||{};
+19919:   if(!await showConfirm('정말 삭제할까요?\n\n['+id+' '+(p.정본명||'')+'] 일일실적·캘린더 기록이 있으면 지워지지 않아요.',{title:'프로그램 삭제',okText:'삭제',danger:true}))return;
+19920:   try{ await api('POST','/api/ym/plan/delete',{프로그램ID:id}); showToast('삭제 완료 · '+id,'success'); await _ypProgReload(); _ypBizRender(); }catch(e){ showToast('삭제 실패: '+_ypErr(e),'error'); }
+19921: }
+19922: 
+19923: /* ── ③ 정산 입력 ── */
+19924: function openSettleForm(id){
+19925:   var p=_yp.progs.filter(function(x){return x.프로그램ID===id;})[0]; if(!p){showToast('프로그램을 찾을 수 없어요: '+id,'error');return;}
+19926:   var h='<div class="modal-bg show" style="z-index:9650" onmousedown="modalBgMouseDown(event)" onclick="modalBgClick(event,closeSettleForm)"><div class="modal" style="width:96vw;max-width:480px;max-height:88vh;overflow:auto;--mpad-y:24px;--mpad-x:24px;position:relative"><button class="modal-x" onclick="closeSettleForm()" title="닫기" aria-label="닫기">✕</button>'+_mhead('정산 입력',p.프로그램ID+' · '+p.정본명+' · '+p.상태);
+19927:   h+='<form id="yp-settle-form" onsubmit="event.preventDefault();_ypSettleSave(\''+escapeHtml(id)+'\')" style="display:flex;flex-direction:column;gap:14px">';
+19928:   h+='<div style="background:#F6F5FF;border:1px solid rgba(74,77,231,0.15);border-radius:10px;padding:10px 12px;font-size:11.5px;color:var(--accent)"><b>'+escapeHtml(p.사업코드)+' '+escapeHtml(p.사업명||'')+'</b><span style="color:#888"> — 저장하면 이 사업의 합계(실지출·수입·관객)가 바로 다시 계산돼요. 잠금은 없고 수정 이력만 남아요.'+(p.정산일?' 마지막 정산 '+escapeHtml(p.정산일)+' · '+escapeHtml(p.정산자||''):'')+'</span></div>';
+19929:   h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>실지출(전표 실적)</label><input name="실지출" type="number" min="0" step="1" value="'+escapeHtml(String(p.실지출||''))+'" placeholder="원"></div><div style="flex:1"><label>수입(정산서 매출)</label><input name="수입" type="number" min="0" step="1" value="'+escapeHtml(String(p.수입||''))+'" placeholder="원"></div></div>';
+19930:   h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>판매 수수료</label><input name="판매수수료" type="number" min="0" step="1" value="'+escapeHtml(String(p.판매수수료||''))+'" placeholder="원"></div><div style="flex:1"><label>오픈석</label><input name="오픈석" type="number" min="0" step="1" value="'+escapeHtml(String(p.총오픈석||''))+'" placeholder="석"></div></div>';
+19931:   h+='<div style="display:flex;gap:10px"><div style="flex:1"><label>유료 관객</label><input name="유료관객" type="number" min="0" step="1" value="'+escapeHtml(String(p.유료관객||''))+'" placeholder="명"></div><div style="flex:1"><label>무료 관객</label><input name="무료관객" type="number" min="0" step="1" value="'+escapeHtml(String(p.무료관객||''))+'" placeholder="명"></div><div style="flex:1"><label>무료 중 문화나눔</label><input name="문화나눔" type="number" min="0" step="1" value="'+escapeHtml(String(p.문화나눔||''))+'" placeholder="명"></div></div>';
+19932:   h+='<div style="font-size:11px;color:var(--dim)">기본값 출처 — 비용: <b>'+escapeHtml(p.비용출처||'-')+'</b> · 관객: <b>'+escapeHtml(p.관객출처||'-')+'</b>. 정산서 기준으로 고쳐도 돼요. 실지출은 전표 집행액(수수료 제외)이고, 실 지출+수수료가 따로 계산돼요. 사업의 실지출은 정산된 프로그램 실지출의 합이에요.</div>';
+19933:   h+='<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:8px;padding-top:14px;border-top:1px solid #eee"><button type="button" onclick="closeSettleForm()" style="'+_YP_BTN_CANCEL+'">취소</button><button type="submit" style="'+_YP_BTN_OK+'">정산 저장</button></div></form></div></div>';
+19934:   _ypModal('yp-settle-modal',h);
+19935: }
+19936: function closeSettleForm(){ _ypClose('yp-settle-modal'); }
+19937: async function _ypSettleSave(id){
+20406: //   · ⚠️ 판정은 반드시 FRESH·초안포함 신청목록으로(분신술 감사1 HIGH·감사4): 전역 records는 로그인 시 1회 로드 후 stale일 수 있고
+20407: //     (openMsgBox는 메시지만 최신화) 초안을 제외한다 → 그걸로 판정하면 ①내 로그인 이후 타 기기/관리자가 만든 살아있는 신청
+20408: //     ②현재 초안 상태인 신청 의 알림을 유령 오판해 영구삭제. → 삭제 직전 records 재조회(초안 미제외 전체), 실패/빈결과면 스킵.
+20409: async function _msgPurgeGhosts(){
+20410:   try{
+20411:     if(!_msgApiAvailable) return;  // Worker 다운/봉인 확정 시 스킵(재조회·삭제 모두 아낌 — 미배포 버스트 억제, 감사3)
+20412:     const myAppl = _msgMyAppl();
+20413:     if(!myAppl) return;
+20414:     // 저비용 프리체크(감사3 부하 최적화) — 삭제 후보(내 수신·refNo 있음·reason 없음·비QA)가 하나도 없으면
+20415:     //   fresh 재조회(무캐시 전량 GET) 자체를 스킵. 정상상태(유령 0)에서 매 open Graph read 낭비 방지.
+20416:     const cands = _msgGet().filter(function(m){
+20417:       return m && m.id && m.recipient===myAppl && (m.refNo||'').toString().trim() && !(m.reason||'').toString().trim() && !_isQaMessage(m);
+20418:     });
+20419:     if(!cands.length) return;
+20420:     let fresh=null;
+26783:     main.querySelectorAll('.bizm-strip .cell .val').forEach(function(v){ if(v.offsetParent===null)return; _memHubCountUp(v,900,0); });
+26784:   }catch(_e){}
+26785: }
+26786: function _memberHubPurge(){
+26787:   /* 유휴 잠금·로그아웃(_memPurge)과 같은 위생: 그려진 명단·결과·대화를 지우고 닫는다. 틀은 남긴다(다음 열기 즉시). */
+26788:   closeMemberHub();
+26789:   ['seg-result','mem-body'].forEach(function(id){ var e=document.getElementById(id); if(e)e.innerHTML=''; });
+26790:   var mb=document.getElementById('mem-body'); if(mb)mb.style.display='none';
+26791:   var ms=document.getElementById('mem-sub'); if(ms)ms.textContent='불러오는 중…';
+26792:   var q=document.getElementById('mem-q'); if(q)q.value='';
+26793:   var log=document.getElementById('mem-ai-log-h'); if(log)log.innerHTML='';
+26794:   window._memHubFilter=null; var nt=document.getElementById('hub-search-note'); if(nt)nt.innerHTML='';
+26795:   window._memberHubFilled=0;
+26796: }
+26797: /* [260903 허브 연결] 예울이 답 → 우상 검색 결과에 자동 반영 (_memAiSend 가 로컬 답 뒤에 호출).
+28318:   // [Phase4-3b] 옛 시트 모양 뷰/저장 — 화면 코드가 아직 옛 열 이름(ID·사업명·유료좌석…)을 쓰는 동안의 어댑터(한 곳). 열 이름을 새 체계로 바꾸는 작업이 끝나면 이 표를 지운다.
+28319:   var VIEW={
+28320:     '공연마스터':{sheet:'판매설정',part:'공연',cols:{'ID':'프로그램ID','사업명':'명칭'},d8:['시작일','종료일','티켓오픈일'],headers:['사업명','ID','기준석','총회차','총오픈석','목표점유율','수익성','티켓오픈일','종료일','시작일','상태','사업코드']},
+28321:     '전시마스터':{sheet:'판매설정',part:'전시',cols:{'전시ID':'프로그램ID','전시명':'명칭'},d8:[],headers:['전시ID','전시명','연도','시작일','종료일','운영일수','목표관객','목표금액','최종유료','최종무료','최종총인원','최종매출','최종점유율','수익성','무료여부','상태','장소','사업코드']},
+28322:     '회차상세':{sheet:'회차',part:'공연',cols:{'ID':'프로그램ID'},d8:['공연일'],headers:['ID','공연일']},
+28323:     '일일입력':{sheet:'일일실적',part:'공연',cols:{'공연ID':'프로그램ID','공연명':'명칭','유료좌석':'누계유료','무료좌석':'누계무료','합계좌석':'누계총인원','합계금액':'누계금액'},d8:['기준일자'],headers:['기준일자','공연명','유료좌석','유료금액','무료좌석','합계좌석','합계금액','점유율','전일대비(석)','공연ID','예측제외']},
+28324:     '전시일일':{sheet:'일일실적',part:'전시',cols:{'전시ID':'프로그램ID','전시명':'명칭'},d8:['기준일자'],headers:['기준일자','전시ID','전시명','일일유료','일일무료','일일총인원','일일금액','누계유료','누계무료','누계총인원','누계금액','점유율']}
+28325:   };
+28326:   function statusOld(part,v){ v=String(v||'').trim(); if(part==='공연')return v==='진행중'?'판매중':v; if(part==='전시')return v==='판매중'?'예정':v; return v; }
+28327:   function raw(sheet,fresh){
+28328:     if(sheet==='회차')return roundsFromSales(null,fresh).then(function(rs){ return {sheet:'운영_회차',headers:['프로그램ID','구분','공연일','오픈좌석'],rows:rs,count:rs.length,via:'판매설정'}; });   // [Phase10]
+28329:     return api('GET','/api/ops?sheet='+encodeURIComponent(sheet)+(fresh?'&fresh=1':''));
+28330:   }
+28331:   // view(옛 이름) → {sheet,headers,rows,count} 옛 모양. 표에 없는 이름은 그대로 통과(단체·사업비·카페일정 등).
+28332:   function view(name,fresh){
+33521: // [260731 운영자 "바로 안 열려요"] PII 재적재 가드를 「#member-lookup 존재」 → 「purge 에포크」로 교체.
+33522: //   구 가드는 회원 조회 모달이 DOM에 없으면(= 회원 분포로 곧장 들어온 경우) 응답을 통째로 버려서 개요가 항상 "못 불러왔어요"였다.
+33523: //   에포크 = _memPurge(로그아웃·유휴잠금)가 증가 → await 중 purge된 응답만 정확히 폐기(보안 의도 동일, 진입 경로 무관).
+33524: function _memPurge(){try{if(typeof _memberHubPurge==='function')_memberHubPurge();}catch(_eh){}_memState=null;   /* [260902 고객 관리 허브] 같은 위생 */_memSummary=null;_memSummaryError='';_memLoading=false;_memP=null;_memSummaryLoading=false;_memSummaryP=null;_bkState=null;_bkLoading=false;_bkP=null;_memEpoch++;_memAiHist=[];_memAiBusy=false;   /* [260806] _bkP(비행 중 적재)도 끊는다 — 안 끊으면 purge 뒤 첫 호출이 **폐기 예정인 옛 요청**에 합류해 빈손으로 돌아온다 */
+33525:   /* [260808] 고객 분류(AI 홍보 3탭) = 이름·휴대폰·관람이력이 한 표에 뜨는 자리라 같은 위생을 건다 —
+33526:      상태(_segLast·_bkAsk)와 **이미 그려진 DOM** 둘 다 지운다. 상태만 지우면 화면의 명단은 그대로 남는다. */
+33527:   _segLast=null;_bkAsk=null;var pc=document.getElementById('promo-check');if(pc)pc.innerHTML='';
+33528:   var bg=document.getElementById('member-lookup');if(bg){if(_memEscH){document.removeEventListener('keydown',_memEscH);_memEscH=null;}bg.remove();}var ov=document.getElementById('member-ov');if(ov)ov.remove();var inl=document.getElementById('mem-ov-inline');if(inl){_ldSweepOff(inl);inl.innerHTML='<div style="text-align:center;padding:40px;color:var(--dim);font-size:13px">세션 종료로 집계를 비웠어요</div>';}}   // [260731 4차 · 페이블 검수 HIGH] 인라인 4면(고객 분석)에 그려진 회원 집계 DOM도 소거 — 로그아웃·유휴잠금 PII 위생 동일 적용 · [260806] 스윕도 함께 걷는다(박스 직속이라 innerHTML 교체로는 안 지워진다)
+33529: // 선로딩(운영자 260731 "항상 바로 나오게") — 대시보드 ▸ 회원 분포 항목에 마우스만 올려도 백그라운드 적재 시작.
+33530: //   클릭 시점엔 이미 캐시라 즉시 그려진다. 중복 발사는 _memLoading·_memState 가드로 차단(추가 API 호출 0).
+33531: function _memWarm(){ if(userRole!=='admin')return; try{_bkWarm();}catch(e){}   /* [260804] 예매 집계도 같이 덥힌다 — 첫 예매 질문에서 「아직 안 불러왔어요」가 안 뜨게 */
+33532:   if(_memSummary||_memSummaryLoading)return; try{_memLoadSummary(false);}catch(e){} }
+33533: // [260810 운영자 「대시보드를 불러오는 순간 고객분석 데이터까지 다 · 애초에 이 웹앱이 열려있으면 데이터는 불러오게」]
+33534: //   **부팅 선로딩** — 구판의 출발 신호는 세부메뉴 **호버**(위 _memWarm)와 책 4면 도착(_bizMemberEnsure) 둘뿐이라,
+33535: //   책을 4면까지 넘겨야 그제서야 회원 시트를 부르기 시작했다. 신호를 「앱에 들어온 순간」(initApp)으로 앞당긴다.

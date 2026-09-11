@@ -1,0 +1,3220 @@
+{
+  "authSyntax": true,
+  "errors": [],
+  "excluded": [
+    {
+      "path": ".env",
+      "reason": "Live environment secrets"
+    },
+    {
+      "path": "api/ym-auth-initial-private.js",
+      "reason": "Real credential digests"
+    },
+    {
+      "path": "api/ym-ticketlink-private.js",
+      "reason": "Real encryption key"
+    },
+    {
+      "path": "--viewport",
+      "reason": "Diagnostic screenshot"
+    },
+    {
+      "path": ".coder/**,.opencode/**,.rollback/**,backups/**",
+      "reason": "Runtime state and superseded backups"
+    },
+    {
+      "path": "public/data/프로그램마스터_260905.xlsx",
+      "reason": "Superseded workbook snapshot; no runtime references; current data retained in DB and CSV/JSON"
+    },
+    {
+      "path": "src/main.tsx",
+      "reason": "Referenced platform-managed entrypoint; read API returned HTTP 403"
+    },
+    {
+      "path": "api/_runtime_env.js",
+      "reason": "Platform-generated environment hook; excluded by original .gitignore"
+    },
+    {
+      "path": "tools/apply_age2_260829.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/apply_finmodal_260829.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/apply_edu_plan_260829.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/apply_pastaud_alias_260828.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/apply_planbadge_260829.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/apply_valid_percent_260829.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/apply_yearreal_260829.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/apply_yrsync_260829.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/apply_yrsync_revert_260829.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/apply_yrsync2_260829.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/improve_dashboard_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/install_member_sync_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/live-consistency-audit.b64",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/plan_ui2_260906.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/plan_ui_260906.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/plan_ui3_260906.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/plan_ui4_260906.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/plan_ui5_260906.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/round-foundation-audit.b64",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_apply_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_manual_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_modal_close_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_confirm_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_history_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_progress_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_timeout_layout_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_recovery_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_settings_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_ui_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/ticketlink_ui_final_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    },
+    {
+      "path": "tools/update_group_260907.py",
+      "reason": "Superseded encoded installer/audit payload; current decoded application code and business data exported separately"
+    }
+  ],
+  "files": [
+    {
+      "format": "json",
+      "path": "api/data/booking_agg.s2.json"
+    },
+    {
+      "format": "json",
+      "path": "api/data/booking_agg.s3.json"
+    },
+    {
+      "format": "json",
+      "path": "api/data/booking_agg.s1.json"
+    },
+    {
+      "format": "json",
+      "path": "api/data/booking_agg.s0.json"
+    },
+    {
+      "format": "json",
+      "path": "api/data/booking_agg.s4.json"
+    },
+    {
+      "format": "json",
+      "path": "api/data/booking_agg.s5.json"
+    },
+    {
+      "format": "json",
+      "path": "api/data/booking_agg.s6.json"
+    },
+    {
+      "format": "json",
+      "path": "api/data/booking_agg.s7.json"
+    },
+    {
+      "format": "json",
+      "path": "api/data/booking_agg.s8.json"
+    },
+    {
+      "format": "csv",
+      "path": "api/data/exhib_master.csv",
+      "rows": 25
+    },
+    {
+      "format": "json",
+      "path": "api/data/booking_agg.s9.json"
+    },
+    {
+      "format": "csv",
+      "path": "api/data/ops_예매집계.csv",
+      "rows": 10119
+    },
+    {
+      "format": "csv",
+      "path": "api/data/ops_예매.csv",
+      "rows": 40429
+    },
+    {
+      "format": "csv",
+      "path": "api/data/ops_회원.csv",
+      "rows": 30477
+    },
+    {
+      "format": "json",
+      "path": "public/data/db_v46/indicators.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/db_v46/manifest.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/db_v46/booking_agg.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/db_v46/upload_1787617924351_1.json"
+    },
+    {
+      "format": "csv",
+      "path": "public/data/members/age.csv",
+      "rows": 10
+    },
+    {
+      "format": "csv",
+      "path": "public/data/members/dong.csv",
+      "rows": 712
+    },
+    {
+      "format": "json",
+      "path": "public/data/db_v46/members.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/db_v46/upload_1787617924349_0.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/db_v46/schedule_sales.json"
+    },
+    {
+      "format": "csv",
+      "path": "public/data/members/region.csv",
+      "rows": 234
+    },
+    {
+      "format": "csv",
+      "path": "public/data/members/region_age.csv",
+      "rows": 991
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/PromoSpecial.csv",
+      "rows": 999
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/Claude Log.csv",
+      "rows": 199
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/공연마스터.csv",
+      "rows": 9
+    },
+    {
+      "format": "csv",
+      "path": "public/data/members/ledger.csv",
+      "rows": 29752
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/공연색인.csv",
+      "rows": 1318
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/공연대장.csv",
+      "rows": 1442
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/규정.csv",
+      "rows": 901
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/담당자.csv",
+      "rows": 38
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/도표.csv",
+      "rows": 4
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/기획공연판매현황.csv",
+      "rows": 23
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/로그.csv",
+      "rows": 927
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/불편사항.csv",
+      "rows": 1
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/세부운영관리대장정리.csv",
+      "rows": 2262
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/일일입력.csv",
+      "rows": 1607
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/전시일일.csv",
+      "rows": 18
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/장도.csv",
+      "rows": 214
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/메시지.csv",
+      "rows": 229
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/챗봇FAQ.csv",
+      "rows": 4
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/콘텐츠.csv",
+      "rows": 5
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/챗봇로그.csv",
+      "rows": 37
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/카페일정.csv",
+      "rows": 61
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/프로그램.csv",
+      "rows": 31
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/회차상세.csv",
+      "rows": 17
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/홍보접수설정.csv",
+      "rows": 13
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/홍보기록.csv",
+      "rows": 998
+    },
+    {
+      "format": "csv",
+      "path": "public/data/ops/플랫폼.csv",
+      "rows": 10
+    },
+    {
+      "format": "json",
+      "path": "public/data/biz_program_links.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/business_performance_detail.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/gaeyo_260901.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/historical_business_performance.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/keymap_v46_260902.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/program_master.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/예매집단분석_260821.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/programs_fallback.json"
+    },
+    {
+      "format": "json",
+      "path": "public/data/예매집단분석_과거_260828.json"
+    },
+    {
+      "format": "csv",
+      "path": "server-data/ops/예매.csv",
+      "rows": 40429
+    },
+    {
+      "format": "csv",
+      "path": "server-data/ops/예매집계.csv",
+      "rows": 10119
+    },
+    {
+      "format": "csv",
+      "path": "server-data/ops/회원.csv",
+      "rows": 29752
+    },
+    {
+      "format": "json",
+      "path": "src/data/yeulmaru.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/auth-contract-260907/index.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/auth-contract-260907/install-status.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/exhibition-rounds-verification.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/finance-all-years.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/finance-anchors.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/finance-audit.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/finance-detail.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/finance-runtime.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/finance-toggle.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/patch_fix_260828.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/patch_fix2_260828.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/patch_series_260828.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/patch_programs_260828.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/replace_bc_260828.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/replace_y26_260828.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/round-foundation-verification.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/round-today-verification.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/ui-screen-registry.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/ui-contract-baseline.json"
+    },
+    {
+      "format": "json",
+      "path": "tools/view-permissions-functions.json"
+    },
+    {
+      "format": "json",
+      "path": "package.json"
+    },
+    {
+      "format": "json",
+      "path": "show_bookings_260828.json"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/001_unified_baseline.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/002_dedupe_daily.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/003_drop_unused.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/004_rounds_into_sales.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/005_restore_rounds.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/006_rounds_into_sales_again.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "api/migrations/007_programs_into_master.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/008_ops_schedule_merge.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/009_code_tables_merge.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/011_schedule_merge2.js"
+    },
+    {
+      "embeddedBlocks": 5,
+      "format": "source",
+      "path": "api/migrations/010_sales_into_master.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/migrations/012_ledger_into_daily.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/migrations/013_biz_into_master.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/014_account_no.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/015_schedule_d8.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/016_records_program_id.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "api/migrations/017_rent_into_master.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/018_calendar_table.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/020_single_keys.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "api/migrations/019_records_into_calendar.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/022_master_compact.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/migrations/021_daily_ref_master.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/024_pid_index.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/023_compact_rest.js"
+    },
+    {
+      "embeddedBlocks": 4,
+      "format": "source",
+      "path": "api/migrations/025_codes_calendar.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/026_promo_flag.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/027_master_drop_empty.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/migrations/028_master_merge_cols.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/029_calendar_pid_fix.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "api/migrations/030_biz_2012_2016.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/migrations/032_rental_merge.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/031_daily_drop_copies.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/033_pid_unify.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/migrations/034_program_merge1.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/migrations/035_merge_decisions.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/036_report_names.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/037_report_names_fix.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/038_name_tails.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/039_name_tails_2026.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/040_jangdo_place.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/041_place_unify.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/042_place_unify2.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/044_place_unify3.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/046_place_fill_web.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/043_jangdo_studio.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/045_names_1214.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/047_place_fill_ledger.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/migrations/048_ledger_merge.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/049_place_fill_ledger2.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/050_place_fill_final.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/053_fix_131031_place.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/052_split_and_add.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/051_ledger_names.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/055_biz_split_2017_2022.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/054_biz_names.js"
+    },
+    {
+      "embeddedBlocks": 4,
+      "format": "source",
+      "path": "api/migrations/057_form_v3.js"
+    },
+    {
+      "embeddedBlocks": 4,
+      "format": "source",
+      "path": "api/migrations/056_supplement.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/059_acct_manager.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "api/migrations/058_ledger_ghosts.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/061_acct_default.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/migrations/060_clear_stale_tickets.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/062_addr_reparse.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/063_addr_hardening.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/065_round_foundation.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/064_joint_revenue.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/_migration_order_guard_lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/_migration_order_guard.pb.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/066_round_today.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/migrations/067_exhibition_rounds.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/_runtime_env.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/_tmp_addcol_260902.pb.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/_tmp_fix_place_260901.pb.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/content-kakao.pb.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/content-detail.pb.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/miso-llm-adapter.pb.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/KEYS.md"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/README.md"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/miso-llm-bridge.pb.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/round-today-260908.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-acct-lib.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/ym-addr-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-auth-lib.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "api/ym-addr-map.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-auth.pb.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/ym-biz-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-cache.pb.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/ym-changelog-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-changelog.pb.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-compact-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-compact.pb.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "api/ym-codes-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-crons.pb.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/ym-daily-join-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-cron-lib.js"
+    },
+    {
+      "embeddedBlocks": 4,
+      "format": "source",
+      "path": "api/ym-db.pb.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/ym-env-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-env.pb.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/ym-join-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-local-relay-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-local-relay.pb.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-member-search.pb.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "api/ym-member-summary-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-member-search-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-member-sync-lib.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "api/ym-ops-alias-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-member-summary.pb.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-member-sync.pb.js"
+    },
+    {
+      "embeddedBlocks": 10,
+      "format": "source",
+      "path": "api/ym-plan-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-plan.pb.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "api/ym-programs-lib.js"
+    },
+    {
+      "embeddedBlocks": 10,
+      "format": "source",
+      "path": "api/ym-plan-dev-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-read-rows-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-round-applicability-lib.js"
+    },
+    {
+      "embeddedBlocks": 4,
+      "format": "source",
+      "path": "api/ym-records-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-round-metrics-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-ticketlink-field-lib.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/ym-sales-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-ticketlink-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-ticketlink-round-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "api/ym-ticketlink.pb.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "docs/MISO-HANDOFF.md"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "api/ym-views-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "docs/MISO-WORK-RULES.md"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "docs/UI-DESIGN-SYSTEM.md"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "docs/ROUND-FOUNDATION-260908.md"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "docs/UI-SCREEN-MATRIX.md"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "docs/UI-VERIFICATION-260908.md"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "docs/발행관리_설계.md"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "docs/등록구조_청사진_260903.md"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "public/data/biz_finance.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/data/exhib_daily_2026.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/data/annual_yr.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "public/data/edu_rooms.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/data/perf_access_stats.js"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/pets/pet_love.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/pets/pet_crab.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/pets/pet.webp"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/01_Labor.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/02_cafe.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/03_insta.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/05_blog.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/04_youtube.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/06_kakao.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/07_SMS.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/08_HP.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/09_Emergency.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/10_background.jpg"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/app-icon.svg"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/apple-touch-icon.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/bg-yeulmaru.webp"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/classyvogue-latin.woff2"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/favicon-16.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/favicon-32.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/favicon.svg"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/logo-yeulmaru-white.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/noto-sans-kr-700.woff2"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/noto-sans-kr-400.woff2"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/og-image.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/promomap-all.jpg"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/promomap-ov-all.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/promomap-ov-gwangyang.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/promomap-gwangyang.jpg"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/promomap-ov-suncheon.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/promomap-ov-yeosu.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/promomap-suncheon.jpg"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/image/promomap-README.txt"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/promomap-yeosu.jpg"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/pwa-icon-192-maskable.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/pwa-icon-192.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/pwa-icon-512-maskable.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/yeul_face.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/pwa-icon-512.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/images/ci/yeulmaru-english-2line-negative.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/image/yeul.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/images/ci/yeulmaru-english-2line-source.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/images/ci/yeulmaru-korean-lockup.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/images/yeulmaru-hero.jpg"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/persona/yeuli.md"
+    },
+    {
+      "format": "asset",
+      "path": "public/images/yeulmaru-logo-1line.png"
+    },
+    {
+      "format": "asset",
+      "path": "public/favicon.ico"
+    },
+    {
+      "format": "asset",
+      "path": "public/images/yeulmaru-logo-2line.png"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/manifest.webmanifest"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "public/healthcheck.html"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ui-system-preview.html"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/verify.html"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ym-auth-ui.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ym-group-ui.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ym-local-relay-ui.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ym-member-sync-ui.js"
+    },
+    {
+      "embeddedBlocks": 19,
+      "format": "source",
+      "path": "public/standalone.html"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ym-motion.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ym-perf.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ym-relay-permission-ui.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ym-ticketlink-ui.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ym-ui-components.css"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "public/ym-ui-tokens.css"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "public/ym-ui-components.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "public/members.js"
+    },
+    {
+      "format": "asset",
+      "path": "src/assets/bg-yeulmaru.webp"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "src/components/calendar/CalendarView.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/common/DetailModal.tsx"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "src/components/gate/PinGate.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/gate/PinGate.css"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/layout/AppShell.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/layout/YeulmaruNav.css"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/layout/YeulmaruNav.tsx"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "src/components/performance/PerformanceView.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/performance/performance-types.ts"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "src/components/performance/SalesDetail.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/programs/ProgramsView.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/aspect-ratio.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/accordion.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/alert-dialog.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/alert.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/breadcrumb.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/avatar.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/badge.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/button.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/card.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/carousel.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/calendar.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/chart.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/checkbox.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/collapsible.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/context-menu.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/command.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/dropdown-menu.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/drawer.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/form.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/dialog.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/hover-card.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/input.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/menubar.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/label.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/navigation-menu.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/pagination.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/popover.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/resizable.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/progress.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/radio-group.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/scroll-area.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/sheet.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/select.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/separator.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/sidebar.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/slider.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/skeleton.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/switch.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/sonner.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/tabs.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/table.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/toggle-group.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/textarea.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/tooltip.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/components/ui/toggle.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/data/index.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/data/exhibMaster.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/data/programs.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/data/opsMaster.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/data/special.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/hooks/use-mobile.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/direct-llm-error.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/miso-auth.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/miso-client.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/miso-connectors.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/miso-llm-tool-loop.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/miso-llm.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/miso-ai-sdk-transport.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/miso-proxy-plugin.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/miso-hooks.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/site-client.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/miso-sdk/runtime-client.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/csv.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/date.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/status.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/lib/utils.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/styles/yeulmaru.css"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/types/domain.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/types/pb-types.ts"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/App.tsx"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "src/index.css"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/api-route-index.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/boot.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/bottom-menu.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/config-read.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/entry-menu.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/config-write.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/lock-settings.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/integration.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/lock-toggle.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/logout.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/lock.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/menu-index.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/menu-definitions.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/pin-submit.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/navigation.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/role-functions.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/routes.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/auth-contract-260907/user-settings.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/migrations/002_dedupe_daily.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/migrations/001_unified_baseline.js"
+    },
+    {
+      "embeddedBlocks": 4,
+      "format": "source",
+      "path": "tools/auth-contract-260907/role-contract.txt"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/migrations/003_drop_unused.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/migrations/005_restore_rounds.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/migrations/004_rounds_into_sales.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "tools/migrations/007_programs_into_master.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/migrations/006_rounds_into_sales_again.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/migrations/011_schedule_merge2.js"
+    },
+    {
+      "embeddedBlocks": 5,
+      "format": "source",
+      "path": "tools/migrations/010_sales_into_master.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "tools/migrations/012_ledger_into_daily.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/migrations/014_account_no.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "tools/migrations/013_biz_into_master.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/migrations/015_schedule_d8.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/migrations/016_records_program_id.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "tools/migrations/019_records_into_calendar.js"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "tools/migrations/017_rent_into_master.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/migrations/020_single_keys.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/migrations/018_calendar_table.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "tools/migrations/021_daily_ref_master.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/migrations/022_master_compact.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/migrations/023_compact_rest.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/migrations/024_pid_index.js"
+    },
+    {
+      "embeddedBlocks": 4,
+      "format": "source",
+      "path": "tools/migrations/025_codes_calendar.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/migrations/026_promo_flag.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "tools/migrations/028_master_merge_cols.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/migrations/027_master_drop_empty.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/_probe_a.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/_probe_c.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/_probe_d.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/_probe_f.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/_probe_b.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/_probe_h.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/_probe_g.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/_probe.txt"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/admin_apply_260907.py"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/admin_review_260907.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/addr_unclear_260907.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_dedupe_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_fix_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_fix2_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_memfix_260829.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_patch_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_memdeb_260829.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_replace_bc_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_series_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_unitalign_260829.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_revis_label_260829.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_y26_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/apply_zclean_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/booking_shard_260907.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/bizlink_module.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/build_pastaud_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/chartfix_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/check_ui_contract.py"
+    },
+    {
+      "embeddedBlocks": 5,
+      "format": "source",
+      "path": "tools/check_ui_contract.cjs"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/codex_consistency_apply_260906.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/codex_consistency_functions_260906.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/codex_consistency_functions_260906.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/codex_consistency_read_260906.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/codex_integrity_260906.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/codex_consistency_read_260906.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/codex_phase2_260906.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/codex_phase5_260906.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/codex_phase4_260906.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/codex_phase3_260906.py"
+    },
+    {
+      "embeddedBlocks": 10,
+      "format": "source",
+      "path": "tools/codex_plan_candidate_260906.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/dailyjoin_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/deckfix2_260901.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/deckfix_260901.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/dedupe_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/dedupe2_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/dedupe3_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/dedupe4_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/devpin_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/dialogfix_260901.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/divmark_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/divmark2_260828.py"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/env_ym-env-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/divmark3_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/env_ym-env.pb.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/env_ym-ops-alias-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/exhibfix_260901.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/fcfix_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/finfix_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/finfix2_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/fix_msal_iframe_interactive_guard_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/fix_msal_iframe_popup_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/fix_msal_iframe_redirect_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/fix_msal_iframe_top_frame_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/fs_ym-fs.pb.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/fs_ym-fs-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/kpifix_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/leftframe_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/leftframe2_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/leftframe3_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/leftframe4_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/leftframe5_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/leftframe6_260902.py"
+    },
+    {
+      "embeddedBlocks": 18,
+      "format": "source",
+      "path": "tools/group_input_source.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/livecode_260907.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub_module.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub_260902.py"
+    },
+    {
+      "embeddedBlocks": 4,
+      "format": "source",
+      "path": "tools/member_sync_details.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/member_sync_contract.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub12_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub11_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub13_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub10_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub2_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub3_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub4_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub6_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub5_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub8_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub7_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memberhub9_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/memlazy_260907.py"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/menu_review.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge1_programs_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge10_dailyref_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge11_compact_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge12_join_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge2_views_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge13_calendar_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge3_sales_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge5_ledger_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge4_views2_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge7_rent_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge6_keys_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge8_records_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/merge9_keys_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/mgrcols_260906.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/nojangdo_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/ovsales_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/nofix_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/patch_pastaud_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/patch_pastaud_260828.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/patch_ui2_260828b.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/patch_ui_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/patch_ui4_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/patch_ui3_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/patch_ui5_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/patch_ui6_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/patch_ui7_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase0_saveprog_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase1_pmoverlay_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase1_prgrp_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase10_rounds_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase2_bizlink_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase3_salesmeta_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase3c_canon_db_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase3d_canon_genre_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase3e_override_rm_260903.py"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/phase4_ym-ops-alias-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase4c_ymdb_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase3b_dates_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase4d_ymdb_view_260904.py"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/phase4_alias_hook_260903.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase4e_rounds_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase4d_hook_part_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase56_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase7b_daily_upsert_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase7_upsert_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase7d_reqexhib_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase7c_preload_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase8_env_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase4g_alias_rm_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase8b_app_env_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase9_devlogin_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase8c_member_env_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase9b_devlogin_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase9c_devlogin_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/phase9d_devlogin_260904.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/place_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/prewarm_260902.py"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/prograil_module.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "tools/prograil_cols_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/prgrp_module.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/prograil_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/rentmerge3_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/rentmerge2_260905.py"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/rentmerge_260905.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/salesmeta_module.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/sessfix_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/series_apply_260906.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/series_review.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/timefix_260901.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/uifix_260828.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/update_sales_menu_260907.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/v46fix_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/v46fix2_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/v46retire_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/v46retire2_260902.py"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/wiring_review_260907.txt"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "tools/who_260906.py"
+    },
+    {
+      "embeddedBlocks": 3,
+      "format": "source",
+      "path": "tools/ym-programs-lib.js"
+    },
+    {
+      "embeddedBlocks": 2,
+      "format": "source",
+      "path": "tools/ym-sales-lib.js"
+    },
+    {
+      "embeddedBlocks": 1,
+      "format": "source",
+      "path": "tools/ym-views-lib.js"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": ".gitignore"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "CLAUDE.md"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "index.html"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "MIGRATION-260828.md"
+    },
+    {
+      "embeddedBlocks": 0,
+      "format": "source",
+      "path": "STANDALONE-MAP.md"
+    }
+  ],
+  "inlineSyntax": {
+    "passed": true,
+    "source": {
+      "checked": 14,
+      "errors": []
+    },
+    "synthetic": {
+      "checked": 14,
+      "errors": []
+    }
+  },
+  "privacyPatternScan": {
+    "hits": [],
+    "passed": true
+  },
+  "pseudonymization": {
+    "fields": 2600917,
+    "freeText": 11464,
+    "namespaces": {
+      "address": 85138,
+      "birth": 27531,
+      "city": 476,
+      "district": 12505,
+      "email": 30708,
+      "group": 3,
+      "groupId": 21,
+      "name": 23154,
+      "personId": 61528,
+      "phone": 49898,
+      "region": 355,
+      "staff": 40,
+      "ticket": 74259,
+      "zip": 4233
+    }
+  },
+  "shards": {
+    "counts": [
+      2263,
+      2263,
+      2263,
+      2263,
+      2263,
+      2263,
+      2263,
+      2263,
+      2263,
+      2263
+    ],
+    "rebucketed": true,
+    "rows": 22630
+  },
+  "tables": {
+    "members": {
+      "rows": 0,
+      "sheets": {}
+    },
+    "users": {
+      "rows": 0,
+      "sheets": {}
+    },
+    "ymdata": {
+      "rows": 18643,
+      "sheets": {
+        "applysettings": 12,
+        "contents": 5,
+        "exhib_daily": 146,
+        "exhib_master": 9,
+        "managers": 38,
+        "ops_공연마스터": 22,
+        "ops_공연마스터_이력": 1258,
+        "ops_공연색인": 1317,
+        "ops_기획공연판매현황": 23,
+        "ops_대관일정": 292,
+        "ops_사업마스터": 1423,
+        "ops_사업비": 273,
+        "ops_세부운영관리대장정리": 2294,
+        "ops_일일실적": 3111,
+        "ops_일일입력": 1652,
+        "ops_일일입력_이력": 2926,
+        "ops_장도": 214,
+        "ops_전시일일입력": 147,
+        "ops_카페일정": 61,
+        "ops_판매설정": 1250,
+        "ops_프로그램마스터": 1867,
+        "ops_회차": 23,
+        "ops_회차상세": 23,
+        "platforms": 10,
+        "programs": 36,
+        "records": 178,
+        "special": 33
+      }
+    },
+    "ymdata_dev": {
+      "rows": 51304,
+      "sheets": {
+        "_ticketlink_batches": 10,
+        "_ticketlink_field_source": 126,
+        "_ticketlink_group_archive": 8,
+        "_ym_change_log": 1410,
+        "_ym_col_archive": 8765,
+        "managers": 39,
+        "ops_거래일별회차실적": 1484,
+        "ops_단체": 26,
+        "ops_실적회차": 26,
+        "ops_일별수집상태": 610,
+        "ops_일일실적": 5361,
+        "ops_캘린더": 178,
+        "ops_코드표": 34,
+        "ops_프로그램마스터": 2225,
+        "ops_회원": 30950,
+        "ops_회차별일일실적": 52
+      }
+    },
+    "ymmeta": {
+      "rows": 37,
+      "sheets": {
+        "_hold_cancel": 1,
+        "_lastmod": 1,
+        "_member_summary": 1,
+        "_monitor": 1,
+        "_promo_scan": 1,
+        "_ym_migrations": 1,
+        "applysettings": 1,
+        "contents": 1,
+        "exhib_daily": 1,
+        "exhib_master": 1,
+        "managers": 1,
+        "messages": 1,
+        "ops_ztest_ops": 1,
+        "ops_공연마스터": 1,
+        "ops_공연마스터_이력": 1,
+        "ops_공연색인": 1,
+        "ops_기획공연판매현황": 1,
+        "ops_대관일정": 1,
+        "ops_사업마스터": 1,
+        "ops_사업비": 1,
+        "ops_세부운영관리대장(정리)": 1,
+        "ops_세부운영관리대장정리": 1,
+        "ops_일일실적": 1,
+        "ops_일일입력": 1,
+        "ops_일일입력_이력": 1,
+        "ops_장도": 1,
+        "ops_전시일일입력": 1,
+        "ops_카페일정": 1,
+        "ops_판매설정": 1,
+        "ops_프로그램마스터": 1,
+        "ops_회차": 1,
+        "ops_회차상세": 1,
+        "platforms": 1,
+        "programs": 1,
+        "records": 1,
+        "special": 1,
+        "ztest_p0": 1
+      }
+    },
+    "ymmeta_dev": {
+      "rows": 30,
+      "sheets": {
+        "_acctseq": 1,
+        "_codeseq": 1,
+        "_config": 1,
+        "_hold_cancel": 1,
+        "_joint_revenue_260908": 1,
+        "_lastmod": 1,
+        "_member_summary": 1,
+        "_member_sync": 1,
+        "_monitor": 1,
+        "_promo_scan": 1,
+        "_round_foundation_260908": 1,
+        "_ticketlink_batches": 1,
+        "_ticketlink_field_source": 1,
+        "_ticketlink_group_archive": 1,
+        "_ticketlink_state": 1,
+        "_ym_change_log": 1,
+        "_ym_col_archive": 1,
+        "_ym_migrations": 1,
+        "managers": 1,
+        "messages": 1,
+        "ops_거래일별회차실적": 1,
+        "ops_단체": 1,
+        "ops_실적회차": 1,
+        "ops_일별수집상태": 1,
+        "ops_일일실적": 1,
+        "ops_캘린더": 1,
+        "ops_코드표": 1,
+        "ops_프로그램마스터": 1,
+        "ops_회원": 1,
+        "ops_회차별일일실적": 1
+      }
+    }
+  },
+  "validation": {
+    "bookingRows": 40429,
+    "credentialHits": 0,
+    "csvRowsChecked": 204416,
+    "issueCount": 0,
+    "issues": [],
+    "memberBookingMatches": {
+      "source": 23063,
+      "synthetic": 23063
+    },
+    "memberRows": 30477,
+    "passed": true,
+    "protectedValuesChecked": 852061,
+    "shardRows": 22630
+  }
+}

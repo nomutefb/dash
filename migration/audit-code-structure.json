@@ -1,0 +1,2179 @@
+[
+  {
+    "path": "api/migrations/001_unified_baseline.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "88d0cd4a1a35439a81dd65674aced62f53980cd9b4dea4278cb675083101915f"
+  },
+  {
+    "path": "api/migrations/003_drop_unused.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "3b76c7e48f4b2d7e44fc86b0ea51f6f882877364f06e04a3e4d9e57e1824ace4"
+  },
+  {
+    "path": "api/migrations/005_restore_rounds.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "9440e57ae59f6dfdd844e17f4dc70538c9933f9807cac7ee54dc05cac2ea00b0"
+  },
+  {
+    "path": "api/migrations/007_programs_into_master.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "2b2c765d3034bdafc899f828ae9fb4d537237a4df209b083e3abf7eb54ab9927"
+  },
+  {
+    "path": "api/migrations/008_ops_schedule_merge.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "974bc083c71f0909adcf3aece179c36092113155a86c2db550b9746144aa7923"
+  },
+  {
+    "path": "api/migrations/009_code_tables_merge.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "25fde906116698d8662a326870b18cc07c5a307932b12a54d22d906ebd01d8bd"
+  },
+  {
+    "path": "api/migrations/011_schedule_merge2.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "abf8384d758cbd12fe9ccd576d5f7529050b029283357d1ec2d1eae0c452bf82"
+  },
+  {
+    "path": "api/migrations/010_sales_into_master.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "b8a0b260883e884f9e52759ae23517b780a05d2d72a2e3c61bf08da4f50f0160"
+  },
+  {
+    "path": "api/migrations/012_ledger_into_daily.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "9f6c9f419536d1336c886d8bf6b689603efb02fcf1c425aafe02165fbcc66b0f"
+  },
+  {
+    "path": "api/migrations/013_biz_into_master.js",
+    "counts": {
+      "string": 1
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[2].value.body.body[2].declarations[0].init.properties[15].value.value",
+        "type": "StringLiteral",
+        "local": "Avery Foster 23152"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "70b0411494b431ba63198af71945f87f23c4b05dc1c9f8610a219c7e14f3b322"
+  },
+  {
+    "path": "api/migrations/015_schedule_d8.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "0ea5f5ea392661f9f5b325503ad2e1d41abf55cae973c230b6b84b80d3644de1"
+  },
+  {
+    "path": "api/migrations/017_rent_into_master.js",
+    "counts": {
+      "string": 1
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[2].value.body.body[2].declarations[0].init.properties[15].value.value",
+        "type": "StringLiteral",
+        "local": "Morgan Foster 23153"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "26cd6caa4d18070065e8ff5c79737aba866fea0411f2f5eb2881a552f3fdc739"
+  },
+  {
+    "path": "api/migrations/018_calendar_table.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "d80af222e8fe8d82aadeed9abba5e470119c6b4ca3f24423b63ed9087daf87ee"
+  },
+  {
+    "path": "api/migrations/019_records_into_calendar.js",
+    "counts": {
+      "string": 3
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[2].value.body.body[3].declarations[0].init.properties[15].value.value",
+        "type": "StringLiteral",
+        "local": "Jordan Foster 23154"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[2].value.body.body[3].declarations[0].init.properties[18].value.value",
+        "type": "StringLiteral",
+        "local": "Morgan Foster 23153"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[2].value.body.body[3].declarations[0].init.properties[20].value.value",
+        "type": "StringLiteral",
+        "local": "https://example.invalid/synthetic-attachment"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "d52a794043e07a0ae040f02ee4ef63b414b2b4602133e3bdc8572631567ddf6e"
+  },
+  {
+    "path": "api/migrations/021_daily_ref_master.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "e9c6eba165d1e493fa4c3e0c4f98820c8b5f933256b85d09de3a681bb5eb796a"
+  },
+  {
+    "path": "api/migrations/025_codes_calendar.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "b397f0f49ba2734b95fae3887f828864d46cb21bf73412d730cb7d440c4775f3"
+  },
+  {
+    "path": "api/migrations/027_master_drop_empty.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "0feaeb47b07cda0c64840b4bc53b4b8069121eefd8365746872416ecb376c66f"
+  },
+  {
+    "path": "api/migrations/028_master_merge_cols.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "f6809c89a21ce7744257311e2f887688e96c69375df68f94f5194207a4d355e5"
+  },
+  {
+    "path": "api/migrations/032_rental_merge.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "69596cf93a5df1541a2e0936ec1107fa5328e8a9990ee5d7f16319d31e11686e"
+  },
+  {
+    "path": "api/migrations/031_daily_drop_copies.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "5339033f6e3cac1d245a0c6b6a51d247c476f7af159e85657ae960faf3485911"
+  },
+  {
+    "path": "api/migrations/034_program_merge1.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "696c14bc4fa2593916d43b9d6170dcec39c4cf85881327fd1adbdbfaea3e2ffe"
+  },
+  {
+    "path": "api/migrations/035_merge_decisions.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "6632e1d76be0e3a2231156b864fc2fdc4df02f97bb7993589bafbef3d17f35cd"
+  },
+  {
+    "path": "api/migrations/036_report_names.js",
+    "counts": {
+      "string": 1
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[106].elements[1].value",
+        "type": "StringLiteral",
+        "local": "Rowan Foster 04215"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "e7615356f054a2da7f62d2e2a096291b3290e0a19b468f462c7442024cd67afe"
+  },
+  {
+    "path": "api/migrations/037_report_names_fix.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "6052d42c43ee817dc51b13b6bfba0e6676ea3cae421ff8388b2eef948836f143"
+  },
+  {
+    "path": "api/migrations/040_jangdo_place.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "ed636dba642ba10222162530fd9b432c38b1de0609c826bc769a6aae3bece51a"
+  },
+  {
+    "path": "api/migrations/048_ledger_merge.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "972c495c30890f49b951c28f1321866313a93b4c9009b1fdf623e7af876ca42b"
+  },
+  {
+    "path": "api/migrations/052_split_and_add.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "b5ccbf323b4c0500349e7615e9fc392608687ef3b1f0f8c5799497ced6a3dbdb"
+  },
+  {
+    "path": "api/migrations/051_ledger_names.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "4d4de6f902108ca1a099da93d84fa0eebdf48bfbdd42d012aca4fd341da5b9c2"
+  },
+  {
+    "path": "api/migrations/055_biz_split_2017_2022.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "2b2a16333c470feec3ae1a346a655e4296430b0df3f4457a07543e8f167b65d1"
+  },
+  {
+    "path": "api/migrations/054_biz_names.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "801b7d28e04cbfc63336d86db9063402a0473893e4793d3cda4bbc8fea570999"
+  },
+  {
+    "path": "api/migrations/057_form_v3.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "cfa5a563f5fb38be657655d79279ee581c62f86607a07b316910b069b0f33604"
+  },
+  {
+    "path": "api/migrations/056_supplement.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "487af72c9bbeae9a4072cb9005a099fa9eafc8840f4797d885aa0d3c50f64c14"
+  },
+  {
+    "path": "api/migrations/059_acct_manager.js",
+    "counts": {
+      "string": 1
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[2].value.body.body[7].body.body[3].test.left.right.value",
+        "type": "StringLiteral",
+        "local": "Cameron Bennett 04518"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "6175cf9192ce53bb9139108c5e1de75278ff12a15bb52cf401ed38a8f1ca73e6"
+  },
+  {
+    "path": "api/migrations/058_ledger_ghosts.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "4635b92b1495e5ee940f42578e06eb45d1eba3938da719b86afc36c2faee7aea"
+  },
+  {
+    "path": "api/migrations/060_clear_stale_tickets.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "0552d4f16d5ba58e274ac234f33e8958e045d918ded96e48a8ce7ace6b1f75e6"
+  },
+  {
+    "path": "api/migrations/063_addr_hardening.js",
+    "counts": {
+      "string": 2
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[2].value.body.body[7].body.body[12].test.right.value",
+        "type": "StringLiteral",
+        "local": "Example State 350"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[2].value.body.body[7].body.body[13].test.left.right.right.value",
+        "type": "StringLiteral",
+        "local": "Example State 350"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "d17b4b4dbf2ddd4ed590f33da50fc6462d92f75b9ca9bbba4d79c911497acb02"
+  },
+  {
+    "path": "api/migrations/064_joint_revenue.js",
+    "counts": {
+      "string": 2
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[2].value.body.body[7].expression.arguments[0].body.body[2].expression.right.value",
+        "type": "StringLiteral",
+        "local": "Casey Brooks 04613"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[2].value.body.body[11].expression.arguments[0].body.body[1].test.left.left.right.value",
+        "type": "StringLiteral",
+        "local": "Casey Brooks 04613"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "bc60e4c621cbf68692ad0223b8bee509ab44fccf650e26a5f682c7c9acf6d84e"
+  },
+  {
+    "path": "api/ym-addr-lib.js",
+    "counts": {
+      "string": 204
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[0].elements[1].elements[2].value",
+        "type": "StringLiteral",
+        "local": "Example City 472"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[1].elements[1].elements[2].value",
+        "type": "StringLiteral",
+        "local": "Example City 471"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[2].elements[1].elements[2].value",
+        "type": "StringLiteral",
+        "local": "Example City 469"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[3].elements[1].elements[2].value",
+        "type": "StringLiteral",
+        "local": "Example City 474"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[4].elements[1].elements[2].value",
+        "type": "StringLiteral",
+        "local": "Example City 470"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[5].elements[1].elements[2].value",
+        "type": "StringLiteral",
+        "local": "Example City 473"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[6].elements[1].elements[3].value",
+        "type": "StringLiteral",
+        "local": "Example City 468"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[12].elements[1].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Example City 149"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[12].elements[1].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Example District 462"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.elements[12].elements[1].elements[10].value",
+        "type": "StringLiteral",
+        "local": "Example State 207"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[0].value",
+        "type": "StringLiteral",
+        "local": "Example State 212"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[2].value",
+        "type": "StringLiteral",
+        "local": "Example City 076"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[3].value",
+        "type": "StringLiteral",
+        "local": "Example City 048"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[4].value",
+        "type": "StringLiteral",
+        "local": "Example City 183"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[5].value",
+        "type": "StringLiteral",
+        "local": "Example City 067"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[6].value",
+        "type": "StringLiteral",
+        "local": "Example City 201"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[7].value",
+        "type": "StringLiteral",
+        "local": "Example City 175"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[8].value",
+        "type": "StringLiteral",
+        "local": "Example City 218"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[9].value",
+        "type": "StringLiteral",
+        "local": "Example City 039"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[10].value",
+        "type": "StringLiteral",
+        "local": "Example District 3205"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[11].value",
+        "type": "StringLiteral",
+        "local": "Example City 059"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[12].value",
+        "type": "StringLiteral",
+        "local": "Example City 194"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[13].value",
+        "type": "StringLiteral",
+        "local": "Example City 054"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[14].value",
+        "type": "StringLiteral",
+        "local": "Example City 053"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[15].value",
+        "type": "StringLiteral",
+        "local": "Example City 061"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[16].value",
+        "type": "StringLiteral",
+        "local": "Example City 068"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[17].value",
+        "type": "StringLiteral",
+        "local": "Example City 058"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[18].value",
+        "type": "StringLiteral",
+        "local": "Example City 013"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[19].value",
+        "type": "StringLiteral",
+        "local": "Example City 075"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[20].value",
+        "type": "StringLiteral",
+        "local": "Example District 3164"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[21].value",
+        "type": "StringLiteral",
+        "local": "Example District 3703"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[22].value",
+        "type": "StringLiteral",
+        "local": "Example City 030"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[23].value",
+        "type": "StringLiteral",
+        "local": "Example City 027"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[0].value.elements[24].value",
+        "type": "StringLiteral",
+        "local": "Example City 011"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.properties[1].value.elements[3].value",
+        "type": "StringLiteral",
+        "local": "Example City 047"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "349bceb831341990e0e09d8cded75cf1d3fb7c537981f10a851ec03f3bf5fb96"
+  },
+  {
+    "path": "api/ym-auth-lib.js",
+    "counts": {
+      "string": 12
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[0].init.value",
+        "type": "StringLiteral",
+        "local": "r00000000009231"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[1].init.value",
+        "type": "StringLiteral",
+        "local": "r00000000025937"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[1].declarations[2].init.value",
+        "type": "StringLiteral",
+        "local": "r00000000049400"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[2].body.body[0].argument.left.right.right.value",
+        "type": "StringLiteral",
+        "local": "contact0030457@example.invalid"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[36].body.body[4].consequent.body[0].declarations[0].init.value",
+        "type": "StringLiteral",
+        "local": "REQUIRES_LOCAL_CONFIGURATION"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[36].body.body[6].expression.arguments[0].body.body[1].declarations[1].init.arguments[0].body.body[1].argument.left.right.right.value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[36].body.body[6].expression.arguments[0].body.body[1].declarations[1].init.arguments[0].body.body[1].argument.right.right.value",
+        "type": "StringLiteral",
+        "local": "807"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[36].body.body[6].expression.arguments[0].body.body[1].declarations[2].init.arguments[0].body.body[1].argument.left.left.right.right.value",
+        "type": "StringLiteral",
+        "local": "Cameron Bennett 04518"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[36].body.body[6].expression.arguments[0].body.body[1].declarations[2].init.arguments[0].body.body[1].argument.right.right.value",
+        "type": "StringLiteral",
+        "local": "801"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[51].body.body[2].expression.arguments[0].body.body[2].test.arguments[0].body.body[0].argument.right.right.value",
+        "type": "StringLiteral",
+        "local": "contact0030457@example.invalid"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[51].body.body[2].expression.arguments[0].body.body[8].declarations[0].init.properties[0].value.value",
+        "type": "StringLiteral",
+        "local": "Rowan Ellis 22959"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[51].body.body[2].expression.arguments[0].body.body[8].declarations[0].init.properties[3].value.value",
+        "type": "StringLiteral",
+        "local": "contact0030457@example.invalid"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "724531b6ad6880b51b1069270e2a2e0de056d7ab2b98f273aa0bb2daa6e7b103"
+  },
+  {
+    "path": "api/ym-addr-map.js",
+    "counts": {
+      "string": 911
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[0].value",
+        "type": "StringLiteral",
+        "local": "Example State 139"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[1].value",
+        "type": "StringLiteral",
+        "local": "Example City 379"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[2].value",
+        "type": "StringLiteral",
+        "local": "Example District 082"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[4].value",
+        "type": "StringLiteral",
+        "local": "Example State 084"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[5].value",
+        "type": "StringLiteral",
+        "local": "Example City 426"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[6].value",
+        "type": "StringLiteral",
+        "local": "Example District 2394"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[7].value",
+        "type": "StringLiteral",
+        "local": "Example City 403"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[8].value",
+        "type": "StringLiteral",
+        "local": "Example State 043"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[9].value",
+        "type": "StringLiteral",
+        "local": "Example District 188"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[10].value",
+        "type": "StringLiteral",
+        "local": "Example City 365"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[11].value",
+        "type": "StringLiteral",
+        "local": "Example District 547"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[12].value",
+        "type": "StringLiteral",
+        "local": "Example District 3106"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[13].value",
+        "type": "StringLiteral",
+        "local": "Example District 270"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[14].value",
+        "type": "StringLiteral",
+        "local": "Example District 122"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[16].value",
+        "type": "StringLiteral",
+        "local": "Example City 294"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[17].value",
+        "type": "StringLiteral",
+        "local": "Example District 078"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[18].value",
+        "type": "StringLiteral",
+        "local": "Example District 355"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[19].value",
+        "type": "StringLiteral",
+        "local": "Example State 198"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[20].value",
+        "type": "StringLiteral",
+        "local": "Example State 078"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[21].value",
+        "type": "StringLiteral",
+        "local": "Example City 095"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[22].value",
+        "type": "StringLiteral",
+        "local": "Example District 348"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[23].value",
+        "type": "StringLiteral",
+        "local": "Example District 182"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[24].value",
+        "type": "StringLiteral",
+        "local": "Example State 055"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[25].value",
+        "type": "StringLiteral",
+        "local": "Example District 904"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[26].value",
+        "type": "StringLiteral",
+        "local": "Example District 1587"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[27].value",
+        "type": "StringLiteral",
+        "local": "Example District 006"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[28].value",
+        "type": "StringLiteral",
+        "local": "Example District 398"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[29].value",
+        "type": "StringLiteral",
+        "local": "Example District 138"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[30].value",
+        "type": "StringLiteral",
+        "local": "Example City 122"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[31].value",
+        "type": "StringLiteral",
+        "local": "Example District 148"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[32].value",
+        "type": "StringLiteral",
+        "local": "Example District 012"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[33].value",
+        "type": "StringLiteral",
+        "local": "Example State 184"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[34].value",
+        "type": "StringLiteral",
+        "local": "Example District 111"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[35].value",
+        "type": "StringLiteral",
+        "local": "Example District 3382"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].declarations[0].init.properties[0].value.elements[36].value",
+        "type": "StringLiteral",
+        "local": "Example District 260"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "b73cd582e3763b137357a35fe7ceb0aa8cddd4068490296cfbadc29aea72456f"
+  },
+  {
+    "path": "api/ym-biz-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "d94b1ec58a0338f0ed5d2ddeb9c26af9691c34e5b0c2d07d22b05f2752c168f1"
+  },
+  {
+    "path": "api/ym-changelog-lib.js",
+    "counts": {
+      "number": 1
+    },
+    "samples": [
+      {
+        "kind": "number",
+        "trail": ".program.body[2].declarations[0].init.properties[1].value.value",
+        "type": "NumericLiteral",
+        "local": 840
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "df143c56fbfd4cc5de4be6d8224e73fefc2e33934008b0f54f6fb58a6f0b8163"
+  },
+  {
+    "path": "api/ym-codes-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "d906d782653c276a1488b5cdc37ec728223802ad7fbc8f2e0b4beabc67e3564c"
+  },
+  {
+    "path": "api/ym-daily-join-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "9ef8944b861ca47d99378e465826bdd91eaff12d8f02cfee9493ca22ba50e7a4"
+  },
+  {
+    "path": "api/ym-cron-lib.js",
+    "counts": {
+      "string": 2
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[12].body.body[2].block.body[0].consequent.body[0].declarations[0].init.arguments[0].properties[0].value.left.right.arguments[0].value",
+        "type": "StringLiteral",
+        "local": "Jordan Reed 07890"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[17].body.body[1].body.body[4].expression.right.consequent.value",
+        "type": "StringLiteral",
+        "local": "Jordan Reed 07890"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "12cec1269b7b1559144a272b8260d3650c7239f49a51bdb9ad73f2536c3b87ed"
+  },
+  {
+    "path": "api/ym-db.pb.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "3e5b10afb2338797e70928bba52b2fc2366e0670abcb14f1fa2f82577fbfa77a"
+  },
+  {
+    "path": "api/ym-env-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "d8cb8d191880570c8e0c9454062fcbc057d5171e127a4a47f264244a8dd40ba7"
+  },
+  {
+    "path": "api/ym-join-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "5ddfb11311d3fc9a043f0b8273a39cacf82854734d4ba03f9d8268763a3416fb"
+  },
+  {
+    "path": "api/ym-member-summary-lib.js",
+    "counts": {
+      "string": 2
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[7].body.body[7].body.body[0].consequent.argument.consequent.value",
+        "type": "StringLiteral",
+        "local": "Example State 207"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[7].body.body[9].body.body[4].test.right.right.value",
+        "type": "StringLiteral",
+        "local": "Example State 350"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "8d7cdbba82b1b59c8062d8db8a2d0ae8b3d801cfcd6cc2c7a2f09b12453152f9"
+  },
+  {
+    "path": "api/ym-member-search-lib.js",
+    "counts": {
+      "string": 1
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[8].body.body[0].consequent.argument.consequent.value",
+        "type": "StringLiteral",
+        "local": "Example State 207"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "4ecf7b44cd6fd68f6f13928eb2f41a6d30f700a5882b819ed4a4302422efc970"
+  },
+  {
+    "path": "api/ym-ops-alias-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "41a12c2587d0eb0318d4186476485ca96f5510a9f67c9d8abcfe02d67e8d5dad"
+  },
+  {
+    "path": "api/ym-plan-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "1b01238b640fdfbcd2c952562daba982e821a8eed2c968a938ab52dd938ff75c"
+  },
+  {
+    "path": "api/ym-programs-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "21fd54001005f356e02a58c24e45d4f209b5dc13f95c9d9db7e3569f023425a4"
+  },
+  {
+    "path": "api/ym-plan-dev-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "6ba500250a8e31d7b22f8b92c870798d2c3b06b489a7b0f912e100f4e2875a87"
+  },
+  {
+    "path": "api/ym-records-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "27b66e2fb16c30d9e3b91045753e5d70b680de8e6353760172b2adcb45d4729c"
+  },
+  {
+    "path": "api/ym-ticketlink-field-lib.js",
+    "counts": {
+      "string": 1
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[12].body.body[7].expression.arguments[0].body.body[14].expression.arguments[3].properties[5].value.value",
+        "type": "StringLiteral",
+        "local": "Example Group 1"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "017b2d2b843143f70be29ee536003311652b886b964e97774fc7cd94d46efd5d"
+  },
+  {
+    "path": "api/ym-sales-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "50b1acba9de180025d5bad55ad7afce5fedcbe898ffe8b69e3a8d7332ede688a"
+  },
+  {
+    "path": "api/ym-views-lib.js",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "91ba5e0b514e305473d75a81620865ed9af758ab4ca03c95f777328a1a989c3e"
+  },
+  {
+    "path": "public/ym-auth-ui.js",
+    "counts": {
+      "string": 1
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.callee.body.body[29].expression.right.body.body[11].expression.right.value",
+        "type": "StringLiteral",
+        "local": "REQUIRES_LOCAL_CONFIGURATION"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "be99b312054ab28be55f826f2384c5f79f683aabfb9bc2c7e88363116c7cd5f5"
+  },
+  {
+    "path": "src/components/calendar/CalendarView.tsx",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "0a13159dceaba9409aab62f5e2c55cb0adcdf4cce813b9a84f15058a192520b0"
+  },
+  {
+    "path": "src/components/gate/PinGate.tsx",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "13374cc24d12403c0baf6cba02fbecf423c97c20edf19f25c62d013843d5aa59"
+  },
+  {
+    "path": "src/components/layout/YeulmaruNav.tsx",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "61a3f5fee8c4633f80516fe4fa5b8cc858a78e2b43bb334b0541a9ca4be37011"
+  },
+  {
+    "path": "src/components/performance/PerformanceView.tsx",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "2c0f7f836250274bca57dd1ded9194a2a908435f0db4c60f4b84ff913bb125ae"
+  },
+  {
+    "path": "src/components/performance/SalesDetail.tsx",
+    "counts": {},
+    "samples": [],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "5c0634e3bd07a368cf23079f40d92dd59c55ea43e336b7009bfbe5f205ea2e5a"
+  },
+  {
+    "path": "src/data/programs.ts",
+    "counts": {
+      "string": 31
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[0].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[1].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[2].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Parker 05068"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[3].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Cameron Foster 06326"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[4].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[5].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[6].elements[3].value",
+        "type": "StringLiteral",
+        "local": "Rowan Bennett 16295"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[6].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Jordan Hayes 05274"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[7].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[8].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[9].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[10].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[11].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[12].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Jordan Hayes 05274"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[13].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[14].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[15].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[16].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[17].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Jordan Hayes 05274"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[18].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[19].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[20].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[21].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[22].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Jordan Hayes 05274"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[23].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Jordan Hayes 05274"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[24].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[25].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Jordan Hayes 05274"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[26].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[27].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Avery Brooks 06336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[28].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Cameron Foster 06326"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[29].elements[8].value",
+        "type": "StringLiteral",
+        "local": "Taylor Brooks 05380"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "7cfd3c77e8263e212beb11cbbe79263557380bdc3885399098f9d2576b4c8886"
+  },
+  {
+    "path": "src/data/special.ts",
+    "counts": {
+      "string": 28
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[0].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[1].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[2].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[3].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[4].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[5].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[6].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[7].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Cameron Lane 09790"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[8].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[9].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[10].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[11].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[12].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[13].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[14].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[15].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[16].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[17].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[18].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[19].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[20].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[21].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Cameron Lane 09790"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[22].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Cameron Lane 09790"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[23].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Cameron Lane 09790"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[24].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[25].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Cameron Lane 09790"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[26].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[3].declarations[0].init.elements[27].elements[5].value",
+        "type": "StringLiteral",
+        "local": "Avery Reed 08336"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "3e697fdb53537ceae7bcd3b20011200669d4ef8a756ece201494666b8a3b6886"
+  },
+  {
+    "path": "src/App.tsx",
+    "counts": {
+      "string": 1
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[9].declarations[0].init.value",
+        "type": "StringLiteral",
+        "local": "REQUIRES_LOCAL_CONFIGURATION"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "f86561f20039cf8aff331f48696da9a6e01375f0b11597b000b4cbaecd426f48"
+  },
+  {
+    "path": "public/members.js",
+    "counts": {
+      "string": 212632
+    },
+    "samples": [
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[0].properties[0].value.value",
+        "type": "StringLiteral",
+        "local": "000-0003-0403"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[0].properties[1].value.value",
+        "type": "StringLiteral",
+        "local": "Rowan Reed 08919"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[0].properties[2].value.value",
+        "type": "StringLiteral",
+        "local": "Example State 001"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[0].properties[3].value.value",
+        "type": "StringLiteral",
+        "local": "Example City 001"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[0].properties[4].value.value",
+        "type": "StringLiteral",
+        "local": "Example District 001"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[0].properties[5].value.value",
+        "type": "StringLiteral",
+        "local": "101 Example Avenue, Unit 2"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[0].properties[6].value.value",
+        "type": "StringLiteral",
+        "local": "00001"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[1].properties[0].value.value",
+        "type": "StringLiteral",
+        "local": "000-0003-0404"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[1].properties[1].value.value",
+        "type": "StringLiteral",
+        "local": "Avery Hayes 08920"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[1].properties[2].value.value",
+        "type": "StringLiteral",
+        "local": "Example State 001"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[1].properties[3].value.value",
+        "type": "StringLiteral",
+        "local": "Example City 002"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[1].properties[4].value.value",
+        "type": "StringLiteral",
+        "local": "Example District 002"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[1].properties[5].value.value",
+        "type": "StringLiteral",
+        "local": "103 Example Avenue, Unit 4"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[1].properties[6].value.value",
+        "type": "StringLiteral",
+        "local": "00002"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[2].properties[0].value.value",
+        "type": "StringLiteral",
+        "local": "000-0003-0405"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[2].properties[1].value.value",
+        "type": "StringLiteral",
+        "local": "Rowan Foster 06263"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[2].properties[2].value.value",
+        "type": "StringLiteral",
+        "local": "Example State 001"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[2].properties[3].value.value",
+        "type": "StringLiteral",
+        "local": "Example City 003"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[2].properties[4].value.value",
+        "type": "StringLiteral",
+        "local": "Example District 003"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[2].properties[5].value.value",
+        "type": "StringLiteral",
+        "local": "105 Example Avenue, Unit 6"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[2].properties[6].value.value",
+        "type": "StringLiteral",
+        "local": "00003"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[3].properties[0].value.value",
+        "type": "StringLiteral",
+        "local": "000-0003-0406"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[3].properties[1].value.value",
+        "type": "StringLiteral",
+        "local": "Morgan Hayes 08921"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[3].properties[2].value.value",
+        "type": "StringLiteral",
+        "local": "Example State 001"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[3].properties[3].value.value",
+        "type": "StringLiteral",
+        "local": "Example City 001"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[3].properties[4].value.value",
+        "type": "StringLiteral",
+        "local": "Example District 004"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[3].properties[5].value.value",
+        "type": "StringLiteral",
+        "local": "107 Example Avenue, Unit 8"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[3].properties[6].value.value",
+        "type": "StringLiteral",
+        "local": "00004"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[4].properties[0].value.value",
+        "type": "StringLiteral",
+        "local": "000-0000-6693"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[4].properties[1].value.value",
+        "type": "StringLiteral",
+        "local": "Jordan Hayes 08922"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[4].properties[2].value.value",
+        "type": "StringLiteral",
+        "local": "Example State 001"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[4].properties[3].value.value",
+        "type": "StringLiteral",
+        "local": "Example City 004"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[4].properties[4].value.value",
+        "type": "StringLiteral",
+        "local": "Example District 005"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[4].properties[5].value.value",
+        "type": "StringLiteral",
+        "local": "109 Example Avenue, Unit 10"
+      },
+      {
+        "kind": "string",
+        "trail": ".program.body[0].expression.right.properties[1].value.elements[4].properties[6].value.value",
+        "type": "StringLiteral",
+        "local": "00005"
+      }
+    ],
+    "structurePreserved": true,
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "736bd1226dcfc6d0bc35ba3d75d7ef800366b8e282121df3fb5ee4b0c6c5052e"
+  },
+  {
+    "path": "public/standalone.html",
+    "styleCount": {
+      "source": 2,
+      "local": 2
+    },
+    "stylesIdentical": true,
+    "shellIdentical": true,
+    "scriptCount": {
+      "source": 28,
+      "local": 28
+    },
+    "scripts": [
+      {
+        "index": 0,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 1,
+        "attributesIdentical": true,
+        "identical": false,
+        "counts": {
+          "string": 1
+        },
+        "samples": [
+          {
+            "kind": "string",
+            "trail": ".program.body[0].expression.callee.body.body[3].expression.right.value",
+            "type": "StringLiteral",
+            "local": "contact0029932@example.invalid"
+          }
+        ],
+        "structurePreserved": true
+      },
+      {
+        "index": 2,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 3,
+        "attributesIdentical": true,
+        "identical": false
+      },
+      {
+        "index": 4,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 5,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 6,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 7,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 8,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 9,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 10,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 11,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 12,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 13,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 14,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 15,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 16,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 17,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 18,
+        "attributesIdentical": true,
+        "identical": false,
+        "counts": {
+          "string": 42
+        },
+        "samples": [
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[0].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9891"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[1].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9892"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[2].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9892"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[3].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9893"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[3].properties[5].value.value",
+            "type": "StringLiteral",
+            "local": "contact0030704@example.invalid"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[4].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9893"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[4].properties[5].value.value",
+            "type": "StringLiteral",
+            "local": "contact0030704@example.invalid"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[5].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9893"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[5].properties[5].value.value",
+            "type": "StringLiteral",
+            "local": "contact0030704@example.invalid"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[6].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9894"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[7].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9895"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[8].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9896"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[9].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9896"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[10].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9896"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[16].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9897"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[16].properties[5].value.value",
+            "type": "StringLiteral",
+            "local": "contact0030705@example.invalid"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[17].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9897"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[17].properties[5].value.value",
+            "type": "StringLiteral",
+            "local": "contact0030705@example.invalid"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[18].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "00000008032"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[19].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "00000008032"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[20].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "00000012185"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[21].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9898"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[22].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9898"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[32].declarations[0].init.elements[23].properties[4].value.value",
+            "type": "StringLiteral",
+            "local": "000-0004-9898"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[104].body.body[1].consequent.body[0].expression.right.value",
+            "type": "StringLiteral",
+            "local": "REQUIRES_LOCAL_CONFIGURATION"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[104].body.body[2].consequent.body[0].expression.right.value",
+            "type": "StringLiteral",
+            "local": "REQUIRES_LOCAL_CONFIGURATION"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[105].body.body[9].expression.right.value",
+            "type": "StringLiteral",
+            "local": "REQUIRES_LOCAL_CONFIGURATION"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[115].body.body[1].block.body[5].consequent.body[0].expression.right.value",
+            "type": "StringLiteral",
+            "local": "REQUIRES_LOCAL_CONFIGURATION"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[115].body.body[1].block.body[6].consequent.body[0].expression.right.value",
+            "type": "StringLiteral",
+            "local": "REQUIRES_LOCAL_CONFIGURATION"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[134].body.body[2].block.body[0].expression.right.value",
+            "type": "StringLiteral",
+            "local": "REQUIRES_LOCAL_CONFIGURATION"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[139].body.body[1].block.body[0].expression.right.value",
+            "type": "StringLiteral",
+            "local": "REQUIRES_LOCAL_CONFIGURATION"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[139].body.body[1].block.body[6].expression.arguments[1].value",
+            "type": "StringLiteral",
+            "local": "contact0030706@example.invalid"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1614].body.body[2].block.body[12].declarations[0].init.right.value",
+            "type": "StringLiteral",
+            "local": "Avery Reed 08336"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1628].body.body[4].consequent.body[0].expression.right.value",
+            "type": "StringLiteral",
+            "local": "REQUIRES_LOCAL_CONFIGURATION"
+          },
+          {
+            "kind": "string",
+            "trail": ".program.body[1851].body.body[6].expression.right.value",
+            "type": "StringLiteral",
+            "local": "<div><label>새 이메일<span class=\"req\">*</span></label><input id=\"er-email1\" type=\"email\" required placeholder=\"contact00307"
+          }
+        ],
+        "structurePreserved": true
+      },
+      {
+        "index": 19,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 20,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 21,
+        "attributesIdentical": true,
+        "identical": false,
+        "counts": {
+          "string": 1
+        },
+        "samples": [
+          {
+            "kind": "string",
+            "trail": ".program.body[0].expression.callee.body.body[3].expression.right.body.body[0].block.body[3].consequent.body[1].expression.right.value",
+            "type": "StringLiteral",
+            "local": "REQUIRES_LOCAL_CONFIGURATION"
+          }
+        ],
+        "structurePreserved": true
+      },
+      {
+        "index": 22,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 23,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 24,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 25,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 26,
+        "attributesIdentical": true,
+        "identical": true
+      },
+      {
+        "index": 27,
+        "attributesIdentical": true,
+        "identical": true
+      }
+    ],
+    "comparisonScope": "Historical MISO capture; reviewed final local delta is in audit-final-delta.json",
+    "finalLocalSha256": "c45921b346621603f611dec953153d52c7d5cae9c5703266e6b8640045a11e8d"
+  }
+]

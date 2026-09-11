@@ -1,0 +1,18 @@
+/*
+ * YeulmaruNav — 운영자 1679px 실측값 원문 그대로 이식
+ * 출처: 정본 260730 검수판
+ * 변경 금지 — 값·선택자 그대로. 한 줄도 수정하지 말 것.
+ */
+
+/* 원본 원문 §1 ── 마크업 마운팅용: month-nav 신규 클래스(정본 div["month-nav nav-mnav"]) */
+.month-nav{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+/* 원본 원문 §3 ── 대시보드(non-cal) 뷰에서만 월 피커 흐림 + 비활성 */
+#app.biz-mode .nav-mnav{
+  opacity:.82;
+  pointer-events:none;
+}

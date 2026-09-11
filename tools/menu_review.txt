@@ -1,0 +1,241 @@
+10411:   }catch(e){ showToast('저장 실패: '+(e.message||e),'error'); }
+10412:   finally{ _finIn.busy=0; hideOverlayLoad(); }
+10413: }
+10414: function _bizInlineRender(){
+10415:   var el=document.getElementById('biz-main'); if(!el)return;
+10416:   if(typeof _mainView==='undefined'||_mainView!=='biz')return;
+10417:   try{ el.dataset.face=(typeof _bizDeck!=='undefined'&&_bizDeck==='ov')?'ov':'sales'; }catch(_e){}   /* [260901 버그수정 v2] 면 도장 — 덱 캐시 오염 판별 기준 */
+10418:   // [260812 2차] 사업 개요 덱 = 책 구조를 안 탄다(위 절 참조) — 여기서 곧장 그리고 끝낸다.
+10419:   if(typeof _bizDeck!=='undefined'&&_bizDeck==='ov'){
+10420:     try{if(window.Plotly)['#bizm-chart','#bizm-ex-chart','#bizm-edu-chart','#bizm-genre','#bizm-season','#yrm-chart'].forEach(function(s){var n=el.querySelector(s); if(n)Plotly.purge(n);});}catch(_e){}   // 판매 현황 덱에서 넘어온 차트 정리(리스너·옵저버 누수 차단 — 아래 본 경로와 같은 규약)
+10421:     _bizmState.leftId='ov';
+10422:     try{ _bizOvRender(el); }catch(_e){ console.warn('[사업 개요]',_e); }
+10423:      setTimeout(function(){try{_srailAlignTop();}catch(_e2){}},0);
+10424:     return;
+10425:   }
+10426:   if(typeof _bizDeck!=='undefined'&&_bizDeck==='sales'){
+10427:      if(_salesLeftTrend){ try{_salesMonthRender(el);}catch(_e){console.warn('[sales month]',_e);} return; }   /* [WA71-v1] 연도 모드 = 월별 3단(A/B/C) */
+10428:     try{if(window.Plotly)['#bizm-chart','#bizm-ex-chart','#bizm-edu-chart','#bizm-genre','#bizm-season','#yrm-chart'].forEach(function(s){var n=el.querySelector(s); if(n)Plotly.purge(n);});}catch(_e){}
+10429:     _bizmState.leftId=_bizLeftId();
+10430:      _bizmSwap(el,'<div style="position:relative">'+_bizmHead('<span style="display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap">'+_ryYearTrigger()+_programLegend()+'</span>','연간 실적',' ')+_BIZM_BOX+'<div id="yrm-body"></div></div>');
+10431:     _yrmRender();
+10432:     return;
+10433:   }
+10434:    setTimeout(function(){try{_srailAlignTop();}catch(_e){}},0);   // [260723 운영자] 좌 보드 렌더(innerHTML 반영) 후 우 판매현황 레일 높이 재캡 = 세로변 동일
+10435:   try{if(window.Plotly)['#bizm-chart','#bizm-ex-chart','#bizm-edu-chart','#bizm-genre','#bizm-season','#yrm-chart'].forEach(function(s){var n=el.querySelector(s); if(n)Plotly.purge(n);});}catch(_e){}   // [260723 평의회4] innerHTML 파기 전 purge — 리스너·옵저버 누수 차단 · [260801 5차] 좌 열(el) 안으로 한정 = 짝 면에서 우 열이 들고 있는 차트 오폭 방지
+10436:   // [260801 4차→5차] 책 4면 — 좌 열이 그리는 면 = 현재 면 그대로(넓은 화면에서 고정면 2만 좌 열이 안 그린다 · _bizLeftPage)
+10437:   var page=_bizLeftPage();
+10438:   _bizmState.leftId=_bizLeftId();   // [260808] 좌 열 신원 도장 — 우 열(_railYrmRender의 rightId)과 대칭. 여기서 찍으므로 **강제 재렌더 경로**(필터·연도 토글·모드 복귀·데이터 도착)도 신원이 자동으로 최신이 된다
+10439:   var _pgTag='';   // [260723 운영자] 페이지 인디케이터 알약(1/2) 제거 — 하단 _bizmDots(‹ • • ›)로 일원화(헤더 우측 오버플로·중복 표기 해소). page 변수는 아래 분기에서 계속 사용
+10440:   if(page===2){   // [260731 4차] 좁은 화면 전용 — 판매 실적 면(우 레일 틀을 좌 보드가 대신 그림 · 데이터 = 레일 6시트 공유)
+10441:     try{ var _uhaN=document.getElementById('srail-uha'), _railN=document.getElementById('sales-rail'); if(_uhaN&&_railN&&!_railN.contains(_uhaN))_railN.appendChild(_uhaN); }catch(_e){}
+10442:     try{ var _ryN=document.getElementById('rail-yrm'); if(_ryN)_ryN.innerHTML=''; }catch(_e){}   // #rail-yrm-list ID 유일성 — 숨은 레일 쪽 잔존 DOM 비움(uha는 위에서 대피)
+10443:     _bizmSwap(el,_railYrmFrame()+_bizmDots()+_bizmPageNav());   // [260802] 프레임 유지·안쪽만 교체(번쩍임 제거)
+10444:     if(!(_salesState&&_salesState.daily&&_salesState.master&&_salesState.ops)){ if(typeof _srailInit==='function')_srailInit(false,null,true); }   // allowNarrow = 좁은 화면 6시트 확보(§_srailInit)
+10445:     else if(typeof _srailRender==='function'){ try{_srailRender();}catch(_e){console.warn('[book p2]',_e);} }
+10446:     return;
+10447:   }
+10448:   if(page===4){   // [260801 5차] 고객 분석 면(admin, 비admin은 _bizBookN=3이라 진입 불가) · [260809] 좌 열이 그리는 건 **좁은 화면**뿐 — 넓은 화면에선 우 열이 들고 있다(_bizPageIsRight)
+10449:     try{ var _ryM=document.getElementById('rail-yrm'); if(_ryM&&_ryM.querySelector('#mem-ov-inline'))_ryM.innerHTML=''; }catch(_e){}   // [260809] #mem-ov-inline ID 유일성 — 넓→좁 전환이 한 번에 튀어 `_railYrmClear`가 못 돈 경우(리사이즈 이벤트 삼킴) 숨은 레일에 남은 같은 면을 비운다. 좁은 화면 2면이 쓰던 같은 방어(위 `_ryN.innerHTML=''`)와 한 규약
+10450:     _bizmSwap(el,'<div style="position:relative">'+_bizPageMemberHtml()+_bizmDots()+_bizmPageNav()+'</div>');   // [260802] 프레임 유지·안쪽만 교체
+10451:     _bizMemberEnsure();
+10452:     return;
+10453:   }
+10454:   if(page===1){
+10455:     // [260723g 운영자 시안] 누적 총 = 헤더 우측(히어로 박스 폐지) · 부제 = 기간 · 본문 = 컴팩트(_yrmRender)
+10456:     _bizmSwap(el,'<div style="position:relative">'
+10457:       +_bizmHead(_ryYearTrigger()+_pgTag,'연간 실적',' ')   /* [260805-39 운영자 「b go」] 구 ' 2012~2026 상반기(잠정)' — 잠정 여부는 말했지만 **자(尺)가 다른 것**은 못 말했다. · [260807] 자가 같아져 '(발권유료)' 딱지 폐지 — 공연대장 유료+초대 = 다른 해와 같은 기준(무료 포함). */
+10458:        +_BIZM_BOX+'<div id="yrm-body"></div>'+'</div>'+(_bizmState.annual?'':_bizmDots())
+10459:       +_bizmPageNav()+'</div>');   // [260802] 프레임 유지·안쪽만 교체
+10460:     _yrmRender();
+10461:     return;
+10462:   }
+10463:   _bizCompRender(el,_bizBookWide()?2:0);   // [v154] 넓은 화면은 좌측에 판매현황 상세를 두고 우측에 프로그램 별 판매 추이를 둔다. 좁은 화면은 기존 한 열 전체.
+10464: }
+10465: var _bizPerfModal={root:null,body:null,main:null,parent:null,next:null,wasFit:false};
+10466: function closeBusinessPerformanceBoard(){
+10467:   var st=_bizPerfModal;
+10468:   if(st.root&&st.root.parentNode)st.root.parentNode.removeChild(st.root);
+10469:   if(st.main&&st.parent){
+10470:     if(st.next&&st.next.parentNode===st.parent)st.parent.insertBefore(st.main,st.next);
+10471:     else st.parent.appendChild(st.main);
+10472:   }
+10473:   var app=document.getElementById('app');
+10474:   if(app){if(st.wasFit)app.classList.add('biz-fit');else app.classList.remove('biz-fit');}
+10475:   _bizPerfModal={root:null,body:null,main:null,parent:null,next:null,wasFit:false};
+10476:   setTimeout(function(){try{_srailAlignTop();}catch(e){} try{_bizFitViewport();}catch(e){}},0);
+10477: }
+10478: function _bizPerfModalRender(){
+10479:   if(_bizPerfModal.body) _bizOvRender(_bizPerfModal.body);
+10480: }
+10481: function openBusinessPerformanceBoard(){
+10482:   var preApp=document.getElementById('app'),wasFit=!!(preApp&&preApp.classList.contains('biz-fit'));
+10483:   closeBusinessPerformanceBoard();
+10484:   var main=document.getElementById('biz-main'),parent=main&&main.parentNode,next=main&&main.nextSibling;
+10485:   if(main&&parent)parent.removeChild(main);
+10486:   var root=document.createElement('div');root.id='biz-performance-board';
+10487:   root.innerHTML='<div class="modal-bg show" onclick="if(event.target===this)closeBusinessPerformanceBoard()"><div class="modal" style="width:96vw;max-width:1280px;height:92vh;max-height:92vh;--mpad-y:0;--mpad-x:0;position:relative;display:flex;flex-direction:column;overflow:hidden">'
+10488:     +'<button class="modal-x" onclick="closeBusinessPerformanceBoard()" title="닫기" aria-label="닫기">✕</button>'
+10489:     +_mhead('사업 실적','사업 현황 · 2012~2026')
+10490:     +'<div id="biz-performance-body" style="flex:1;overflow:auto;padding:20px 24px;min-width:0"></div></div></div>';
+10491:   document.body.appendChild(root);
+10492:   _bizPerfModal={root:root,body:document.getElementById('biz-performance-body'),main:main,parent:parent,next:next,wasFit:wasFit};
+10493:   _bizPerfModalRender();
+10494: }
+10495: // [260801 운영자] 3면 「사업 결과 비교」 렌더러 — 한 열에 다 넣기엔 많아 짝 면(3-1/3-2)으로 자른 면.
+10496: //   half 0 = 전부(좁은 화면 = 한 열에 위아래로) · 1 = 3-1(좌: 필터·KPI 3칸·월×점유율 분포) · 2 = 3-2(우: 장르 벤치마크·시즌 추세·공연 목록 표).
+10497: //   자른 건 담는 자리뿐 — 카드·값·집계·차트는 종전 그대로(신규 부품·색·값 0). 하단 점줄 바는 좌 열에만(박스 밖 바 1개 유지).
+10498: // ── [260803 운영자 선택값] 3면 판매현황 축 보조 부품 3종 — 값 계산·표기 전용(신규 색·토큰·컴포넌트 0) ──────────
+10499: // 판매 축 조인 인덱스 = _salesBuild(레일 정본 집계) 산출을 이름 정규화 키로 뒤집은 것. 6시트 미로드(좁은 화면·부팅 중)면 null.
+10500: //   ⚠ 여기서 새로 집계하지 않는다 — 판매 수치 SSOT는 _salesBuild 하나(쌍둥이 집계 = 값 드리프트 · 위 gmap 경고와 같은 축).
+10501: //   [260804] year 인자 = **재연 오매칭 방어**(정본 `_opsLookup`의 ±1년 가드와 같은 축). 이름만으로 붙이면 연도 성분이 없는
+10502: //     상시 시리즈(브런치 콘서트 Ⅲ·호두까기 인형·헬로!오페라 등)의 올해 매출·「판매중」 상태가 지난해 막대에 그대로 붙는다(평의회6).
+10503: function _bizSalesIdx(year){
+10504:   try{
+10505:     if(typeof _salesState==='undefined'||!_salesState||!_salesState.daily||!_salesState.master)return null;
+10506:     var idx={};
+10507:     _salesBuild().forEach(function(p){
+10508:       var k=_uName(p.name||''); if(!k||idx[k])return;
+10509:       if(year){ var d=p.endDate||p.startDate; if(d&&d.getFullYear&&d.getFullYear()!==year)return; }
+10510:       idx[k]=p;
+10511:     });
+10512:     return idx;
+10513:   }catch(_e){ console.warn('[biz sales idx]',_e); return null; }
+10514: }
+10515: // ── [260808-2 운영자 「지금 판매중인 공연이 **예상 판매율**을 그라데이션으로 표현하자는 거였는데」 ────────
+10516: //   + 「각 판매 공연 누르면 **예상으로 몇 개 팔립니다** 뜨는 게 있어 · 그거대로 해주면 될 듯」]
+10517: //   기틀 §2 #18이 「미완 = 2단 표기(팔린 만큼 실선 + 예상 만큼 페이드)」로 남겨 둔 **그 원천**이 여기다.
+10518: //   운영자가 지목한 「그거」 = 레일 카드 하단 「AI 예상」 문구(`_srailCard`)·카드 차트 종료 예상점(`_srailTrend`)이
+10519: //   쓰는 엔진 — **새 예측식 창작 0**, 그 식을 그대로 부른다:
+10520: //     예상 최종석 = 지금 판 좌석 + 일평균 판매속도(`fcRate` · 「예측제외」 체크일이 빠진 그 값) × 판매 종료일까지 남은 날
+10521: //                  · 총오픈석 상한(= 카드 예측의 `CAP=100%` 클램프와 같은 자리)
+10522: //   ⚠ 게이트도 그대로 옮긴다 — 하나라도 못 넘기면 **예측 없음(null) = 아무것도 안 그린다**(= 종전 실막대 그대로):
+10523: //     ① 판매중(active)·집계 전 아님 ② 실측 `_SRAIL_FC_MIN`(7)건 이상 ③ 판매 종료일까지 3일 이상
+10524: //     ④ 종료일이 오늘 이후(스테일 종료일 방어 — `_srailTrend`의 `endD>=_tdy`와 같은 축) ⑤ 예상이 현재보다 커야 한다
+10525: //     (속도 0·전 구간 예측제외 = 늘 자리가 없다 → 페이드도 없다).
+10526: //   ⚠ 기준일 = **마지막 실측일**(`days` 끝점)이지 오늘이 아니다 — 카드 종료 예상점(`kEnd`)이 그 자를 쓴다.
+10527: function _bizFcSeat(p){
+10528:   if(!p||p.status!=='active'||p.noData)return null;
+10529:   var tot=p.totalOpen||0, cur=p.seats||0;
+10530:   if(!(tot>0)||p.fcRate==null||!isFinite(p.fcRate))return null;
+10531:   var days=(p.days||[]).filter(function(d){ return d&&d.seat!=null&&!isNaN(d.seat); });
+10532:   if(days.length<_SRAIL_FC_MIN)return null;
+10533:   var ld=_salesDate(String(days[days.length-1].bd)), ed=p.endDate;
+10534:   var t=new Date(); t.setHours(0,0,0,0);
+10535:   if(!ld||!ed||!ed.getTime||ed<t)return null;
+10536:   var k=Math.round((ed-ld)/86400000); if(!(k>=3))return null;
+10537:   var fc=Math.min(tot,Math.round(cur+p.fcRate*k));
+10538:   return (fc>cur)?fc:null;
+10539: }
+10540: // 금액 표기 — KPI·표·툴팁 공용. 자릿수만 다루는 순수 표기 함수.
+10541: // [260805 운영자 「억 > 만원으로 통일」] 구판은 1억 경계에서 '4.86억' ↔ '3,828만'으로 단위가 갈려 같은 열의 두 값을
+10542: //   눈으로 비교할 수 없었다(억 = 소수 2자리 · 만 = 정수 천단위). → **만 하나로 고정**(1억 = 10,000만).
+10543: //   bare = 단위 글자 없이 숫자만 — 열 머리글이 「(단위: 만원)」을 이미 말하는 표 칸용(KPI·툴팁은 머리글이 없어 '만'을 달고 쓴다).
+10544: function _bizMoney(v,bare){
+10545:   if(v==null||!isFinite(v))return '—';
+10546:   return Math.round(v/1e4).toLocaleString()+(bare?'':'만');
+10547: }
+10548: // ── [260807 운영자] 판매현황 상세 「일시」 표기 — 0 없는 M/D · 요일 없음 · 범위는 '-' ──────────────
+10549: //   지시: *"1/24-25 이렇게 갈게 (요일은 뺄게)"* · *"12/24-25"* · *"월이 넘어가는 케이스가 있을때는. 12/24-1/3"*.
+10550: //   = 같은 달이면 뒤쪽 월을 생략(일만 잇는다) · 달이 바뀌면 양쪽 다 적는다. 구 표기(`01.24(토)~01.25(일)` 19자)
+10551: //     대비 절반 이하로 줄어든 폭은 그대로 공연명 칸이 가져간다(운영자 「확보된 만큼 공연명을 좌측으로」).
+10552: //   ⚠ **앞자리 맞춤은 철회했다 — 그냥 좌측 정렬**(운영자 260807-3 「일시 그냥 좌측정렬할게」).
+10553: //     구판은 맨 앞 월을 `min-width:2ch;text-align:right` 상자에 담아 한 자리 월을 한 칸 들여썼다
+10554: //     (=「앞에 0이 있다고 가정」 · 첫 `/` 편차 0.02px). 실물을 본 운영자 판단으로 **한 자리 월이 들여써지는 것보다
+10555: //     전 행 왼쪽 끝이 한 줄로 서는 쪽**을 택한다 → 상자 제거, 잉크 그대로 왼쪽 정렬.
+10556: //     되살리려면 앞 월을 `<span style="display:inline-block;min-width:2ch;text-align:right">`로 감싸면 된다.
+10557: function _bizMD(d){ return (d.getMonth()+1)+'/'+d.getDate(); }
+10558: function _bizDateCell(s,e,single){ /* [WA81-v1] 판매현황 일시 표기 = 사업현황 일자와 동일(MM/DD · MM/DD-MM/DD, 0 채움) — 운영자 260825 「판매현황 일자 정렬 > 사업현황처럼」 */
+10559:   var p2=function(n){return (n<10?'0':'')+n;};
+10560:   var f=function(d){return p2(d.getMonth()+1)+'/'+p2(d.getDate());};
+10561:   if(single)return f(e);
+10562:   return f(s)+'-'+f(e);
+10563: }
+10564: // ── [260807 운영자] 공연명 앞 대/소 원형 배지 = 「어느 극장인가」 ────────────────────────────────
+10565: //   '대'·'소' 한 글자 표기 = 이 레포 정본 축약(_GC_PLACE 「대→대극장 · 소→소극장」) 그대로.
+10566: //   소스 사다리 — **아는 것과 미루어 아는 것을 구분해서** 단다(지침 [2] 「추측 금지 · 못 확인하면 미확인」):
+10567: //     ① 프로그램 시트 장소(PERFS.l) = 사람이 적어 둔 값 → **확정**(장르 사다리 _pgRow.g2와 같은 우선 규약)
+10568: //     ② 없으면 운영대장 **회차당 기본좌석**(총오픈석÷회차) → **추정**. 운영대장엔 장소 열이 아예 없어 이게 유일한 단서다.
+10569: //        실측 분포(운영대장 2,188행): 216~306 무리(302가 486행으로 최빈 = 소극장 정원)와 400~1021 무리가
+10570: //        **307~399 빈 구간을 사이에 두고** 갈린다 → 경계 350 = 그 빈 구간 한가운데(한 데이터 값에 붙인 임계가 아니다).
+10571: //        ⚠ 이 임계의 **정본은 아직 없다** — 프로그램 시트와 조인되는 4건은 전부 대극장이라 소 가지는 미검증이다.
+10572: //        그래서 추정분은 배지 툴팁이 「추정 · 회차당 N석」이라고 **스스로 밝힌다**(화면이 사실로 우기지 않게).
+10573: //     ③ 좌석이 없거나 실측 최대 극장값(1021)을 넘으면(야외 1,300~12,000) **배지 없음** — 두 극장 중 하나라고
+10574: //        말할 근거가 없는 자리에 배지를 달지 않는다.
+10575: var _BIZ_HALL_SMALL_MAX=350, _BIZ_HALL_BIG_MAX=1021, _bizHallIdx=null, _bizHallIdxSrc=null;
+10576: // 정규화 이름 → [{장소, 연도}] 인덱스. **PERFS 배열이 통째로 갈릴 때만** 다시 만든다(loadPrograms가 새 배열을 대입).
+10577: //   행마다 PERFS를 훑으면 O(행수×PERFS)라 시트가 자라면 렌더가 늘어진다(PERFS 300 = 렌더당 52.8ms 실측) —
+10578: //   같은 레포 _bizSalesIdx와 같은 규약으로 한 번만 만들고 재사용한다.
+10579: function _bizHallMap(){
+10580:   var P=(typeof PERFS!=='undefined'&&PERFS)?PERFS:null;
+10581:   if(!P||!P.length)return null;
+10582:   if(_bizHallIdx&&_bizHallIdxSrc===P)return _bizHallIdx;
+10583:   var m={};
+10584:   P.forEach(function(p){
+10585:     if(!p||p.t!=='c'||!p.l)return;
+10586:     var d=_salesDate(p.s), y=(d&&d.getFullYear)?d.getFullYear():null;
+10587:     [p.f,p.n].forEach(function(nm){ var k=_uName(nm||''); if(!k)return; (m[k]=m[k]||[]).push({l:String(p.l),y:y}); });
+10588:   });
+10589:   _bizHallIdx=m; _bizHallIdxSrc=P; return m;
+10590: }
+10591: function _bizHallOf(g){
+10592:   try{
+10593:     // ⚠ 프로그램 시트가 아직 안 왔으면 **추정 배지도 그리지 않는다**(빈 자리만 유지).
+10594:     //   그리면 시트 도착 뒤 좌석 추정이 시트 장소로 뒤집혀 **글자가 대↔소로 바뀌는 게 눈에 보인다**(실측).
+10595:     //   「없다가 생긴다」는 정상 로딩으로 읽히지만 「틀렸다가 고쳐진다」는 화면이 거짓말을 한 것이다.
+10596:     if(typeof _perfReady!=='undefined'&&!_perfReady)return null;
+10597:     var m=_bizHallMap(), un=_uName(g&&g.name||'');
+10598:     var hit=(m&&un)?m[un]:null;
+10599:     if(hit&&hit.length){
+10600:       // ⚠ **연도 가드** — 시리즈물(브런치 콘서트 Ⅰ~Ⅳ·헬로!오페라·호두까기 인형)은 해마다 같은 이름으로 돌아온다.
+10601:       //   가드가 없으면 다른 해 편성의 장소를 이 해 행에 **확정으로** 달아 버린다(추정과 달리 자기 고지가 없어 최악).
+10602:       //   같은 레포 _bizSalesIdx의 「재연 오매칭 방어」와 같은 축. 연도를 모르는 쪽은 통과시킨다(정보 없음 ≠ 불일치).
+10603:       var gy=(g&&g.end&&g.end.getFullYear)?g.end.getFullYear():null, c=null, i;
+10604:       for(i=0;i<hit.length;i++){ if(gy==null||hit[i].y==null||hit[i].y===gy){ c=hit[i]; break; } }
+10605:       if(c){
+10606:         var big=c.l.indexOf('대극장')>=0, sml=c.l.indexOf('소극장')>=0;
+10607:         // 시트가 「대극장도 소극장도 아니다」라고 말하면(7층 전시실·야외 등) 그 말을 믿고 **배지를 안 단다** —
+10608:         //   정본이 있는데 좌석으로 되짚는 건 정본을 무시하는 것이다. 둘 다 적힌 병기도 판정 불가로 본다.
+10609:         return (big&&!sml)?{h:'대',est:0,per:0}:((sml&&!big)?{h:'소',est:0,per:0}:null);
+10610:       }
+10611:     }
+10612:   }catch(_e){}
+10613:   /* [WA89-v1] ② DB(programs.json 장소 — 이름+연도 색인, 별칭 포함) → 확정. 야외(광장·데크·옥외·잔디·야외공연장)·이름이 야외콘서트/예울마루 위크/파크 콘서트면 '야'(연회색). 운영자 260826 「대·소 말고 야」 */
+10614:   try{ var _nm=String(g&&g.name||''); var _ix=(typeof _pmUnIdx==='function')?_pmUnIdx():null; var _gy=(g&&g.end&&g.end.getFullYear)?g.end.getFullYear():null; var _pm=(_ix&&_gy!=null)?(_ix[_uName(_nm)+'|'+_gy]||null):null; var _L=_pm?String(_pm.장소||''):''; var _bg=_L.indexOf('대극장')>=0, _sm=_L.indexOf('소극장')>=0; var _od=(/야외|광장|데크|옥외|잔디|테라스|바닥 ?분수/.test(_L)) /* [260905 장소통일] */||(/야외\s*콘서트|예울마루\s*위크|파크\s*콘서트/.test(_nm)); if(_od&&!_bg&&!_sm)return {h:'야',est:0,per:0,out:1}; if(_bg&&!_sm)return {h:'대',est:0,per:0}; if(_sm&&!_bg)return {h:'소',est:0,per:0}; }catch(_e2){}
+10615:   var per=(g&&g.cnt>0&&g.seat>0)?Math.round(g.seat/g.cnt):0;
+10616:   if(!per||per>_BIZ_HALL_BIG_MAX)return null;
+10617:   return {h:(per<=_BIZ_HALL_SMALL_MAX)?'소':'대',est:1,per:per};
+10618: }
+10619: // 형태 = **`_batchBadge`(~L16293) 자구 그대로 계승** — 16px 원 · 9px/700 · 이름과 5px · 표 셀 안 · 말줄임 제목 앞.
+10620: //   조건이 같은 자리(그쪽 본문 12.5px · 여기 13px)라 크기를 새로 잡을 이유가 없다 = **값 변경 0**.
+10621: //   (그 배지도 캘린더 셀 배지 ~L3318에서 온 것 — 같은 계보의 표 셀판이다.)
+10622: //   ⚠ **대·소가 같은 음영**(운영자 260807-3 「소극장도 같은 음영 동그라미 써줘」) —
+10623: //     `--accent-light` 채움 + `--accent` 글자 한 벌(**4.96:1** · WCAG AA 통과 · 팔레트 밖 색 0).
+11641: function _bizmAnnualTrigger(){
+11642:   var on=!!_bizmState.annual;
+11643:   return '<button type="button" class="ry-live-tg" role="switch" aria-checked="'+(on?'true':'false')+'" onclick="_bizmAnnualToggle()" title="'+(on?'연간 실적을 보는 중 — 눌러서 사업 결과 비교로':'사업 결과 비교를 보는 중 — 눌러서 연간 실적으로')+'">'+(on?'사업 결과 비교':'연간')+'</button>';
+11644: }
+11645: // 「전체 ↔ 판매중」 글자 토글 — 라벨이 **지금 보고 있는 상태**를 말한다(운영자 「전체 > 판매중 > 전체…」).
+31713:   var itemCss='display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:0;text-align:left;font-size:13px;font-weight:600;color:var(--text);border-radius:9px;cursor:pointer;font-family:inherit;transition:background .12s';
+31714:   menu.innerHTML='<div style="padding:8px 14px 6px;font-size:11px;color:var(--dim);font-weight:700">판매 현황</div>'
+31715:      +'<button type="button" onclick="_ddCloseAll();openYearBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'"><span style="flex:1">연간 실적</span></button>'
+31716:      +(false?'<button type="button" onclick="_ddCloseAll();openBusinessBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">사업 결과 비교</button>':'')
+31717:      +(false?'<button type="button" onclick="_ddCloseAll();openSalesBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">판매 실적</button>':'')
+31718:       +(userRole==='admin'?'<div style="height:1px;background:var(--border);margin:6px 10px"></div><button type="button" onclick="_ddCloseAll();openDailyInput()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'"><span style="flex:1">실적 입력</span></button>':'');
+31719: }
+31720: function _bizMenuBuild(menu){
+31722:   // 사업 현황 세부 — 연간 실적 + 사업 실적 입력. 기존 항목은 조건부 숨김으로 유지해 복구 가능.
+31723:    menu.innerHTML='<div style="padding:8px 14px 6px;font-size:11px;color:var(--dim);font-weight:700">대시보드</div>'
+31724:        +'<button type="button" onclick="_ddCloseAll();openBusinessPerformanceBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'"><span style="flex:1">연간 실적</span></button>'
+31725:      +(false?'<button type="button" onclick="_ddCloseAll();openSalesBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">판매 실적</button>':'')
+31726:      +(false?'<button type="button" onclick="_ddCloseAll();openAnalyticsBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">실적 조회</button>':'')
+31731:      +(false&&userRole==='admin'?'<button type="button" onclick="_ddCloseAll();openMemberOverview()" title="거주지·연령·전국 분포 요약 (회원 조회는 여기서 진입)" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\';_memWarm()" onmouseleave="this.style.background=\'none\'">고객 분석</button>':'')
+31732:      +'<div style="height:1px;background:var(--border);margin:6px 10px"></div>'
+31733:       +'<button type="button" onclick="_ddCloseAll();openBizFinInput()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'"><span style="flex:1">실적 입력</span></button>';
+31734: }
+31735: // [260805 운영자 2차·3차] 콘텐츠 제작 = SNS / Edit / Utility 3구획.
+33589:      +(false?'<button type="button" onclick="_ddCloseAll();openTicketReg()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">상품 등록·변경</button>':'')   // [260731 운영자] 구 '상품 등록·변경' 대메뉴 → 판매 현황 세부 1번
+33590:      +(false?'<button type="button" onclick="_ddCloseAll();openAnalyticsBoard()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">실적 조회</button>':'')
+33591:     +(userRole==='admin'?'<button type="button" onclick="_ddCloseAll();openDailyInput()" style="'+itemCss+';background:rgba(74,77,231,0.06)" onmouseenter="this.style.background=\'rgba(74,77,231,0.12)\'" onmouseleave="this.style.background=\'rgba(74,77,231,0.06)\'"><span style="flex:1">실적 입력</span></button>':'');   // 구 '일일 실적 입력'(관리자) · [260731 3차] 구 '실적 분석'(openBusinessBoard)은 「사업 결과 비교」로 개명해 대시보드로 이동
+33592: }
+33593: // === [260710] 회원 조회 — 통합문서 '운영_회원' 시트 read-only (admin 전용 — Worker도 동일 게이트 강제) ===

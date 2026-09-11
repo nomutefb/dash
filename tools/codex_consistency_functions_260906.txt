@@ -1,0 +1,326 @@
+SOURCE api
+async function api(method,path,body){
+  if(window._QA)return _qaApi(method,path,body);   // [QA] 실네트워크 차단 — 목데이터만(실API·실데이터 미접촉)
+  // [로그인 프리로드] 같은 경로 GET의 선행 응답을 1회 재사용(신선할 때만) — 만료·실패는 아래 정상 fetch 폴백(회귀 0)
+  if(method==='GET'&&_plJobs[path]){
+    var _pl=_plJobs[path]; delete _plJobs[path];   // 1회 소비 — 이후 같은 경로(수동 새로고침·syncReload)는 항상 네트워크
+    // [평의회1] records↔lastmod 에폭 짝 — lastmod 프리로드가 이미 죽어 있으면(실패·만료) records 워밍도 버리고 둘 다
+    //   지금 네트워크로 정렬(화면=t0·배지 기준선=t1로 갈라지는 사각 차단). 미착(pending)은 h2 같은 연결이라 비대칭 스톨이
+    //   사실상 없고(전환·슬립은 둘 다 죽어 둘 다 폴백 = 정렬), 정상 도착분은 _refreshSeenMod의 .v 경로가 t0 값을 쓴다.
+    if(path==='/api/records'){ try{ var _lm=_plJobs['/api/lastmod']; if(_lm&&(_lm.err||(Date.now()-_lm.t)>=_PL_TTL))_pl=null; }catch(_e){} }
+    if(_pl&&(Date.now()-_pl.t)<_PL_TTL){
+      // [평의회5] 스톨 방어 — 죽은-pending 소켓(잠금 방치 중 네트워크 전환·슬립 복귀)은 TTL 검사로 못 끊는다 →
+      //   8초 안에 안 오면 버리고 아래 정상 fetch(오늘의 경로)로. 최악 추가 대기 8초 상한(구: 소켓 포기까지 수 분 무표시).
+      //   타임아웃은 reject가 아니라 센티널 resolve — 패배한 타이머가 나중에 터져도 unhandledrejection(관리자 오류 토스트) 0.
+      try{ var _plto={}; var _plgot=await Promise.race([_pl.p,new Promise(function(rs){setTimeout(rs,8000,_plto);})]); if(_plgot!==_plto) return _plgot; }
+      catch(_e){}   // 프리로드 실패 = 아래 정상 fetch 폴백
+    }
+  }
+  // [260905 통합⑱] 같은 GET 이 이미 날아가는 중이면 그 응답을 복사해 쓴다(부팅 때 일일실적·판매설정 3번씩 겹치던 낭비 제거). 실패하면 아래 정상 fetch.
+  if(method==='GET'){ var _bp=path.replace(/[?&]fresh=1$/,''); var _inf=_apiInflight[path]||((_bp!==path&&_apiInflight[_bp]&&_apiInflight[_bp].w===_apiWriteSeq)?_apiInflight[_bp]:null);   // [⑱-2] fresh=1 도 그 사이 쓰기가 없었으면 합친다
+    if(_inf){ try{ var _shv=await _inf.p; return _apiClone(_shv); }catch(_e){} } }
+  const headers={'Content-Type':'application/json','X-App-Password':password};
+  // 서브 admin: 본인 PIN을 헤더에 동봉 (Worker가 검증해 admin 권한 부여)
+  const subPin=sessionStorage.getItem('subAdminPin');
+  if(subPin)headers['X-Sub-Admin-PIN']=subPin;
+  // [260812] 회계 담당자: 같은 문법으로 본인 PIN 동봉 — Worker가 담당자 시트 `회계여부`로 재검증해
+  //   **운영_사업비 쓰기만** 열어준다(다른 시트·다른 경로는 종전 admin 게이트 그대로).
+  const acctPin=sessionStorage.getItem('acctPin');
+  if(acctPin)headers['X-Acct-PIN']=acctPin; try{var _yu=sessionStorage.getItem('myApplicant')||'';if(_yu)headers['X-Ym-User']=encodeURIComponent(_yu);}catch(_eu){} /* [260906 수정이력] */
+  const o={method,headers};
+  if(body)o.body=JSON.stringify(body);
+  const _w=(method!=='GET'); if(_w){_apiWrites++; if(/^\/api\/(records|ops|sheet|messages|programs|ym\/)/.test(path))_apiWriteSeq++;}   // [⑱-2] 쓰기 순번 [⑱-4] 자료 표 쓰기만(presence 같은 신호는 제외)
+  try{
+     const localLlmPath=/^\/(?:api\/blog\/(?:dispatch|draft)|api\/promo\/(?:auto-run|auto-latest)|api\/content\/(?:kakao|structure|ocr|logo)|api\/monitor\/scan|api\/(?:hwp|office|press|anydoc|slim)\/dispatch)/.test(path);
+      const localDbPath=/^\/api\/(?:records(?:\/|$)|records-delete$|ops(?:\/|$)|sheet\/|qa(?:\/|$)|messages(?:\/|$)|config$|memo$|presence$)/.test(path);
+     if(localLlmPath)return (await misoLlmRoute(method,path,body)).json();
+     if(method==='GET'){   // [260905 통합⑱] GET 은 in-flight 표에 올려 두고, 끝나면 내린다
+       var _pf=fetch(path,o).then(async function(r){ if(!r.ok)throw new Error(r.status+': '+(await r.text())); return r.json(); });
+       _apiInflight[path]={p:_pf,w:_apiWriteSeq};
+       try{ return await _pf; } finally{ if(_apiInflight[path]&&_apiInflight[path].p===_pf)delete _apiInflight[path]; }
+     }
+     const r=await fetch(method==='GET'||localDbPath?path:`${API}${path}`,o);if(!r.ok)throw new Error(`${r.status}: ${await r.text()}`);return r.json();
+  }finally{ if(_w)_apiWrites=Math.max(0,_apiWrites-1); }   // finally 필수 — 예외에 감산이 새면 영구 busy = 자동 탑재 전면 사망(평의회6 경고)
+}
+
+// (isSuperAdmin 제거됨 — 슈퍼admin 개념 폐기, 권한은 role==='admin'로 통일)
+
+// Excel 시리얼(1899-12-30 기준) → "YYYY-MM-DD" 변환. 텍스트 날짜('2026-06-30'/'2026.6.30')도 허용
+// — 관리자 CRUD/시트 수기 편집으로 시리얼 대신 문자열이 저장돼도 표시가 깨지지 않게 (260610)
+
+FUNCTION _salesBuild
+SOURCE _salesBuild
+function _salesBuild(){
+  var st=window._salesState, dr=st&&st.daily&&st.daily.rows, mr=st&&st.master&&st.master.rows;
+  var m=_salesBuildMemo;
+  if(m&&m.dr===dr&&m.mr===mr&&m.dl===(dr?dr.length:-1)&&m.ml===(mr?mr.length:-1))return m.val;
+  var val=_salesBuildRaw.apply(this,arguments);
+  _salesBuildMemo={dr:dr,mr:mr,dl:dr?dr.length:-1,ml:mr?mr.length:-1,val:val};
+  return val;
+}
+
+FUNCTION _salesBuildRaw
+SOURCE _srailInit
+function _srailInit(force,_fetchGate,allowNarrow){
+  if(typeof _salesState==='undefined'||!_salesState)return;   // 부트 파싱중 방어(분신술 4호 HIGH — initApp의 setTimeout과 이중 안전)
+  var els=_srailEls(); if(!els.body)return;
+  _srailArmResize();
+  // 레일이 숨는 폭(2열 하한 `_BIZ_WIDE_MIN` 미만)에선 데이터도 안 당긴다(모바일 낭비 방지, 분신술 1호 LOW) — 넓어지면 resize에서 1회 재시도
+  // [260731 4차] 예외 = allowNarrow(책 2면 「판매 실적」이 좁은 화면에서 좌 보드로 나올 때) — 6시트 파이프라인은 이 한 곳만 쓴다(제2 fetch 경로 금지 · 페이블 검수 4)
+  if(!_bizBookWide()&&!allowNarrow)return;
+  _srailAlignTop();
+  // 전시 캐시 = 분석 보드와 공유(_anaState._exDaily/_exMaster) — 레일이 선채우면 분석 보드 전시 탭도 즉시 열림
+  _anaState=_anaState||{screen:1,cat:'공연',genre:'전체',year:null,drillName:null,xstep:3,cmp:{tray:[],bars:false}};
+  if(force){
+    _salesState.master=null;_salesState.daily=null;_salesState.rounds=null;_salesState.ops=null;_salesState.group=null;_salesState._opsIdx=null;
+    _anaState._exDaily=null;_anaState._exMaster=null;
+    try{ _v46sm.done=false;_v46sm.tries=0;_v46om.done=false;_v46om.tries=0; setTimeout(_v46SalesMergeTick,1500); setTimeout(_v46OpsMergeTick,2000); }catch(_v){}   /* [260902] 강제 새로고침 뒤에도 v46 보강분(과거 판매 이력) 재병합 */
+  }
+  if(_salesState.daily&&_salesState.master&&_salesState.rounds&&_salesState.ops&&_salesState.group&&_anaState._exDaily&&_anaState._exMaster){ _srailRender(); return; }
+  if(_srailBusy&&!force){console.warn('[srail] 로드 중 — 중복 호출 무시');return;}   // force = 스톨 뚫고 재발사 허용(세대 토큰이 구응답 폐기)
+  _srailBusy=true;
+  var gen=++_srailGen;
+  _srailNavSlot('');   // 로딩 진입 시 nav 우측 [← 목록] 잔존 방지
+  // [260710 운영자] 로딩 표기 = 좌측 캘린더 스켈레톤과 동일 — 문구(.cal-load-msg 스펙: 정중앙·accent 75%·14px/600·_ldHtml(16)·「불러오는 중」) + 광택 스윕(.sk-sweep 공용, "스캔 모션까지")
+  els.body.innerHTML='<div style="position:relative;height:100%"><div class="sk-sweep" aria-hidden="true"></div><div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--accent);opacity:.75;font-size:14px;font-weight:600">'+_ldHtml(16)+'불러오는 중</div></div>';
+  // [로딩 정렬 260711] 정렬(_srailAlignTop)·로딩표시는 위에서 이미 즉시 수행 · 아래 6시트 fetch만 캘린더 로드(_fetchGate)까지 지연 발사(cfbd4ed 네트워크 우선권 유지 · 로딩 중 레일 flex 확대 회귀 수정).
+  var _fire=function(){
+  if(gen!==_srailGen){console.warn('[srail] 게이트 대기 중 세대 교체 — fire 폐기');return;}   // fetch 게이트 대기 중 세대 교체(force 재발사 등)되면 이 fire 폐기
+  Promise.all([
+    _salesState.daily?Promise.resolve(_salesState.daily):YMDB.view('일일입력'),
+    _salesState.master?Promise.resolve(_salesState.master):YMDB.view('공연마스터'),
+    _salesState.rounds?Promise.resolve(_salesState.rounds):YMDB.view('회차상세'),
+    // ops: force면 _bizState.raw(구본) 재사용 없이 진짜 재fetch(분신술 4호 LOW — "다시 불러오기" 문구 정합)
+    _salesState.ops&&_salesState.ops.rows&&_salesState.ops.rows.length?Promise.resolve(_salesState.ops):((!force&&_bizState&&_bizState.raw&&_bizState.raw.rows&&_bizState.raw.rows.length)?Promise.resolve(_bizState.raw):api('GET','/api/ops?sheet='+encodeURIComponent('세부운영관리대장(정리)')).then(function(d){if(d&&d.rows&&d.rows.length)return d;var b=window._MISO_DB&&window._MISO_DB.datasets&&window._MISO_DB.datasets['ops_세부운영관리대장정리'];if(b&&b.rows&&b.rows.length){console.warn('[WA34-v1] PB 세부대장 0행 - 내장 스냅샷 사용',b.rows.length);return {sheet:'운영_세부운영관리대장(정리)',headers:b.headers,rows:b.rows,count:b.rows.length};}return d;})),
+    // 전시 2시트 — 실패해도 공연 레일은 살린다(개별 catch → null → 하단 정직 표기)
+    _anaState._exDaily?Promise.resolve(_anaState._exDaily):YMDB.view('전시일일').catch(function(e){console.warn('[srail 전시일일]',e);return null;}),
+    _anaState._exMaster?Promise.resolve(_anaState._exMaster):YMDB.view('전시마스터').catch(function(e){console.warn('[srail 전시마스터]',e);return null;}),
+    // [단체 유입] 운영_단체 — 없거나 실패해도 공연 레일은 산다(→ null → 단체 합산 0, 개인 집계 그대로)
+    _salesState.group?Promise.resolve(_salesState.group):api('GET','/api/ops?sheet='+encodeURIComponent('단체')).catch(function(e){console.warn('[srail 단체]',e);return null;})
+  ]).then(function(res){
+    if(gen!==_srailGen){console.warn('[srail] 구세대 응답 폐기');return;}   // 구세대 응답 폐기
+    _salesState.daily=res[0];_salesState.master=res[1];_salesState.rounds=res[2];_salesState.ops=res[3];_salesState.group=res[6];_salesState._opsIdx=null;
+    if(_bizState)_bizState.raw=res[3];   // 사업 보드 캐시도 같은 최신본으로 동기(비force면 동일 객체라 no-op)
+    _srailExErr=!(res[4]&&res[5]); if(_srailExErr)console.warn('[srail] 전시 시트 로드 실패 — 일일 '+(!!res[4])+' · 마스터 '+(!!res[5]));
+    if(res[4])_anaState._exDaily=res[4];
+    if(res[5])_anaState._exMaster=res[5];
+    _srailBusy=false; _srailRender();
+    try{_exLineRefresh();}catch(_e){}   // [260731] 전시마스터 도착 = 캘린더 전시 라인 소스 갱신 → 그리드 재렌더
+  }).catch(function(e){
+    if(gen!==_srailGen){console.warn('[srail] 구세대 오류 폐기');return;}
+    _srailBusy=false; console.warn('[srail]',e);
+    var els2=_srailEls(); var b=els2.body; if(!b)return;
+    if(els2.sum)els2.sum.style.display='none';   // [분신술 260710 감사4] 성공 렌더 후 재시도 실패 시 이전 요약 잔존 방지
+    b.innerHTML='<div class="u-empty"><div class="ico">📡</div><div class="msg">판매 데이터를 못 불러왔어요</div><button class="ana-chip" onclick="_srailInit(true)">다시 시도</button></div>';
+    // [260723 평의회1·2·4 공통] 실적 모드 = 좌 인라인 보드도 레일 6시트에 기대므로, 실패를 미러(무한 「불러오는 중」 방치 차단) — 재시도 = 동일 _srailInit(true)로 양쪽 복구
+    if(typeof _mainView!=='undefined'&&_mainView==='biz'&&_bizLeftPage()>=2&&_bizLeftPage()<=3&&!(_bizLeftPage()===3&&_bizState.raw)){ var bm=document.getElementById('biz-main'); if(bm){ bm.innerHTML='<div style="position:relative">'+_bizmHead('')+_BIZM_BOX+'<div style="text-align:center;padding:50px;color:var(--danger);font-size:13px">운영 데이터를 못 불러왔어요 <button class="ana-chip" onclick="_srailInit(true)" style="margin-left:8px">다시 시도</button></div>'+'</div>'+_bizmDots()+_bizmPageNav()+'</div>'; try{_bizmState.leftId=null;}catch(_e9){} } }   // [260731 4차] 6시트 의존 면 = 2(판매 실적, 좁은 화면)·3(사업 결과 비교) — 좌 열이 그 면일 때만 실패 미러
+  });
+  };
+  if(_fetchGate&&_fetchGate.finally)_fetchGate.finally(_fire); else _fire();   // 캘린더 로드 완료 뒤 6시트 fetch(게이트 없으면 즉시 = force 재시도·resize 경로)
+}
+// 리사이즈 대응(1회 장전): 좁은 화면에서 스킵했던 레일 로드 재시도 + 열린 날짜 패널 폭 재계산(분신술 1호 LOW)
+
+FUNCTION _bizOvSalesLoad
+SOURCE _pmSheetRows
+function _pmSheetRows(){
+  if(_pmSheetP)return _pmSheetP;
+  _pmSheetP=api('GET','/api/ops?sheet='+encodeURIComponent('프로그램마스터')).then(function(j){
+    var list=[];
+    // [260904 Phase5] _json 봉인 폐기 — 열이 정본. 숫자 열은 Number, 별칭·병합_ID 는 JSON 배열, 빈 칸은 키 생략(옛 _json 과 같은 모양)
+    var NUM={}; ['연도','부문코드','시작일','종료일','기간','판매시작일','판매종료일','데이터_원천수','회차수','기본좌석','발권유료','발권초대','재무_집행액','회차_건수','회차_첫공연일','회차_끝공연일','표시_사업비','표시_수익률','재무_수입','표시_수입','대장_관람객','재무_사업비','재무_객단가','재무_수익률','검토필요','재무_수강인원','교육_프로그램군','전시_티켓가격','원장_금액','원장_정상매수','검증_발권vs원장','원장_첫판매일','원장_끝판매일','재무_매출실적','보고서_유료','보고서_무료','보고서_관객','보고서_매출','보고서_사업비','보고서_수익률','재무_집행률','사업비_분할N','재무_최종예산','전시_일수','수입_분할N','티켓_가용좌석','티켓_유료판매','홍보시작일','홍보종료일','대장_판매금액','회차_공연횟수','회차_공연인원합','일일_유료판매','일일_유료금액','일일_점유율','일일_최종일자','오픈석실측','검증_회차합vs마스터','무료여부','웹_게시일'].forEach(function(k){NUM[k]=1;});
+    var ARR={'별칭':1,'병합_ID':1}, SKIP={'_json':1,'프로그램ID':1,'구분':1,'매칭근거':1,'구ID':1,'사업코드':1};
+    ((j&&j.rows)||[]).forEach(function(r){
+      var o={}, ks=Object.keys(r||{});
+      for(var i=0;i<ks.length;i++){ var k=ks[i]; if(SKIP[k])continue; var v=r[k]; if(v===''||v===null||v===undefined)continue;
+        if(ARR[k]){ try{ v=JSON.parse(v); }catch(_e){} }
+        else if(NUM[k]){ var t=String(v).trim(); if(/^-?\d+(\.\d+)?$/.test(t))v=Number(t); }
+        o[k]=v; }
+      if(!String(r['프로그램ID']||'').trim())return;
+      o.구ID=String(r['구ID']||''); o.사업ID=String(r['프로그램ID']||''); o.사업코드=String(r['사업코드']||''); list.push(o); });
+    if(list.length<100)throw new Error('프로그램마스터 시트 비어있음');
+    return list;
+  }).catch(function(e){ _pmSheetP=null; throw e; });
+  return _pmSheetP;
+}
+/* ═══ [260903 Phase1 M-2] 프로그램 관리(programs 시트) → 프로그램마스터(_PM) 오버레이 ═══
+   원칙(청사진 §2): 관리자 폼이 쓰는 programs 시트가 정체성(이름·기간·장소·사업코드·구분)의 정본.
+   _PM(이력 시트 = v46 _json 봉인)은 같은 프로그램ID 가 있으면 그 열들을 programs 값으로 덮고, 없는 ID 는 새 행으로 추가한다.
+   재무 파생열(사업비·수입·수익률 …)은 이력 값을 그대로 둔다(Phase 4·5 에서 살아있는 계산으로 교체).
+   끄기: window._PM_OVERLAY=false (부팅 전). 대관(R… ID)·NO 빈 행은 PERFS 규칙과 같이 제외. */
+
+SOURCE _pmOverlayPrograms
+function _pmOverlayPrograms(pm, progs){
+  if(!Array.isArray(pm)||!Array.isArray(progs)||!progs.length)return {added:0,updated:0};
+  var byId={}; pm.forEach(function(r){ if(r&&r.id!=null)byId[String(r.id)]=r; });
+  function n8(v){ var s=String(v==null?'':v).trim(); var m=s.match(/^(\d{4})[-./]?(\d{2})[-./]?(\d{2})/); if(m)return Number(m[1]+m[2]+m[3]); var n=Number(s); if(n>20000&&n<80000){ var d=new Date(Math.round((n-25569)*86400000)); return d.getUTCFullYear()*10000+(d.getUTCMonth()+1)*100+d.getUTCDate(); } return 0; }
+  function d8(v){ v=String(v||''); return v.length>=8?v.slice(4,6)+'.'+v.slice(6,8):''; }
+  var BUN={'공연':'공연','전시':'전시','예술교육':'교육','대관':'공연','기타':'기타'};
+  var added=0,updated=0;
+  progs.forEach(function(p){
+    var id=String(p['프로그램ID']||p['공연ID']||'').trim();
+    if(!id||/^R/i.test(id))return;                       // 대관(구글 캘린더 편입) 제외 — PERFS 규칙과 동일
+    if(p['NO']===''||p['NO']==null)return;
+    var ct=String(p['콘텐츠구분']||'').trim();
+    var bun=BUN[ct]||'기타';
+    var isRent=(ct==='대관');
+    var s=n8(p['시작일']),e=n8(p['종료일'])||s;
+    var sch=(function(){ var a=d8(s),b=d8(e); return (b&&b!==a)?(a+'~'+b):a; })();
+    var yr=s?Math.floor(s/10000):null;
+    var name=String(p['풀네임']||'').trim();
+    var short=String(p['줄임말']||'').trim();
+    var rc=parseInt(String(p['회차']||'').replace(/[^0-9]/g,''),10);
+    var fields={
+      명칭:name||null, 일정:sch||null, 장소:String(p['장소']||'').trim()||null,
+      사업코드:String(p['사업코드']||'').trim(),
+      _s:s||99999999, _e:e||0, _ps:n8(p['판매시작일'])||0, _hs:n8(p['홍보시작일'])||0,
+      _g2:(bun==='전시')?'전시':(String(p['장르']||p['구분']||'').trim()||null),   /* [260903] 전시는 '전시' 고정 */
+      횟수:(rc>0?rc:null)
+    };
+    var cur=byId[id];
+    if(cur){
+      Object.keys(fields).forEach(function(k){ var v=fields[k]; if(v===null||v===undefined||v==='')return; cur[k]=v; });
+      if(short){ if(!Array.isArray(cur.별칭))cur.별칭=[]; if(cur.별칭.indexOf(short)<0)cur.별칭.push(short); }
+      cur.출처='programs';
+      updated++;
+    }else{
+      var gu=(bun==='교육')?'교육':(bun==='전시')?(isRent?'대관전시':'기획전시'):(isRent?'대관공연':'기획공연');
+      var rec={id:id,연도:yr,구분:gu,명칭:name,일정:sch,장소:fields.장소,횟수:fields.횟수,수강인원:null,출처:'programs',비고:null,앱_프로그램명:null,
+        사업비:null,수입:null,수익률:null,무료여부:null,사업비분할:null,수입분할:null,구분2:(isRent?'대관':'기획'),사업코드:fields.사업코드,분야:bun,
+        _s:fields._s,_e:fields._e,_ps:fields._ps,_hs:fields._hs,_st:'',_wg:0,_g2:fields._g2,별칭:(short?[short]:null),보고서명:null};
+      pm.push(rec); byId[id]=rec; added++;
+    }
+  });
+  try{ console.log('[260903 M-2] programs 오버레이',{added:added,updated:updated}); }catch(_e){}
+  return {added:added,updated:updated};
+}
+
+
+SOURCE _pmLoad
+function _pmLoad(){
+   if(_PM&&_BPL)return Promise.resolve({pm:_PM,bpl:_BPL});
+   if(_pmLoading)return _pmLoading;
+_pmLoading=_pmSheetRows().then(function(list){ /* [260903 M-2] programs 시트도 같이 받는다 */ return Promise.all([list,(window._PM_OVERLAY===false)?null:api('GET','/api/programs').catch(function(){return null;})]); }).then(function(res){ var list=res[0],_progRows=(res[1]&&res[1].programs)||[];   /* [260902] 프로그램 마스터 원천 = DB 시트 운영_프로그램마스터(v46 programs.json 이관본 · _json 컬럼에 원본 레코드, 사업ID→프로그램ID(YYMMDD_NN)+사업코드) */
+  if(!Array.isArray(list)||list.length<100)throw new Error('db_v46 empty');
+  function d8(v){v=String(v||'');return v.length>=8?v.slice(4,6)+'.'+v.slice(6,8):'';}
+  _PM=list.map(function(p){
+    var bu=Number(p.부문코드);var ca=String(p.카테고리||'');
+    var gu=(bu===3)?'교육':(bu===2)?(ca.indexOf('대관')>-1?'대관전시':'기획전시'):(bu===1)?(ca==='기획공연'?'기획공연':'대관공연'):'기타';
+    var s=d8(p.시작일),e=d8(p.종료일);var sch=(e&&e!==s)?(s+'~'+e):s;
+      return {id:String(p.사업ID),연도:Number(p.연도)||null,구분:gu,명칭:p.정본명||'',일정:sch,장소:p.장소||null,횟수:(p.회차수==null?null:p.회차수),수강인원:(p.재무_수강인원==null?null:p.재무_수강인원),출처:p.출처||'db_v46',비고:(p.상태&&p.상태!=='정상')?('['+p.상태+']'):(p.비고!=null?String(p.비고):null),앱_프로그램명:null,사업비:(p.표시_사업비==null?null:p.표시_사업비),수입:(p.표시_수입==null?null:p.표시_수입),수익률:(p.표시_수익률==null?null:p.표시_수익률),무료여부:(p.무료여부==null?null:p.무료여부),사업비분할:(p.사업비_분할N==null?null:p.사업비_분할N),수입분할:(p.수입_분할N==null?null:p.수입_분할N),구분2:(function(c){return c==='b'?'대관':(c==='a'?'기획':(p.표시_구분||'—'));})(String(p.구ID||p.사업ID||'').charAt(12)) /* [WA80-v1] 기획/대관 = 구ID(v46) 13번째 글자 · [260902] 사업ID는 프로그램ID로 바뀌어 구ID로 판정 */,사업코드:String(p.사업코드||''),분야:(p.표시_분야||null),_s:(Number(p.시작일)||99999999),_e:(Number(p.종료일)||0),_ps:(Number(p.판매시작일)||0),_hs:(Number(p.홍보시작일)||0),_st:String(p.상태||''),_wg:(Number(p.웹_게시일)||0),_g2:(p.세부장르||p.장르||null),별칭:(Array.isArray(p.별칭)?p.별칭:null),보고서명:(p.보고서명||null)} /* [WA80-v1] 장르 */ /* [WA85-v1] 별칭(구명·문헌명)·보고서명 — v55 programs.json */;
+  });
+  try{ _pmOverlayPrograms(_PM,_progRows); }catch(_oe){ console.warn('[260903 M-2] programs 오버레이 실패',_oe); }
+  _BPL=[];_PM_BY_ID={};_BPL_BY_KEY={};
+  _PM.forEach(function(r){_PM_BY_ID[String(r.id)]=r;});
+  console.log('[WA31] 프로그램 마스터 = db_v46/programs.json',_PM.length);
+  return {pm:_PM,bpl:_BPL};
+}).catch(function(err){
+  console.warn('[WA31] db_v46 로드 실패 — 구 마스터 폴백',err);
+  _pmLoading=null;return _pmLoadLegacy();
+});
+return _pmLoading;
+}
+
+FUNCTION _bizListBuild
+FUNCTION _salesMonthLoad
+FUNCTION _ymEduLoad
+FUNCTION _ymRealLoad
+FUNCTION _bizHalfLoad
+SOURCE _anaExhibBuild
+function _anaExhibBuild(){
+  var master=(_anaState._exMaster&&_anaState._exMaster.rows)||[];
+  var daily=(_anaState._exDaily&&_anaState._exDaily.rows)||[];
+  var byId={};
+  daily.forEach(function(r){var id=String(r['전시ID']||'').trim();if(!id){console.warn('[srail] 전시일일 행 전시ID 없음 — 건너뜀');return;}(byId[id]=byId[id]||[]).push(r);});
+  Object.keys(byId).forEach(function(id){byId[id].sort(function(a,b){return String(a['기준일자']).localeCompare(String(b['기준일자']));});});
+  // 전시ID가 달라도 이름이 `GS칼텍스 예울마루 기획전시 <숨: 쉬는 SUM>` ↔ `숨 쉬는 SUM`처럼
+  // 접두어·콜론·공백만 다른 경우가 있다. _uName은 문장부호와 공백을 제거하므로 포함 관계를 보조 키로 쓴다.
+  var exNameMatch=function(a,b){
+    var x=_uName(a),y=_uName(b); if(!x||!y||x.length<4||y.length<4)return false;
+    return x===y||x.indexOf(y)>=0||y.indexOf(x)>=0;
+  };
+  var matchedDailyIds={};
+  var out=master.map(function(m){
+    var id=String(m['전시ID']||'').trim(), ds=byId[id]||[];
+    if(!ds.length){
+      Object.keys(byId).some(function(did){
+        var first=byId[did]&&byId[did][0];
+        if(first&&exNameMatch(m['전시명'],first['전시명'])){ds=byId[did];matchedDailyIds[did]=1;return true;}
+        return false;
+      });
+    }
+    var occClean=ds.map(function(r){var v=parseFloat(r['점유율']);return isNaN(v)?null:v;}).filter(function(v){return v!=null;});
+    var finalOcc=parseFloat(m['최종점유율']);
+    var occ=occClean.length?occClean[occClean.length-1]:(isNaN(finalOcc)?null:finalOcc);
+    var deltaPP=(occClean.length>1)?(occClean[occClean.length-1]-occClean[occClean.length-2]):null;
+    var free=isFlagOn(m['무료여부']);   // [260803 운영자] 예술성/사업성 축 폐지 — 전시 구분은 '무료여부'(Y=무료 → 판매현황·분석 제외)만 유지(구 '수익성' 공공/상업/무료에서 이관)
+    var st=String(m['상태']||'').trim();
+    var status=(st==='진행중')?'active':(st==='예정'?'notyet':'ended');
+    // [260813 운영자 「끝난 전시는 판매중에서 안 보여야」] 시트 '상태' 미갱신 방어 — 종료일이 지났으면 '진행중'이어도 종료 취급.
+    //   실측: 섬냥이 in 장도(종료 6/21)·우리 SUM 타볼래(종료 6/28)가 시트 상태 '진행중' 잔존으로 판매중 목록에 계속 노출.
+    //   마지막 날(종료일=오늘)은 진행중 유지. 시트 정본 수정과 무관하게 동작하는 안전망(시트가 고쳐지면 이 분기는 no-op).
+    if(status==='active'){ var _edChk=_salesDate(m['종료일']); if(_edChk){ var _tdChk=new Date(); _tdChk.setHours(0,0,0,0); if(_edChk<_tdChk)status='ended'; } }
+    return {id:id,name:String(m['전시명']||'').trim(),year:parseInt(m['연도'],10)||null,
+      occ:occ,deltaPP:deltaPP,spark:occClean.slice(-7),free:free,status:status,
+       목표관객:m['목표관객'],목표금액:m['목표금액'],최종유료:m['최종유료'],최종무료:m['최종무료'],최종점유율:m['최종점유율'],
+      최종총인원:m['최종총인원'],최종매출:m['최종매출'],시작일:m['시작일'],종료일:m['종료일'],운영일수:m['운영일수'],daily:ds};
+  });
+  // [260729 운영자] 전시일일에만 있고 전시마스터엔 없는 전시(=고아)를 합류시킨다.
+  //   왜 = 마스터 미등재 전시의 첫 입력은 「프로그램ID를 전시ID로」 전시일일에 append 된다(_dailyExhibList 260723h).
+  //   그런데 이 함수가 master.map이라 그 전시는 목록에 아예 안 생겼다 → 일일 입력은 쌓이는데 분석 보드는 「조건에 맞는 전시가 없어요」,
+  //   진행중 표는 「집계 전(—·데이터 부족)」. 여기 한 곳만 메우면 세 화면(분석 보드·레일 카드·진행중 표·드릴)이 같이 산다.
+  //   값은 전부 실값 계승(창작 0): 이름·누계 = 전시일일 마지막 행 · 기간 = 프로그램 시트 · 목표관객은 미상이면 null(달성률은 마스터 등재 후).
+  try{
+    var have={}; out.forEach(function(e){ if(e.id)have[e.id]=1; });
+    var pgAll=((typeof PERFS!=='undefined'&&PERFS)||[]);
+    var tISO=_srailTodayISO();
+     Object.keys(byId).forEach(function(id){
+       if(have[id]||matchedDailyIds[id])return;
+      var ds2=byId[id]; if(!ds2||!ds2.length)return;
+      var last=ds2[ds2.length-1], first=ds2[0];
+      var nm=String(last['전시명']||first['전시명']||'').trim();
+      var pg=null;
+      for(var i=0;i<pgAll.length;i++){ var p=pgAll[i];
+        if(!p)continue;
+        if(String(p.id||'')===id){ pg=p; break; }
+        if(nm&&(_uName(p.f||'')===_uName(nm)||_uName(p.n||'')===_uName(nm))){ pg=p; break; } }
+      if(!nm)nm=String((pg&&(pg.f||pg.n))||id).trim();
+      var oc2=ds2.map(function(r){var v=parseFloat(r['점유율']);return isNaN(v)?null:v;}).filter(function(v){return v!=null;});
+      var _d8=function(v){ var s=String(v||'').replace(/[^0-9]/g,''); return (s.length===8)?(s.slice(0,4)+'-'+s.slice(4,6)+'-'+s.slice(6,8)):''; };
+      var sIso=(pg&&pg.s)||_d8(first['기준일자']), eIso=(pg&&pg.e)||'';
+      var st2=eIso?((tISO>eIso)?'ended':((sIso&&tISO<sIso)?'notyet':'active')):'active';
+      out.push({id:id,name:nm,year:parseInt(String(last['기준일자']||'').replace(/[^0-9]/g,'').slice(0,4),10)||null,
+        occ:(oc2.length?oc2[oc2.length-1]:0),deltaPP:((oc2.length>1)?(oc2[oc2.length-1]-oc2[oc2.length-2]):null),
+        spark:oc2.slice(-7),free:false,status:st2,_orphan:true,
+        목표관객:null,목표금액:null,최종유료:last['누계유료'],최종무료:last['누계무료'],
+        최종총인원:last['누계총인원'],최종매출:last['누계금액'],시작일:sIso,종료일:eIso,운영일수:null,daily:ds2});
+    });
+  }catch(_e){ console.warn('[exhib orphan]',_e); }
+  return out;
+}
+
+FUNCTION syncReload
+SOURCE syncReload
+async function syncReload(expectedDelta){
+  var before=records.length;
+  await new Promise(function(r){setTimeout(r,500);});
+  await loadData();
+  if(expectedDelta===undefined)return;
+  var expected=before+expectedDelta;
+  for(var i=0;i<3;i++){
+    if(records.length===expected)return;
+    console.warn('[syncReload] count mismatch (attempt '+(i+1)+'), expected:',expected,'got:',records.length,'- retrying...');
+    await new Promise(function(r){setTimeout(r,1000+i*500);});
+    await loadData();
+  }
+  if(records.length!==expected){
+    console.warn('[syncReload] final mismatch. SharePoint 일관성 안정화에 시간이 더 필요할 수 있음.');
+  }
+}
+
+// === [C-1] 변경 감지 폴링 (방식B: 가벼운 폴링 + 뱃지, 자동 리로드 X) ===
+let _lastSeenMod = null;
+let _updateBadgeShown = false;
+
+FUNCTION _salesDashboardMenuBuild
+FUNCTION _bizMenuBuild
+FUNCTION _salesMenuBuild

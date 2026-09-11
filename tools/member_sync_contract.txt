@@ -1,0 +1,151 @@
+MEMBER_SYNC_CONTRACT_SOURCE
+source: public/standalone.html (streamed line scan; no data rows emitted)
+
+[customer management dropdown blocks]
+function _memberHubBuild @ line 26690
+26690: function _memberHubBuild(){
+26691:   var bg=document.getElementById('member-hub'); if(bg)return bg;
+26692:   _memberHubCss();
+26694:   try{ var lg=document.getElementById('member-lookup'); if(lg)lg.remove(); }catch(_e){}
+26695:   try{ var ov=document.getElementById('member-ov'); if(ov)ov.remove(); }catch(_e){}
+26697:   var page=_memberHubIsPage();
+26698:   bg=document.createElement('div'); bg.id='member-hub';
+26700:   else { bg.className='modal-bg'; bg.style.zIndex='var(--z-modal)'; bg.onclick=function(ev){ if(ev.target===bg)closeMemberHub(); }; }
+26704:     ?('<div data-memhead><span style="font-size:14.5px;font-weight:800;color:var(--accent);white-space:nowrap;letter-spacing:-.01em;flex-shrink:0">고객 관리</span>'
+26705:       +'<span style="font-size:12px;font-weight:600;color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">회원 명부를 지역·연령으로 훑어보고, 오른쪽에서 찾고 물어봐요</span></div>'
+26708:       +'<button class="modal-x" onclick="closeMemberHub()" title="닫기" aria-label="닫기">✕</button>'
+26709:       +_mhead('고객 관리','회원 명부를 지역·연령으로 훑어보고, 오른쪽에서 찾고 물어봐요'));
+26712:       +'<div id="hub-left"><div id="mem-ov-body" style="text-align:center;color:var(--dim);padding:25px 29px">'+_ldHtml(16)+'회원 데이터 불러오는 중…</div></div>'
+26715:           +'<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex:0 0 auto"><span style="font-size:14px;font-weight:800">고객 검색</span>'
+26717:             +'<button type="button" class="ry-live-tg" role="radio" aria-checked="true" data-hubtab="seg" onclick="_memberHubTab(\'seg\')">조건부</button><span class="ry-hd-div" aria-hidden="true"></span>'
+26718:             +'<button type="button" class="ry-live-tg" role="radio" aria-checked="false" data-hubtab="lookup" onclick="_memberHubTab(\'lookup\')">명부</button></span>'
+function _aipromoMenuBuild @ line 26871
+26871: function _aipromoMenuBuild(menu){
+26873:   menu.innerHTML='<div style="padding:8px 14px 6px;font-size:11px;color:var(--dim);font-weight:700">고객 관리</div>'
+26874:      +((userRole==='admin')?'<button type="button" onclick="_ddCloseAll();openMemberOverview()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">고객 분석</button>':'')
+26875:       +'<button type="button" onclick="_ddCloseAll();openCustomerSegment()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">고객 검색</button>'
+26876:       +'<button type="button" onclick="_ddCloseAll();openMemberLookup()" style="'+itemCss+';background:none" onmouseenter="this.style.background=\'rgba(74,77,231,0.07)\'" onmouseleave="this.style.background=\'none\'">회원 조회</button>';
+26878: // 고객 검색 메뉴는 기존 고객 분류 조건 빌더로 직행한다. 명부 검색 화면과 분류 화면은 보존한다.
+
+[member data load/save function names]
+5381: function loadManagers
+5858: function _memoLoad
+5877: function _memoAdd
+33609: function _memLoadCore
+33644: function _memLoad
+33650: function _memLoadSummary
+
+[member/customer-related declarations]
+4633: function _enterAsManager
+5381: function loadManagers
+5407: function filterManagersByType
+5413: function buildManagerOptions
+5424: function refreshManagerOptions
+5824: function _memoUser
+5825: function _memoDateLabel
+5826: function _memoUid
+5827: function _memoTodayStr
+5828: function _memoNowTime
+5832: function _memoTimeWheel
+5834: function _memoDue
+5847: function _memoSorted
+5858: function _memoLoad
+5866: function _memoPersist
+5876: function _memoSetImp
+5877: function _memoAdd
+5885: function _memoToggleDone
+5886: function _memoDel
+5887: function _memoExpand
+5888: function _memoMemoInput
+5889: function _memoRows
+5903: function _memoRenderBody
+5904: function _memoToggleAlarm
+5905: function _memoRender
+5926: function _memoToggle
+5936: function _memoAlarmRefresh
+14805: function _bizPageMemberHtml
+14814: function _bizMemberEnsure
+17988: function openSignageManager
+18011: function closeSignageManager
+21923: function buildManagerRow
+25771: function awToggleMemo
+26498: function allManagersConflict
+26644: function _memberHubIsPage
+26645: function _memberHubCss
+26690: function _memberHubBuild
+26738: function _memberHubTab
+26745: function _memberHubFill
+26750: function openMemberHub
+26760: function closeMemberHub
+26767: function _memberHubShown
+26770: function _memPageMeasure
+26773: function _memPageFit
+26789: function _memHubRv
+26790: function _memHubCountUp
+26802: function _memberHubReveal
+26821: function _memberHubPurge
+26836: function _memberHubOnAnswer
+26851: function _memberHubNote
+26855: function _memberHubLinkClear
+26857: function _memberHubPrewarm
+26871: function _aipromoMenuBuild
+26879: function openCustomerSegment
+30953: function formatMemoCell
+33559: function _memPurge
+33566: function _memWarm
+33576: function _memBootWarm
+33580: function closeMemberLookup
+33581: function openMemberLookup
+33609: function _memLoadCore
+33644: function _memLoad
+33650: function _memLoadSummary
+33675: function _memFillSel
+33686: function _memEsc
+33687: function _memMaskOn
+33688: function _memMaskName
+33693: function _memMaskPhone
+33701: function _memDetail
+33742: function _memRender
+33790: function _memCityName
+33796: function _memGeoKey
+33801: function _memXY
+33802: function closeMemberOverview
+33803: function openMemberOverview
+33826: function _memDonutHtml
+33831: function _memLegendHtml
+33834: function _memSectHtml
+33835: function _memOvRender
+33977: function _memTxtW
+33978: function _memOvMap
+34094: function _memAiCardHtml
+34115: function _memAiPaint
+34149: function _memRiseShift
+34180: function _memAiPaintAll
+34186: function _memAiAuto
+34199: function _memAiKey
+34203: function _memAiChip
+34545: function _segMemIdx
+35020: function _segNameMask
+35314: function _memAiIdx
+35329: function _memAiPct
+35330: function _memAiFmt
+35332: function _memAiRegions
+35353: function _memAiAges
+35370: function _memAiLocal
+35433: function _memAiCtx
+35448: function _memAiSend
+
+[public/members.js]
+path: public/members.js
+first_declaration: absent
+personal data body: omitted
+
+[api member-related files]
+api/ym-acct-lib.js
+api/ym-member-summary-lib.js
+api/ym-member-summary.pb.js
+
+[detected DB references]
+sheets: +encodeURIComponent(, _member_importing, _member_summary, ops_회원
+collections: (none detected)
+connection_keys: ID, 계정NO, 담당자

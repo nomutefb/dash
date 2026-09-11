@@ -1,0 +1,131 @@
+async function initApp(){
+  _perfReady=false;
+  buildNav();startClock();updateRoleTag();
+  _loadSalesAsOfBadge();
+  _msgApiAvailable=true;  // 🔒 로그인 완료 — 로그인 전 폴링이 걸었을 수 있는 메시지 API 봉인 해제(분신술 B-HIGH)
+  try{_chatbotMount();}catch(_e){console.warn('[chatbot mount]',_e);}
+  try{_qaMount();}catch(_e){console.warn('[qa mount]',_e);}
+  try{_initLongPress();}catch(_e){}
+  // 날씨 위젯 제거(운영자 260706) — loadWeather 호출·타이머 중단(함수 골격 보존)
+  _presBeat(); _presPoll(); if(!window._presTimer)window._presTimer=setInterval(function(){_presBeat();_presPoll();},35000);
+  _memoLoad().then(_memoAlarmRefresh); if(!window._memoTimer)window._memoTimer=setInterval(_memoAlarmRefresh,60000);  // 메모/알림 = 전체 사용자
+  // 슈퍼 admin (subAdminPin 없음)만 myApplicant 정리. 서브 admin은 본인 신원 유지.
+  if(userRole==='admin' && !sessionStorage.getItem('subAdminPin')){
+    try{sessionStorage.removeItem('myApplicant');}catch(e){}
+  }
+  // [로딩 성능] 초기 데이터 로더 병렬화 — 서로 독립인데 순차 await로 폭포수처럼 쌓여 있던 걸 동시 출발로 전환.
+  //   · 캘린더(records+특별일정)를 먼저 그리고, 프로그램/마스터/카페·장도/접수설정은 백그라운드 병렬로 채움.
+  //   · 순서 의존성은 loadPrograms→updatePerfOpen 하나뿐(나머지 로더 결과는 updatePerfOpen이 안 씀).
+  //   · loadPromoSpecial 중복 호출 제거 — loadData가 이미 특별일정을 로드함.
+  var _calP=loadData();  // records + 특별일정 → render() : 캘린더 즉시 표시
+  _loadPetCfg();  // 전역설정 pets_visible 로드 → ON이면 하단 펫(3마리 랜덤) 시동(기본 숨김·관리자 토글로 켬 · 운영자 260711)
+  // 판매 레일 — _salesState 공유 캐시 선채움.
+  // [로딩 성능 260711 운영자] 레일 6시트(일일입력·공연마스터·회차상세·세부운영관리대장·전시일일·전시마스터)를
+  //   캘린더(records/특별일정) 로드 '완료 뒤'로 미룬다 — 로그인 직후 동시요청 폭주(캘린더+마스터+레일6 ≈17개)를
+  //   시간축 분산해 캘린더에 네트워크 우선권(레일은 사용자가 볼 때 잠깐 늦어도 무해). 비차단 성격은 그대로.
+  // ⚠️ setTimeout 필수: F5 세션복원은 부트 IIFE가 "파싱 중" initApp을 동기 호출 — 그 시점엔 뒤쪽 var(_salesState 등)가
+  //    할당 전(undefined)이라 동기 호출 시 레일이 조용히 죽는다(분신술 4호 HIGH — 260705 TDZ 참사와 동일 클래스).
+  //    → loadData().finally(비동기)면 파싱 완료 후 실행이라 TDZ 안전(+_srailInit 자체 _salesState undefined 방어 유지).
+  // [로딩 정렬 260711] 레일 정렬·로딩표시는 즉시(캘린더 스켈레톤 높이로 .srail 높이 캡 → 로딩 중 flex 확대 방지) · 6시트 fetch만 캘린더(_calP) 로드 뒤로 게이트(cfbd4ed 네트워크 우선권 유지).
+  //   setTimeout(0) = F5 세션복원 TDZ 방어(뒤쪽 var _salesState 등 할당 완료 후 실행) · loadData() 동기부가 이미 캘린더 스켈레톤을 그려 _srailAlignTop이 그 높이를 참조.
+  setTimeout(function(){
+    try{_gcalHydrate();loadRentals(currentYear,currentMonth);}catch(_e){console.warn('[initApp gcal]',_e);}   // [260801 운영자] 대관(구글 캘린더) = records와 동시 출발 + 캐시 즉시 반영. 구: loadData 완료 → render() 안에서야 출발이라 대관만 한 박자 늦게 떴다(정본 시트가 아니라 별도 피드라 이 경로뿐)
+    try{_mvApply(true);}catch(_e){console.warn('[initApp mv]',_e);}   // [260723] 메인 기본 = 사업 실적 — setTimeout(0) = F5 세션복원 TDZ 방어(_mainView 등 뒤쪽 var 할당 후) · noRail=레일 fetch는 아래 기존 게이트가 담당
+    try{_srailInit(false,_calP);}catch(_e){console.warn('[initApp srail]',_e);}
+  },0);
+  var _pPrograms=loadPrograms().then(function(){ updatePerfOpen(); _perfReady=true;
+    try{_exLineRefresh();}catch(_e){}   // [260731] 프로그램 시트 도착 = 캘린더 전시 라인·공연 배지 소스 갱신 → 그리드 재렌더
+    if(PERFS.length&&document.getElementById('cal')){try{renderCal();}catch(_e){}}
+    try{_ycSync();}catch(_e){}          // [260731e] 프로그램 시트 도착 = 연간 일정 타임라인 자동 재생성(스냅샷 → 실데이터)
+    // 판매 레일이 PERFS보다 먼저 그려졌으면 재렌더 — 프로그램 시트 폴백 카드(마스터 미등록 판매중 공연) 누락 방지
+    if(typeof _salesState!=='undefined'&&_salesState&&_salesState.daily&&_salesState.master&&!_srailBusy){try{_srailRender();}catch(_e){}}
+    // [260808] 프로그램 시트 도착 = 3면 **예술교육 반쪽의 로딩 해제 신호** — 그 반쪽의 유일한 소스가 PERFS인데
+    //   도착을 알리는 자리가 여기뿐이다(전시 반쪽은 _bizExhibEnsure .then이 같은 역할을 진다).
+    //   위 _srailRender 경로가 이미 3면을 다시 그렸으면(그 안에서 _bizInlineRender 호출) 여기선 건너뛴다 = 이중 렌더 0.
+    else if(typeof _mainView!=='undefined'&&_mainView==='biz'&&_bizLeftPage()===3){try{_bizInlineRender();}catch(_e){console.warn('[initApp bizm edu]',_e);}}
+  }).catch(function(e){console.warn('[initApp loadPrograms]',e);});
+  Promise.all([
+    _pPrograms,
+    loadAllMasters().catch(function(e){console.warn('[initApp loadAllMasters]',e);}),
+    loadApplySettings().catch(function(e){console.warn('[initApp loadApplySettings]',e);})
+  ]).then(function(){ try{_memBootWarm();}catch(_e){console.warn('[initApp memBootWarm]',_e);} });   // [260810 운영자] 고객 분석(회원·예매집계) 선로딩 = 첫 화면 로더가 다 끝난 뒤 출발 — 사유·가드는 _memBootWarm 주석
+  // MS(OneDrive) 토큰 미리 확보 — 폴더 선택 때 팝업 안 뜨게 (재방문 silent / 첫 로그인 popup 1회)
+  _msalPrefetch();
+  // [260812 운영자 「투데이스 브리핑 안 나오게」] 로그인 후 자동 팝업 = 소거. 아래 호출 한 줄만 잠근다.
+  //   브리핑 자체는 살아 있다 — 「AI 홍보」 메뉴(openPromoCheck)에서 종전대로 본다. 롤백 = 이 줄 주석 해제.
+  //   [260807 운영자] 투데이스 브리핑 — 로그인 후 사업 대시보드 한켠 팝업(세션 1회 · 「더 보지 않기」 존중 · 실패 무해)
+  // setTimeout(function(){ try{_paTodayPop();}catch(_e){} },1500);
+}
+
+function adminRoute(id){
+  if(id==='programs')return openProgramAdmin();
+  if(id==='bizplan')return openBizAdmin();     // [260906 입력절차③]
+  if(id==='progplan')return openPlanProgAdmin();
+  if(id==='platform')return openSheetAdmin('platform');
+  if(id==='users')return openSheetAdmin('manager');
+  if(id==='schedule')return openPromoBoard();
+  if(id==='logs')return openLogsAdmin();
+  if(id==='applysettings')return openApplySettings();
+  if(id==='qa')return openQaBoard();
+  if(id==='schedsync')return openScheduleSync();   // [260804 운영자] 일정 반영 ▸ 카페 운영 일정
+  showToast('['+id+'] 미구현','error');
+}
+
+function openBizFinInput(year){
+  if(!_isAcct()){ showToast('회계 담당자 또는 관리자만 입력할 수 있어요','error'); return; }
+  _finInClose();
+  _finIn.year=null; _finIn.no=null; _finIn.dd=0; _finIn.mode='year';
+  var wrap=document.createElement('div'); wrap.id='fin-in';
+  // [260812 5차] 머리줄은 `.modal`의 **직계 자식**이어야 한다. 구판은 `<div id="fin-in-head">` 래퍼 안에 넣어서
+  //   `.modal:has(>.mhead)` 규칙이 통째로 안 먹었다 → ① 코발트 밴드 둘레에 흰 1px 테두리가 남고(운영자 260805
+  //   「상단 양옆 흰 실선도 음영만」으로 직접 고친 그 자리) ② 닫기 ✕가 흰 잉크가 아니라 인디고 잉크라 밴드 위에서 소실됐다.
+  //   머리줄은 고정 문구라 다시 그릴 일이 없으므로 여기서 한 번만 박고, `_finInPaint`는 본문(`#fin-in-body`)만 만진다.
+  wrap.innerHTML='<div class="modal-bg show" onclick="if(event.target===this)_finInClose()"><div class="modal" style="width:620px;max-width:94vw;text-align:left">'
+    +'<button class="modal-x" onclick="_finInClose()" title="닫기" aria-label="닫기">✕</button>'
+    +_mhead('사업 지표 입력','연도와 사업을 고르고 원 단위(소수 첫째 자리까지)로 적어요')
+    +'<div id="fin-in-body"></div></div></div>';
+  document.body.appendChild(wrap);
+  _finLoad().then(_finInPaint);
+}
+
+function _isAcct(){ try{ if(typeof userRole!=='undefined'&&userRole==='admin')return true; return sessionStorage.getItem('isAcct')==='1'; }catch(_e){ return false; } }
+// 시트 적재 — 시트가 아직 없으면 `/api/ops`가 `note:'시트 없음 (미동기화)'` + 빈 rows로 답한다(에러 아님)
+//   = 첫 사용자는 **씨앗만으로** 정상 렌더된다. 시트 신설은 첫 저장(`opsWriteSheet`→`ensureSheet`)이 한다.
+function _finLoad(force){
+  if(_finState.rows&&!force)return Promise.resolve(_finState.rows);
+  if(_finState.busy&&_finState._p&&!force)return _finState._p;
+  _finState.busy=1;
+  _finState._p=api('GET','/api/ops?sheet='+encodeURIComponent(_FIN_SHEET)+(force?'&fresh=1':''))
+    .then(function(d){ _finState.rows=(d&&d.rows)?d.rows:[]; _finState.note=(d&&d.note)||null; _finState.err=null; })
+    .catch(function(e){ _finState.rows=[]; _finState.note=null; _finState.err=e; console.warn('[사업비]',e); })
+    .then(function(){ _finState.busy=0; _finIdxClear(); return _finState.rows; });
+  return _finState._p;
+}
+
+MISSING _myCats
+
+function openDailyInput(origin){
+  if(userRole!=='admin'){showToast('관리자만 입력할 수 있어요','error');return;}
+  // [260715] 저장 후 직전 메뉴 복원 — 명시 출처 없으면 현재 열린 보드로 자동 판별(둘 다 없으면 사업 실적 메뉴에서 진입)
+  _dailyOrigin=origin||((document.getElementById('analytics-board')&&document.getElementById('analytics-board').innerHTML)?'analytics':((document.getElementById('sales-board')&&document.getElementById('sales-board').innerHTML)?'salesboard':'bizmenu'));   // [260803] 기본 복귀처 = 대시보드 세부메뉴(판매 현황 대메뉴 폐지)
+  window._dsxGen=(window._dsxGen||0)+1;   // [260715 분신술] 세대++ — 이전 세션 orphan 파싱이 이 폼을 덮어쓰지 못하게
+  let el=document.getElementById('daily-input');
+  if(!el){el=document.createElement('div');el.id='daily-input';document.body.appendChild(el);}
+  el.innerHTML='<div class="modal-bg show" style="z-index:99990" onclick="if(event.target===this)closeDailyInput()"><div class="modal" style="width:96vw;max-width:760px;max-height:90vh;overflow:auto;--mpad-y:0;--mpad-x:0;position:relative;background:#fff"><button class="modal-x" onclick="closeDailyInput()" title="닫기" aria-label="닫기">✕</button>'+_mhead('판매 실적 갱신','오늘 판매분을 시트에 바로 적어요')+'<div id="daily-body" style="padding:18px 22px"><div style="text-align:center;color:#888;padding:30px">'+_ldHtml(16)+'공연 목록 불러오는 중</div></div></div></div>';
+  // [260807 운영자 「넣었으면 그만큼 변경할 수도 있어야 함(해당 날짜 리스트로 남아야 함)」] 단체 기존 내역 로드 —
+  //   수정 축이라 열 때마다 fresh(캐시 재사용 경로 포함). 실패해도 입력은 살고(gLoadOk=false = 기존 내역 수정만 잠금 · 신규 추가는 가능),
+  //   저장 시 replaceShow가 이 스냅샷 기준으로 그 공연만 교체한다(_srailEdit groupLoadOk 전삭제 방어와 같은 축).
+  var _gLoad=function(){ return api('GET','/api/ops?sheet='+encodeURIComponent('단체')+'&fresh=1').catch(function(){return {rows:[],headers:[],_loadFailed:1};}).then(function(gr){
+    _dailyState.gLoadOk=!(gr&&(gr._loadFailed||gr.note||!(gr.headers&&gr.headers.length)));
+    _dailyState.gEdit=(( (gr&&gr.rows)||[]).map(_salesNorm).map(function(r){return {공연명:String(r['공연명']||'').trim(),공연ID:String(r['공연ID']||'').trim(),기준일자:String(r['기준일자']||'').replace(/[^0-9]/g,''),좌석:(_salesNum(r['좌석'])==null?'':String(_salesNum(r['좌석']))),금액:(_salesNum(r['금액'])==null?'':String(_salesNum(r['금액']))),단체명:String(r['단체명']||'')};}).filter(function(r){return r.공연명;}))
+      .sort(function(a,b){return a.공연명===b.공연명?((parseInt(a.기준일자,10)||0)-(parseInt(b.기준일자,10)||0)):(a.공연명<b.공연명?-1:1);});
+    _dailyState.gSig=JSON.stringify(_dailyState.gEdit);
+  }); };
+  if(_dailyState.master&&_dailyState.programs&&_dailyState.exMaster){_gLoad().then(function(){_dailyRenderForm();});return;}
+  Promise.all([
+    YMDB.view('공연마스터'),
+    api('GET','/api/programs').then(function(d){return (d&&d.programs)||[];}).catch(function(){return [];}),
+    YMDB.view('전시마스터').catch(function(){return {headers:[],rows:[]};}),   // [260723] 전시 입력용 — 실패해도 공연 입력은 되게 빈 시트 폴백
+    YMDB.view('전시일일').catch(function(){return {headers:[],rows:[]};})
+  ]).then(function(res){_dailyState.master=res[0];_dailyState.programs=res[1];_dailyState.exMaster=res[2];_dailyState.exDaily=res[3];return _gLoad();}).then(function(){_dailyRenderForm();}).catch(function(e){var b=document.getElementById('daily-body');if(b)b.innerHTML='<div style="color:var(--danger);text-align:center;padding:30px">공연 목록 로드 실패: '+escapeHtml(e.message||String(e))+'</div>';});
+}

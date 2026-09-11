@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "filesCompared": 593,
+  "databaseRows": 70014,
+  "memberRows": 30477,
+  "bookingRows": 40429,
+  "memberBookingMatches": 23063,
+  "shardRows": 22630,
+  "javascriptFilesChecked": 186,
+  "inlineScriptsChecked": 14,
+  "sourceComparisonPassed": true,
+  "issues": []
+}

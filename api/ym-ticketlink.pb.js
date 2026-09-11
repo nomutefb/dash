@@ -1,0 +1,13 @@
+routerAdd('POST','/api/ym/ticketlink/status',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'status');});
+routerAdd('POST','/api/ym/ticketlink/group-save',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'group-save');});
+routerAdd('POST','/api/ym/ticketlink/prepare',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'prepare');});
+routerAdd('POST','/api/ym/ticketlink/login-state',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'login-state');});
+routerAdd('POST','/api/ym/ticketlink/request',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'request');});
+routerAdd('POST','/api/ym/ticketlink/heartbeat',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'heartbeat');});
+routerAdd('POST','/api/ym/ticketlink/claim',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'claim');});
+routerAdd('POST','/api/ym/ticketlink/apply',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'apply');});
+routerAdd('POST','/api/ym/ticketlink/failure',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'failure');});
+routerAdd('POST','/api/ym/ticketlink/reconcile',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'reconcile');});
+routerAdd('POST','/api/ym/ticketlink/mappings',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'mappings');});
+routerAdd('POST','/api/ym/ticketlink/settings',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'settings');});
+routerAdd('POST','/api/ym/ticketlink/worker-settings',function(e){return require(__hooks+'/ym-ticketlink-lib.js').handle(e,$app,__hooks,'worker-settings');});

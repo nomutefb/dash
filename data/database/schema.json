@@ -1,0 +1,464 @@
+{
+  "members": {
+    "columns": [
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": true,
+        "name": "id"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "phone"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "name"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "addr1"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "addr2"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "addr3"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "addr4"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "zip"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "phoneDup"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "addrFlag"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "phoneStatus"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "userId"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "birthDate"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "email"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "regDate"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "phoneRaw"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "addrRaw"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "tel"
+      },
+      {
+        "data_type": "number",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "sourceIdx"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "created"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "updated"
+      }
+    ],
+    "total": 0
+  },
+  "users": {
+    "columns": [
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": true,
+        "name": "id"
+      },
+      {
+        "data_type": "password",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "password"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "tokenKey"
+      },
+      {
+        "data_type": "email",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "email"
+      },
+      {
+        "data_type": "bool",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "emailVisibility"
+      },
+      {
+        "data_type": "bool",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "verified"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "name"
+      },
+      {
+        "data_type": "file",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "avatar"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "created"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "updated"
+      }
+    ],
+    "total": 0
+  },
+  "ym_auth_credentials_dev": {
+    "columns": [
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": true,
+        "name": "id"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "managerId"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "kind"
+      },
+      {
+        "data_type": "password",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "password"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "tokenKey"
+      },
+      {
+        "data_type": "email",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "email"
+      },
+      {
+        "data_type": "bool",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "emailVisibility"
+      },
+      {
+        "data_type": "bool",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "verified"
+      }
+    ],
+    "excludedRows": true,
+    "total": 6
+  },
+  "ym_auth_state_dev": {
+    "columns": [
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": true,
+        "name": "id"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "key"
+      },
+      {
+        "data_type": "json",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "value"
+      }
+    ],
+    "excludedRows": true,
+    "total": 1095
+  },
+  "ymdata": {
+    "columns": [
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": true,
+        "name": "id"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "sheet"
+      },
+      {
+        "data_type": "number",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "rowIndex"
+      },
+      {
+        "data_type": "json",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "data"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "created"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "updated"
+      }
+    ],
+    "total": 18643
+  },
+  "ymdata_dev": {
+    "columns": [
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": true,
+        "name": "id"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "sheet"
+      },
+      {
+        "data_type": "number",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "rowIndex"
+      },
+      {
+        "data_type": "json",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "data"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "created"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "updated"
+      }
+    ],
+    "total": 51304
+  },
+  "ymmeta": {
+    "columns": [
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": true,
+        "name": "id"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "sheet"
+      },
+      {
+        "data_type": "json",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "headers"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "source"
+      },
+      {
+        "data_type": "number",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "rowCount"
+      },
+      {
+        "data_type": "number",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "nextRowIndex"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "created"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "updated"
+      }
+    ],
+    "total": 37
+  },
+  "ymmeta_dev": {
+    "columns": [
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": true,
+        "name": "id"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": false,
+        "is_primary_key": false,
+        "name": "sheet"
+      },
+      {
+        "data_type": "json",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "headers"
+      },
+      {
+        "data_type": "text",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "source"
+      },
+      {
+        "data_type": "number",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "rowCount"
+      },
+      {
+        "data_type": "number",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "nextRowIndex"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "created"
+      },
+      {
+        "data_type": "autodate",
+        "is_nullable": true,
+        "is_primary_key": false,
+        "name": "updated"
+      }
+    ],
+    "total": 30
+  }
+}
