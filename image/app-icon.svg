@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="116" fill="#1A1A2E"/>
+  <g font-family="Pretendard,'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="-7">
+    <text x="256" y="196" font-size="170" dominant-baseline="central">예울</text>
+    <text x="256" y="342" font-size="170" dominant-baseline="central">마루</text>
+  </g>
+</svg>

@@ -1,0 +1,39 @@
+{
+  "name": "GS칼텍스 예울마루 사업 대시보드",
+  "short_name": "예울마루",
+  "description": "GS칼텍스 예울마루 사업 대시보드 — 사업 실적·판매 현황·홍보 관리",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "lang": "ko",
+  "background_color": "#ffffff",
+  "theme_color": "#4A4DE7",
+  "icons": [
+    {
+      "src": "image/pwa-icon-192.png?v=260723h",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "image/pwa-icon-512.png?v=260723h",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "image/pwa-icon-192-maskable.png?v=260723h",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "image/pwa-icon-512-maskable.png?v=260723h",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
